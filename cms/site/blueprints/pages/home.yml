@@ -1,0 +1,26 @@
+title: Home
+
+columns:
+  - width: 1/2
+    sections:
+      data:
+        type: fields
+        fields:
+          description:
+            type: textarea
+            label: Description
+            size: medium
+            help: This text will appear on the home page.
+  - width: 1/2
+    sections:
+      media:
+        type: fields
+        fields:
+          carousel_images:
+            type: files
+            label: Carousel Images
+            multiple: true
+            layout: cards
+            size: tiny
+            query: page.images
+            help: These images will appear in a carousel on the home page.

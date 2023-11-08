@@ -1,0 +1,14 @@
+name: Image Section
+icon: box
+fields:
+  slug:
+    type: text
+    label: Slug
+    help: The slug for this section. This will be used to create an anchor link.
+  media:
+    label: Media
+    type: blocks
+    max: 2
+    min: 1
+    fieldsets:
+      - imageSectionMedia

@@ -1,0 +1,14 @@
+title: Clients
+
+columns:
+  - width: 2/3
+    sections:
+      clients_drafts:
+        type: pages
+        label: Clients (Drafts)
+        status: drafts
+        templates: [client]
+      clients_published:
+        type: pages
+        label: Clients (Published)
+        status: listed

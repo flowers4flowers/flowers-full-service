@@ -1,0 +1,125 @@
+/*
+Tailwind/Variables
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --nav-height: 8rem;
+}
+
+@layer utilities {
+  .fill-parent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .media-cover {
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .media-contain {
+    object-fit: contain;
+    object-position: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+
+/*
+Global
+*/
+
+html {
+  font-family: theme('fontFamily.primary');
+  font-size: 10px;
+  color: black;
+  background-color: theme('colors.cream');
+  height: 100%;
+}
+
+body {
+  font-size: theme('fontSize.base');
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  padding-bottom: var(--nav-height);
+}
+
+
+/*
+Def Image
+*/
+
+.def-image {
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.def-image.loaded {
+  opacity: 1;
+}
+
+
+/*
+Screensaver
+*/
+
+#screensaver {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s;
+  z-index: 5000;
+}
+
+#screensaver.active {
+  pointer-events: auto; 
+  opacity: 1;
+  transition: opacity 2.5s;
+}
+
+
+/*
+Rich Text
+*/
+
+.rich-text a {
+  transition: opacity .3s;
+}
+
+.rich-text a:hover {
+  opacity: .5;
+}
+
+.rich-text * + p {
+  margin-top: 2rem;
+}
+
+.rich-text.rt-underline a {
+  text-decoration-line: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: none;
+}
+
+.rich-text.rt-underline a:hover {
+  text-decoration-line: none;
+  opacity: 1;
+}
+
+.rich-text.rt-lg * + p {
+  margin-top: 4rem;
+}

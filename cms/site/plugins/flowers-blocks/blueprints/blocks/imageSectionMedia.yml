@@ -1,0 +1,20 @@
+name: Image Section Media
+icon: box
+fields:
+  media:
+    type: files
+    multiple: false
+    label: Media
+    required: true
+    help: An image to display.
+    query: page.images
+  vimeo_url:
+    type: text
+    label: Vimeo URL
+    size: medium
+    help: A Vimeo URL. If present, the image will act as a preview image for the video.
+  caption:
+    type: text
+    label: Caption
+    size: medium
+    help: A caption for the media.

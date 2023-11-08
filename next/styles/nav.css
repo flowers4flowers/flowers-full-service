@@ -1,0 +1,118 @@
+/*
+Main Nav
+*/
+
+#home-link {
+  flex: none;
+  z-index: 2000;
+  transition: transform .3s;
+}
+
+#home-link.hide {
+  transform: translateY(-100%);
+}
+
+#home-link .caption {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+
+#home-link.show-captions .caption {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#secondary-home-link {
+  flex: none;
+}
+
+#home-link a {
+  transition: width .3s, opacity .3s;
+}
+
+#secondary-home-link a {
+  transition: opacity .3s;
+}
+
+#home-link a svg,
+#secondary-home-link a svg {
+  width: 100%;
+}
+
+#home-link + main {
+  padding-top: 20.3vw;
+}
+
+#secondary-home-link + main {
+  padding-top: 25.4vw;
+  z-index: 10;
+  position: relative;
+}
+
+#main-nav {
+  z-index: 3000;
+  transition: transform .3s;
+}
+
+#main-nav.hide {
+  transform: translateY(100%);
+}
+
+#main-nav .main-nav-links a {
+  display: inline-flex;
+  align-items: center;
+}
+
+#main-nav .main-nav-links a::after {
+  content: '';
+  width: 1.4rem;
+  height: 1.4rem;
+  background-color: black;
+  border-radius: 50%;
+  margin-left: 2rem;
+  display: none;
+  pointer-events: none;
+}
+
+#main-nav .main-nav-links a:hover::after  {
+  display: block;
+}
+
+#main-nav .main-nav-links a.active::after {
+  display: block;
+}
+
+#home-carousel-counter span::before {
+  content: '';
+  width: 1.4rem;
+  height: 1.4rem;
+  background-color: black;
+  border-radius: 50%;
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  left: 0px;
+  transform: translate(-40px, -2px);
+}
+
+#home-carousel-counter span::after {
+  content: '';
+  width: 1.4rem;
+  height: 1.4rem;
+  background-color: black;
+  border-radius: 50%;
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  right: 0px;
+  transform: translate(40px, -2px);
+}
+
+#home-carousel-counter.left span::before {
+  display: block;
+}
+
+#home-carousel-counter.right span::after {
+  display: block;
+}

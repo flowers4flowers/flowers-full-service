@@ -1,0 +1,13 @@
+title: Shop
+
+columns:
+  - width: 2/3
+    sections:
+      data:
+        type: fields
+        fields:
+          text:
+            type: textarea
+            label: Text
+            size: medium
+            help: This text will appear on the shop page.

@@ -1,0 +1,37 @@
+/*
+Project
+*/
+
+.media-section {
+  height: 100vh;
+  opacity: 0;
+  transition: opacity .4s;
+}
+
+.media-section.show {
+  opacity: 1;
+}
+
+.media-section .media-section-item {
+  margin: 0 2vw;
+}
+
+.media-section .video-container button {
+  transition: opacity .3s;
+  pointer-events: auto;
+}
+
+.media-section .video-container.video-started button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.media-section .video-container button svg {
+  width: 5rem;
+  position: relative;
+}
+
+.media-section .video-container button:hover svg path {
+  fill: theme('colors.cream');
+  stroke: theme('colors.cream');
+}

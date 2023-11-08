@@ -1,0 +1,49 @@
+title: Project
+
+columns:
+  - width: 1/2
+    sections:
+      data:
+        type: fields
+        fields:
+          title:
+            type: text
+            label: Title
+            required: true
+          date:
+            type: date
+            label: Date
+            required: true
+          location:
+            type: text
+            label: Location
+            required: true
+          description:
+            type: textarea
+            label: Description
+            size: medium
+          client:
+            type: select
+            label: Client
+            options:
+              type: query
+              query: site.clients.toStructure
+              text: "{{ item.name }}"
+              value: "{{ item.name }}"
+  - width: 1/2
+    sections:
+      media:
+        type: fields
+        fields:
+          featured_image:
+            type: files
+            label: Featured Image
+            required: true
+            multiple: false
+            query: page.images
+            help: This image will appear when this project is referenced on the home page.
+          media_content:
+            label: Media Content
+            type: blocks
+            fieldsets:
+              - imageSection

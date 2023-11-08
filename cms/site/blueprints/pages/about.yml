@@ -1,0 +1,13 @@
+title: About
+
+columns:
+  - width: 2/3
+    sections:
+      data:
+        type: fields
+        fields:
+          description:
+            type: textarea
+            label: Description
+            size: medium
+            help: This text will appear on the about page.

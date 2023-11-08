@@ -1,0 +1,26 @@
+name: Media Item
+icon: box
+fields:
+  image:
+    type: files
+    label: Image
+    required: true
+    multiple: false
+    query: page.images
+  video_preview:
+    type: files
+    label: Video Preview
+    required: false
+    multiple: false
+    query: page.videos
+  project:
+    type: pages
+    label: Project
+    required: true
+    multiple: false
+    query: site.find('Projects').children
+    subpages: false
+  slug:
+    type: text
+    label: Slug
+    help: The slug of the section you want to link to on the associated project page.

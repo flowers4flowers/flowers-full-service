@@ -1,0 +1,29 @@
+Title: Make Time For The Life
+
+----
+
+Date: 2023-11-08
+
+----
+
+Location: Swiss Alps
+
+----
+
+Description: Infrathin spiritual capital anti-structural establishment artifice objecthood. The space of humanity the decisive moment Arte Povera juxtaposition Fluxus of the built environment the work transforms Deleuze displaces field of action negation. The gallery specific objects familiar yet subversive proposition the sub real phenomenological displaces anthropomorphism minting reification infrathin formal concerns.
+
+----
+
+Client: Stella Artois
+
+----
+
+Featured-image: - file://XJT0Sjr1XnWeAh0o
+
+----
+
+Media-content: [{"content":{"slug":"section-1","media":"[{\"content\":{\"media\":[\"file://IieoIW0TasuGyW7Q\"],\"vimeo_url\":\"\",\"caption\":\"\"},\"id\":\"c619acac-d88b-436d-9f55-939e485c2e6a\",\"isHidden\":false,\"type\":\"imageSectionMedia\"}]"},"id":"bbe73f2b-3a36-404e-b747-010eae57270a","isHidden":false,"type":"imageSection"}]
+
+----
+
+Uuid: 1LqVqo8KQwlLdaYs

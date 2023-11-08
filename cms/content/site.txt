@@ -1,0 +1,57 @@
+Title: Flowers Full Service
+
+----
+
+Clients:
+
+- 
+  name: Athletic Greens
+- 
+  name: Rapha
+- 
+  name: Nike
+- 
+  name: Stella Artois
+
+----
+
+Social-links:
+
+- 
+  title: Email
+  link: mailto:info@flowersfullservice.art
+  open_in_new_tab: 'false'
+- 
+  title: IG
+  link: >
+    https://www.instagram.com/flowersfullservice/
+  open_in_new_tab: 'true'
+
+----
+
+Screensaver-image: - file://suXoKV7QtsVMRA5R
+
+----
+
+Site-description: Flowers Full Service is a...
+
+----
+
+Og-image: - file://8dgrjWRwLHEs5Sve
+
+----
+
+Nav-links:
+
+- 
+  title: Gallery
+  link: /gallery
+  open_in_new_tab: 'false'
+- 
+  title: About
+  link: /about
+  open_in_new_tab: 'false'
+- 
+  title: Shop
+  link: /shop
+  open_in_new_tab: 'false'

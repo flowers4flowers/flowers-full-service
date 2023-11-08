@@ -1,0 +1,13 @@
+title: Gallery
+
+columns:
+  - width: 1/2
+    sections:
+      data:
+        type: fields
+        fields:
+          media_items:
+            label: Media Items
+            type: blocks
+            fieldsets:
+              - mediaItem

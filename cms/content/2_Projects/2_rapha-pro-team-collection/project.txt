@@ -1,0 +1,39 @@
+Title: Rapha Pro Team Collection
+
+----
+
+Date: 2022-11-11
+
+----
+
+Location: Swiss Alps
+
+----
+
+Description:
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+(link: https://espn.com text: Link to web article.)
+
+Creative by Ger Tierney
+Shot/Edited by Sam Craven
+Graphics by Arabella Swan
+Produced by Kimberly English
+Grade by Jevi Repponen
+
+----
+
+Client: Rapha
+
+----
+
+Featured-image: - file://XWDe979VYpr2PfK2
+
+----
+
+Media-content: [{"content":{"slug":"section-1","media":"[{\"content\":{\"media\":[\"file://b5316ZzyeBe0BH9T\"],\"vimeo_url\":\"\",\"caption\":\"\"},\"id\":\"f9b48c57-9431-439a-9060-fd9c7bd71090\",\"isHidden\":false,\"type\":\"imageSectionMedia\"},{\"content\":{\"media\":[\"file://Z96M4BiRiCtHN7Fr\"],\"vimeo_url\":\"\",\"caption\":\"\"},\"id\":\"f31bda29-70e6-4e05-9e42-fbeddb67be5b\",\"isHidden\":false,\"type\":\"imageSectionMedia\"}]"},"id":"d3468861-e74b-4765-9791-b5b20d15762e","isHidden":false,"type":"imageSection"},{"content":{"slug":"section-2","media":"[{\"content\":{\"media\":[\"file://XWDe979VYpr2PfK2\"],\"vimeo_url\":\"\",\"caption\":\"\"},\"id\":\"b2aac3fd-45a7-4cc5-ab7e-ed423c0c039c\",\"isHidden\":false,\"type\":\"imageSectionMedia\"}]"},"id":"f147c8c8-1bb9-4afd-ab8b-fa625390820c","isHidden":false,"type":"imageSection"}]
+
+----
+
+Uuid: Z6WW4816ma39TNmz

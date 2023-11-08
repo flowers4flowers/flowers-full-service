@@ -1,0 +1,14 @@
+title: Projects
+
+columns:
+  - width: 2/3
+    sections:
+      projects_drafts:
+        type: pages
+        label: Projects (Drafts)
+        status: drafts
+        templates: [project]
+      projects_published:
+        type: pages
+        label: Projects (Published)
+        status: listed

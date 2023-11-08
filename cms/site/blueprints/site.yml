@@ -1,0 +1,129 @@
+title: Site
+
+tabs:
+  Pages:
+    label: Pages
+    sections:
+      pages_listed:
+        label: Pages
+        type: pages
+        layout: cards
+        status: listed
+        sortable: false
+        templates: [home, about, shop, gallery]
+  Projects:
+    label: Projects
+    sections:
+      projects_drafts:
+        type: pages
+        layout: cards
+        label: Projects (Drafts)
+        status: drafts
+        parent: site.find('Projects')
+        templates: [project]
+      projects_published:
+        type: pages
+        layout: cards
+        label: Projects (Published)
+        status: listed
+        parent: site.find('Projects')
+        templates: [project]
+  Clients:
+    label: Clients
+    sections:
+      info:
+        type: info
+        theme: positive
+        text: >
+          Clients are listed here. These do not have their own pages, but are pulled into project pages.
+      clients:
+        type: fields
+        fields:
+          clients:
+            type: structure
+            label: Clients
+            fields:
+              name:
+                label: Name
+                type: text
+      # clients_drafts:
+      #   type: pages
+      #   label: Clients (Drafts)
+      #   status: drafts
+      #   parent: site.find('Clients')
+      #   templates: [client]
+      # clients_published:
+      #   type: pages
+      #   label: Clients (Published)
+      #   status: listed
+      #   parent: site.find('Clients')
+      #   templates: [client]
+  GlobalData:
+    label: Global Data
+    columns:
+      - width: 1/2
+        sections:
+          nav_links:
+            type: fields
+            fields:
+              # nav_links:
+              #   type: structure
+              #   label: Nav Links
+              #   help: These links will appear on the left side of the nav.
+              #   fields:
+              #     title:
+              #       label: Title
+              #       type: text
+              #       required: true
+              #     link:
+              #       label: Link
+              #       type: text
+              #       required: true
+              social_links:
+                type: structure
+                label: Social Links
+                help: These links will appear on the right side of the nav.
+                fields:
+                  title:
+                    label: Title
+                    type: text
+                    required: true
+                  link:
+                    label: Link
+                    type: text
+                    required: true
+      - width: 1/2
+        sections:
+          social:
+            type: fields
+            fields:
+              screensaver_image:
+                type: files
+                label: Screensaver Image
+                multiple: false
+                query: page.images
+  Metadata:
+    label: Metadata
+    columns:
+      - width: 1/2
+        sections:
+          seo:
+            type: fields
+            fields:
+              site_description:
+                type: textarea
+                label: Site Description
+                help: This will appear in search results.
+                size: medium
+                buttons: false
+      - width: 1/2
+        sections:
+          og:
+            type: fields
+            fields:
+              og_image:
+                type: files
+                label: Open Graph Image
+                help: This will appear when sharing on social media.
+                multiple: false
+                query: page.images

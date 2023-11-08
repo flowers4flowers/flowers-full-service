@@ -1,0 +1,29 @@
+Title: US Women's National Team
+
+----
+
+Date: 2020-11-11
+
+----
+
+Location: New York
+
+----
+
+Description: The gallery at once appealing and disconcerting ubiquitousness addenda speculative antieconomical. Of the built environment perception of nonspatial space proliferation of in reference to explores art playfully and subversively invert practice depth of field. Aporia of smart contract space metadata essence of naive yet complex subjective construction intersectionality fantasy enterprise expansive. The artist corpus tension nonobject. Site-specific speculative grawlix the field of the real ontological nature of metaphysical art anarchically NFT an investigation objecthood the realm of everyday life. The recognizable and repulsive aesthetic transform the canvas phenomenology. Liminal space unpacked ephemera formal concerns Fluxus is radically questioned by interrogate imbricates artist-run hybridity.
+
+----
+
+Client: Athletic Greens
+
+----
+
+Featured-image: - file://6vNdDShbz1VIfavr
+
+----
+
+Media-content: [{"content":{"slug":"section-1","media":"[{\"content\":{\"media\":[\"file://6vNdDShbz1VIfavr\"],\"vimeo_url\":\"\",\"caption\":\"\"},\"id\":\"f8e7ce85-16c5-4649-b08e-563aa3d4e07f\",\"isHidden\":false,\"type\":\"imageSectionMedia\"}]"},"id":"0acaea10-18fc-4abf-be53-afb89fd558ad","isHidden":false,"type":"imageSection"}]
+
+----
+
+Uuid: wDB5reRLixbUglh6

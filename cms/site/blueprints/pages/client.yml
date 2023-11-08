@@ -1,0 +1,12 @@
+title: Client
+
+columns:
+  - width: 1/2
+    sections:
+      data:
+        type: fields
+        fields:
+          title:
+            type: text
+            label: Title
+            required: true

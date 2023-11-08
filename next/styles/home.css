@@ -1,0 +1,27 @@
+/*
+Home
+*/
+
+#home-carousel {
+  pointer-events: none;
+  opacity: 0;
+  transition: .5s;
+  z-index: 4000;
+}
+
+#home-carousel.active {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+#home-carousel .carousel-container {
+  width: 64%;
+  height: 70%;
+  max-width: 1000px;
+  max-height: 800px;
+}
+
+#home-carousel .carousel-container .swiper-slide {
+  backface-visibility: hidden;
+  overflow: hidden;
+}
