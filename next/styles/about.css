@@ -21,6 +21,13 @@ About
   transition: opacity .3s;
 }
 
-.project-link:hover .text-content {
-  opacity: .5;
+
+/*
+About (LG)
+*/
+
+@media (min-width: theme('screens.lg')) {
+  .project-link:hover .text-content {
+    opacity: .5;
+  }
 }

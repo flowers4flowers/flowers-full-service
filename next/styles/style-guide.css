@@ -100,10 +100,6 @@ Rich Text
   transition: opacity .3s;
 }
 
-.rich-text a:hover {
-  opacity: .5;
-}
-
 .rich-text * + p {
   margin-top: 2rem;
 }
@@ -113,11 +109,6 @@ Rich Text
   text-underline-offset: 4px;
   text-decoration-thickness: 1px;
   transition: none;
-}
-
-.rich-text.rt-underline a:hover {
-  text-decoration-line: none;
-  opacity: 1;
 }
 
 .rich-text.rt-lg * + p {
@@ -132,5 +123,14 @@ Rich Text (LG)
 @media (min-width: theme('screens.lg')) {
   .rich-text.rt-lg *+p {
     margin-top: 4rem;
+  }
+
+  .rich-text a:hover {
+    opacity: .5;
+  }
+
+  .rich-text.rt-underline a:hover {
+    text-decoration-line: none;
+    opacity: 1;
   }
 }

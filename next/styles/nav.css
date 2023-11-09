@@ -75,10 +75,6 @@ Main Nav
   pointer-events: none;
 }
 
-#main-nav .main-nav-links a:hover::after  {
-  display: block;
-}
-
 #main-nav .main-nav-links a.active::after {
   display: block;
 }
@@ -155,5 +151,9 @@ Main Nav (LG)
 
   #secondary-home-link+main {
     padding-top: 25.4vw;
+  }
+
+  #main-nav .main-nav-links a:hover::after {
+    display: block;
   }
 }

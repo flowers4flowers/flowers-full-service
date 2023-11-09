@@ -26,11 +26,6 @@ Project
   position: relative;
 }
 
-.media-section .video-container button:hover svg path {
-  fill: theme('colors.cream');
-  stroke: theme('colors.cream');
-}
-
 .media-section .media-section-item {
   height: 100vh;
   display: flex;
@@ -51,5 +46,10 @@ Project (LG)
     margin: 0 2vw;
     height: auto;
     display: block;
+  }
+
+  .media-section .video-container button:hover svg path {
+    fill: theme('colors.cream');
+    stroke: theme('colors.cream');
   }
 }
