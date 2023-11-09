@@ -158,9 +158,11 @@ const HomeContent = ({ description, carouselImages }) => {
             </div>
           </div>
 
-          <div className="flex lg:hidden justify-center mt-4">
-            <p className="text-md font-secondary">{state.homeCarouselData.currentIndex}/{carouselImages.length}</p>
-          </div>
+          {state.homeCarouselData && (
+            <div className="flex lg:hidden justify-center mt-4">
+              <p className="text-md font-secondary">{state.homeCarouselData.currentIndex}/{carouselImages.length}</p>
+            </div>
+          )}
         </>
       )}
     </div>
