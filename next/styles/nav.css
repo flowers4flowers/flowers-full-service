@@ -41,11 +41,11 @@ Main Nav
 }
 
 #home-link + main {
-  padding-top: 20.3vw;
+  padding-top: 25.4vw;
 }
 
 #secondary-home-link + main {
-  padding-top: 25.4vw;
+  padding-top: 29.4vw;
   z-index: 10;
   position: relative;
 }
@@ -115,4 +115,45 @@ Main Nav
 
 #home-carousel-counter.right span::after {
   display: block;
+}
+
+#mobile-menu {
+  transition: transform .3s;
+  pointer-events: none;
+  transform: translateX(-100%);
+  z-index: 3500;
+}
+
+#mobile-menu.active {
+  transform: translateX(0%);
+  pointer-events: auto;
+}
+
+#mobile-nav {
+  z-index: 3000;
+}
+
+#mobile-menu .main-links li .circle {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-3px);
+}
+
+#mobile-menu .main-links li.active .circle {
+  opacity: 1;
+}
+
+
+/*
+Main Nav (LG)
+*/
+
+@media (min-width: theme('screens.lg')) {
+  #home-link+main {
+    padding-top: 20.3vw;
+  }
+
+  #secondary-home-link+main {
+    padding-top: 25.4vw;
+  }
 }

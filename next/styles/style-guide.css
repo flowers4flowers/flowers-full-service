@@ -121,5 +121,16 @@ Rich Text
 }
 
 .rich-text.rt-lg * + p {
-  margin-top: 4rem;
+  margin-top: 2rem;
+}
+
+
+/*
+Rich Text (LG)
+*/
+
+@media (min-width: theme('screens.lg')) {
+  .rich-text.rt-lg *+p {
+    margin-top: 4rem;
+  }
 }

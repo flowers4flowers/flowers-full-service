@@ -48,8 +48,8 @@ const MediaSection = ({ block, title }) => {
         const classes = classNames(
           'media-section-item',
           {
-            'w-1/3': media.media.width <= media.media.height && !media.vimeoUrl,
-            'w-5/12': media.vimeoUrl || media.media.width > media.media.height,
+            'w-full lg:w-1/3': media.media.width <= media.media.height && !media.vimeoUrl,
+            'w-full lg:w-5/12': media.vimeoUrl || media.media.width > media.media.height,
           }
         )
 

@@ -13,7 +13,8 @@ const initialState = {
   hideHomeLink: false,
   hideNav: false,
   currentProjectTitle: null,
-  currentProjectCaptions: []
+  currentProjectCaptions: [],
+  mobileMenuOpen: false,
 }
 
 function reducer(state, action) {
@@ -57,6 +58,11 @@ function reducer(state, action) {
       return {
         ...state,
         currentProjectCaptions: action.payload
+      }
+    case 'SET_MOBILE_MENU_OPEN':
+      return {
+        ...state,
+        mobileMenuOpen: action.payload
       }
     default:
       return state

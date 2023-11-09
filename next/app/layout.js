@@ -1,7 +1,9 @@
 import '@/styles/global.css'
 import { AppWrapper } from '@/context'
 import MainNav from '@/components/MainNav'
+import MobileNav from '@/components/MobileNav'
 import HomeLink from '@/components/HomeLink'
+import MobileMenu from '@/components/MobileMenu'
 import Screensaver from '@/components/Screensaver'
 import { getGlobalData } from '@/queries/layoutQuery'
 
@@ -23,10 +25,16 @@ export default async function RootLayout({ children }) {
           <MainNav
             socialLinks={socialLinks}
           />
+
+          <MobileNav />
           
           <HomeLink />
 
-          <main className='px-14'>{children}</main>
+          <main className='px-5 lg:px-14'>{children}</main>
+
+          <MobileMenu
+            socialLinks={socialLinks}
+          />
 
           {screensaverImage && (
             <Screensaver

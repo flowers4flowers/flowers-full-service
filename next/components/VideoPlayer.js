@@ -24,36 +24,38 @@ const VideoPlayer = ({ block, className }) => {
     
   return (
     <div className={videoClasses}>
-      <Vimeo
-        ref={video}
-        video={block.vimeoUrl}
-        responsive={true}
-        autoplay={false}
-        controls={true}
-        showTitle={false}
-        showPortrait={false}
-        showByline={false}
-        className="video"
-      />
+      <div className="relative w-full">
+        <Vimeo
+          ref={video}
+          video={block.vimeoUrl}
+          responsive={true}
+          autoplay={false}
+          controls={true}
+          showTitle={false}
+          showPortrait={false}
+          showByline={false}
+          className="video"
+        />
 
-      {block.media && (
-        <button
-          className="fill-parent flex justify-center items-center"
-          onClick={playVideo}
-        >
-          <div className="fill-parent">
-            <DefImage
-              src={block.media.url}
-              alt={block.media.alt}
-              width={block.media.width}
-              height={block.media.height}
-              className="media-cover"
-            />
-          </div>
+        {block.media && (
+          <button
+            className="fill-parent flex justify-center items-center"
+            onClick={playVideo}
+          >
+            <div className="fill-parent">
+              <DefImage
+                src={block.media.url}
+                alt={block.media.alt}
+                width={block.media.width}
+                height={block.media.height}
+                className="media-cover"
+              />
+            </div>
 
-          <PlayButton />
-        </button>
-      )}
+            <PlayButton />
+          </button>
+        )}
+      </div>
     </div>
   )
 }

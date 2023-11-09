@@ -9,24 +9,35 @@ const ProjectLink = ({ project }) => {
   const [active, setActive] = useState(false)
   const [xValue, setXValue] = useState(0)
   const linkRef = useRef(null)
+  let isLargeQuery = false
+
+  if (typeof window !== 'undefined') {
+    isLargeQuery = window.matchMedia('(min-width: 992px)').matches
+  }
 
   const handleMouseEnter = () => {
-    setActive(true)
+    if (isLargeQuery) {
+      setActive(true)
+    }
   }
 
   const handleMouseLeave = () => {
-    setActive(false)
+    if (isLargeQuery) {
+      setActive(false)
+    }
   }
 
   const handleMouseMove = (e) => {
-    let bounds = linkRef.current.getBoundingClientRect()
-    let x = e.clientX - bounds.left
+    if (isLargeQuery) {
+      let bounds = linkRef.current.getBoundingClientRect()
+      let x = e.clientX - bounds.left
 
-    setXValue(x)
+      setXValue(x)
+    }
   }
 
   const classes = classNames(
-    'project-link grid grid-cols-8 gap-6 relative',
+    'project-link grid grid-cols-4 lg:grid-cols-8 gap-4 lg:gap-6 relative',
     {
       'active': active
     }
@@ -41,18 +52,18 @@ const ProjectLink = ({ project }) => {
       onMouseMove={handleMouseMove}
       className={classes}
     >
-      <p className="text-content col-span-2 text-lg font-primary uppercase">{project.date}</p>
+      <p className="text-content col-span-1 lg:col-span-2 text-md lg:text-lg font-primary uppercase">{project.date}</p>
 
-      <div className="text-content col-span-6">
-        <p className="text-lg font-primary uppercase inline">{project.title}</p>
+      <div className="text-content col-span-3 lg:col-span-6 mb-2 lg:mb-0">
+        <p className="text-md lg:text-lg font-primary uppercase block lg:inline leading-[1.5]">{project.title}</p>
         {project.location && (
-          <span className="text-sm font-secondary ml-4">({project.location})</span>
+          <span className="hidden lg:inline text-sm font-secondary ml-4">({project.location})</span>
         )}
       </div>
 
       {project.featuredImage && (
         <div
-          className="project-hover-image absolute top-0 left-0 w-[220px]"
+          className="project-hover-image absolute top-0 left-0 w-[220px] hidden lg:block"
           style={{
             transform: `translateX(${xValue - 220}px) translateY(-100%)`
           }}

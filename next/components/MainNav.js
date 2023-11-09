@@ -11,7 +11,7 @@ const MainNav = ({ socialLinks }) => {
   const { state } = useAppState()
 
   const classes = classNames(
-    'fixed bottom-0 left-0 w-full bg-cream px-14 py-10 grid grid-cols-12 gap-6',
+    'fixed bottom-0 left-0 w-full bg-cream px-14 py-10 hidden lg:grid grid-cols-12 gap-6',
     {
       'hide': state.hideNav
     }

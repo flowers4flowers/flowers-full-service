@@ -22,7 +22,7 @@ const HomeLink = () => {
     isLargeQuery = window.matchMedia('(min-width: 992px)').matches
 
     if (!isLargeQuery) {
-      svgWidth = '100px'
+      svgWidth = '130px'
     }
   }
 
@@ -74,7 +74,7 @@ const HomeLink = () => {
   })
 
   const classes = classNames(
-    'fixed top-0 left-0 w-full flex justify-center px-14 py-10',
+    'fixed top-0 left-0 w-full flex justify-center px-5 lg:px-14 py-5 lg:py-10',
     {
       'hide': state.hideHomeLink,
       'show-captions': showCaptions
@@ -89,7 +89,7 @@ const HomeLink = () => {
       >
         {pathname.includes('/projects') && (
           <div
-            className="caption absolute left-14 text-lg font-secondary"
+            className="caption hidden lg:block absolute left-14 text-lg font-secondary"
           >
             {state.currentProjectTitle && (
               <p>{state.currentProjectTitle}</p>
@@ -115,7 +115,7 @@ const HomeLink = () => {
 
         {pathname.includes('/projects') && (
           <button
-            className="caption absolute right-14 text-lg font-secondary lg:hover:opacity-50 transition-opacity duration-300"
+            className="caption hidden lg:block absolute right-14 text-lg font-secondary lg:hover:opacity-50 transition-opacity duration-300"
             onClick={() => {
               window.scrollTo({
                 top: 0,
@@ -130,7 +130,7 @@ const HomeLink = () => {
     return (
       <nav
         id="secondary-home-link"
-        className="fixed top-0 left-0 w-full flex justify-center px-14 py-10"
+        className="fixed top-0 left-0 w-full flex justify-center px-5 lg:px-14 py-5 lg:py-10"
       >
         <Link
           href="/"

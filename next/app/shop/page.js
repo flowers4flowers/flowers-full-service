@@ -11,7 +11,7 @@ export default async function Shop() {
         className="flex justify-center items-center h-full"
       >
         <div
-          className="text-lg font-secondary w-1/2 text-center"
+          className="text-md lg:text-lg font-secondary w-full lg:w-1/2 text-center"
           dangerouslySetInnerHTML={{ __html: text }}
         ></div>
       </div>

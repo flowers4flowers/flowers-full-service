@@ -52,23 +52,23 @@ export default async function About() {
     <div className="pb-60">
       {description && (
         <div
-          className="font-primary text-xxl leading-[1.2] rich-text rt-lg"
+          className="font-primary text-base lg:text-xxl leading-[1.2] rich-text rt-lg"
           dangerouslySetInnerHTML={{ __html: description }}
         ></div>
       )}
 
       {orderedProjectsByClient.length > 0 && (
-        <div className="projects border-t border-black mt-40 pt-14">
-          <div className="grid grid-cols-12 gap-6 mb-32">
-            <h2 className="col-span-8 col-start-5 text-lg font-primary uppercase">FULL PROJECT INDEX</h2>
+        <div className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14">
+          <div className="grid grid-cols-6 lg:grid-cols-12 gap-4 lg:gap-6 mb-20 lg:mb-32">
+            <h2 className="col-span-4 lg:col-span-8 col-start-3 lg:col-start-5 text-md lg:text-lg font-primary uppercase">FULL PROJECT INDEX</h2>
           </div>
 
           {orderedProjectsByClient.map((item, index) => { 
             return (
-              <div className="client-group grid grid-cols-12 gap-6" key={index}>
-                <h3 className="col-span-2 text-lg font-primary uppercase pr-4">{item.client}</h3>
+              <div className="client-group grid grid-cols-6 lg:grid-cols-12 gap-4 lg:gap-6" key={index}>
+                <h3 className="col-span-2 text-md lg:text-lg font-primary uppercase pr-4">{item.client}</h3>
 
-                <div className="col-span-8">
+                <div className="col-span-4 lg:col-span-8">
                   {item.projects.sort(sortByDate).map(project => {
                     return (
                       <ProjectLink project={project} key={project.slug} />

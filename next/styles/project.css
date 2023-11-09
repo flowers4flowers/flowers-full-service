@@ -3,17 +3,12 @@ Project
 */
 
 .media-section {
-  height: 100vh;
   opacity: 0;
   transition: opacity .4s;
 }
 
 .media-section.show {
   opacity: 1;
-}
-
-.media-section .media-section-item {
-  margin: 0 2vw;
 }
 
 .media-section .video-container button {
@@ -34,4 +29,27 @@ Project
 .media-section .video-container button:hover svg path {
   fill: theme('colors.cream');
   stroke: theme('colors.cream');
+}
+
+.media-section .media-section-item {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+
+/*
+Project (LG)
+*/
+
+@media (min-width: theme('screens.lg')) {
+  .media-section {
+    height: 100vh;
+  }
+
+  .media-section .media-section-item {
+    margin: 0 2vw;
+    height: auto;
+    display: block;
+  }
 }

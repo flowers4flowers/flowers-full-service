@@ -14,7 +14,7 @@ const HomeContent = ({ description, carouselImages }) => {
 
   // classnames for the carousel container
   const classes = classNames(
-    'fixed top-0 left-0 w-full h-full flex justify-center items-center',
+    'relative lg:fixed lg:top-0 lg:left-0 w-full lg:h-full flex justify-center items-center mt-5 lg:mt-0 aspect-[4/3] lg:aspect-auto',
     {
       'active': state.homeCarouselOpen
     }
@@ -81,81 +81,87 @@ const HomeContent = ({ description, carouselImages }) => {
       {description && (
         <div
           onClick={handleDescriptionClick}
-          className="font-primary text-xxl leading-[1.2]"
+          className="font-primary text-base lg:text-xxl leading-[1.2]"
           dangerouslySetInnerHTML={{ __html: description }}
         ></div>
       )}
       
       {carouselImages.length > 0 && (
-        <div
-          id="home-carousel"
-          className={classes}
-        >
-          <button
-            onClick={closeCarousel}
-            onMouseEnter={() => {
-              dispatch({
-                type: 'SET_HOME_CAROUSEL_CLOSE',
-                payload: true
-              })
-            }}
-            className="closer fill-parent"
-          ></button>
-
+        <>
           <div
-            className="carousel-container z-10 relative"
-            onMouseLeave={handleCarouselMouseLeave}
-            onMouseEnter={() => {
-              dispatch({
-                type: 'SET_HOME_CAROUSEL_CLOSE',
-                payload: false
-              })
-            }}
+            id="home-carousel"
+            className={classes}
           >
-            <Swiper
-              ref={swiperRef}
-              spaceBetween={0}
-              slidesPerView={1}
-              loop={true}
-              allowTouchMove={false}
-              className="w-full h-full"
-              onSlideChange={(swiper) => {
+            <button
+              onClick={closeCarousel}
+              onMouseEnter={() => {
                 dispatch({
-                  type: 'SET_HOME_CAROUSEL_DATA',
-                  payload: {
-                    total: carouselImages.length,
-                    currentIndex: swiper.realIndex + 1
-                  }
+                  type: 'SET_HOME_CAROUSEL_CLOSE',
+                  payload: true
+                })
+              }}
+              className="closer fill-parent hidden lg:block"
+            ></button>
+
+            <div
+              className="carousel-container z-10 absolute top-0 lg:top-auto left-0 lg:left-auto w-full lg:w-auto h-full lg:h-auto lg:relative"
+              onMouseLeave={handleCarouselMouseLeave}
+              onMouseEnter={() => {
+                dispatch({
+                  type: 'SET_HOME_CAROUSEL_CLOSE',
+                  payload: false
                 })
               }}
             >
-              {carouselImages.map((image, index) => (
-                <SwiperSlide key={index}>
-                  <DefImage
-                    src={image.url}
-                    width={image.width}
-                    height={image.height}
-                    alt={image.alt}
-                    className="media-contain"
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+              <Swiper
+                ref={swiperRef}
+                spaceBetween={0}
+                slidesPerView={1}
+                loop={true}
+                allowTouchMove={true}
+                className="w-full h-full"
+                onSlideChange={(swiper) => {
+                  dispatch({
+                    type: 'SET_HOME_CAROUSEL_DATA',
+                    payload: {
+                      total: carouselImages.length,
+                      currentIndex: swiper.realIndex + 1
+                    }
+                  })
+                }}
+              >
+                {carouselImages.map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <DefImage
+                      src={image.url}
+                      width={image.width}
+                      height={image.height}
+                      alt={image.alt}
+                      className="media-contain"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
 
-            <div className="fill-parent flex z-10">
-              <button
-                onClick={() => swiperRef.current.swiper.slidePrev()}
-                onMouseEnter={() => handleCarouselMouseEnter('left')}
-                className="prev w-1/2 h-full"
-              ></button>
-              <button
-                onClick={() => swiperRef.current.swiper.slideNext()}
-                onMouseEnter={() => handleCarouselMouseEnter('right')}
-                className="next w-1/2 h-full"
-              ></button>
+              <div className="fill-parent hidden lg:flex z-10">
+                <button
+                  onClick={() => swiperRef.current.swiper.slidePrev()}
+                  onMouseEnter={() => handleCarouselMouseEnter('left')}
+                  className="prev w-1/2 h-full"
+                ></button>
+                <button
+                  onClick={() => swiperRef.current.swiper.slideNext()}
+                  onMouseEnter={() => handleCarouselMouseEnter('right')}
+                  className="next w-1/2 h-full"
+                ></button>
+              </div>
             </div>
           </div>
-        </div>
+
+          <div className="flex lg:hidden justify-center mt-4">
+            <p className="text-md font-secondary">{state.homeCarouselData.currentIndex}/{carouselImages.length}</p>
+          </div>
+        </>
       )}
     </div>
   )

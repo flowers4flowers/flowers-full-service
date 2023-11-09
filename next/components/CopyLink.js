@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 
-const CopyLink = ({ title, url }) => {
+const CopyLink = ({ title, url, className }) => {
   const [copied, setCopied] = useState(false)
 
   // remove mailto from url
@@ -19,7 +19,7 @@ const CopyLink = ({ title, url }) => {
   return (
     <button
       onClick={copy}
-      className="lg:hover:opacity-50 transition-opacity duration-300"
+      className={`lg:hover:opacity-50 transition-opacity duration-300 ${className}`}
     >
       {copied ? 'Copied!' : title}
     </button>

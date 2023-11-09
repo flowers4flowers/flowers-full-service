@@ -7,13 +7,22 @@ import { useState } from "react"
 
 const GalleryContent = ({ mediaItems }) => {
   const [currentHovered, setCurrentHovered] = useState(null)
+  let isLargeQuery = false
+
+  if (typeof window !== 'undefined') {
+    isLargeQuery = window.matchMedia('(min-width: 992px)').matches
+  }
 
   const handleMouseEnter = (index) => {
-    setCurrentHovered(index)
+    if (isLargeQuery) {
+      setCurrentHovered(index)
+    }
   }
 
   const handleMouseLeave = () => {
-    setCurrentHovered(null)
+    if (isLargeQuery) {
+      setCurrentHovered(null)
+    }
   }
 
   if (mediaItems.length > 0) {
@@ -23,8 +32,8 @@ const GalleryContent = ({ mediaItems }) => {
           const classes = classNames(
             'gallery-item',
             {
-              'w-1/4': item.image.width <= item.image.height,
-              'w-1/3': item.image.width > item.image.height,
+              'w-1/2 lg:w-1/4': item.image.width <= item.image.height,
+              'w-1/2 lg:w-1/3': item.image.width > item.image.height,
               'inactive': currentHovered !== null && index !== currentHovered,
             }
           )
