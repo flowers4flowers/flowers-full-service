@@ -1,14 +1,26 @@
 title: Projects
 
 columns:
-  - width: 2/3
+  - width: 1/1
     sections:
       projects_drafts:
         type: pages
+        layout: cards
         label: Projects (Drafts)
         status: drafts
+        parent: site.find('Projects')
         templates: [project]
       projects_published:
         type: pages
+        layout: cards
         label: Projects (Published)
         status: listed
+        parent: site.find('Projects')
+        templates: [project]
+      projects_unlisted:
+        type: pages
+        layout: cards
+        label: Projects (Unlisted)
+        status: unlisted
+        parent: site.find('Projects')
+        templates: [project]

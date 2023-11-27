@@ -1,0 +1,29 @@
+Title: Unlisted Project
+
+----
+
+Date: 2023-11-09
+
+----
+
+Location: Utah
+
+----
+
+Description: Unlisted
+
+----
+
+Client: Athletic Greens
+
+----
+
+Featured-image: - file://JDAvG0EuLjXaIv8w
+
+----
+
+Media-content: 
+
+----
+
+Uuid: s1ijVrlcRcWRvgSy

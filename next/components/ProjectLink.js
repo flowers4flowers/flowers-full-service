@@ -57,7 +57,7 @@ const ProjectLink = ({ project }) => {
       <div className="text-content col-span-3 lg:col-span-6 mb-2 lg:mb-0">
         <p className="text-md lg:text-lg font-primary uppercase block lg:inline leading-[1.5]">{project.title}</p>
         {project.location && (
-          <span className="hidden lg:inline text-sm font-secondary ml-4">({project.location})</span>
+          <span className="hidden lg:inline text-md font-secondary ml-4">({project.location})</span>
         )}
       </div>
 

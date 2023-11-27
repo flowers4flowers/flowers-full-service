@@ -15,8 +15,8 @@ export async function getGlobalData() {
             link: true,
           }
         },
-        screensaverImage: {
-          query: 'site.screensaver_image.toFile',
+        screensaverImages: {
+          query: 'site.screensaver_images.toFiles',
           select: {
             url: true,
             width: true,

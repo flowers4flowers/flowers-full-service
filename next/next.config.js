@@ -9,6 +9,10 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'flowers.local.com:8888',
+      },
+      {
+        protocol: 'http',
+        hostname: 'flowers.local.com',
       }
     ]
   },

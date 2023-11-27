@@ -2,34 +2,13 @@ import classNames from "classnames"
 import DefImage from "./DefImage"
 import VideoPlayer from "./VideoPlayer"
 import { useInView } from "framer-motion"
-import { useRef, useEffect } from "react"
-import { useAppState } from "@/context"
+import { useRef } from "react"
 
 const MediaSection = ({ block, title }) => {
-  // const { state, dispatch } = useAppState()
-
   const el = useRef(null)
   const isInView = useInView(el, {
-    margin: "-25% 0px -25% 0px"
+    margin: "-50% 0px -50% 0px"
   })
-
-  // useEffect(() => {
-  //   if (isInView) {
-  //     const captions = block.media.map((media) => {
-  //       return media.caption
-  //     })
-
-  //     dispatch({
-  //       type: 'SET_CURRENT_PROJECT_CAPTIONS',
-  //       payload: captions
-  //     })
-  //   } else {
-  //     dispatch({
-  //       type: 'SET_CURRENT_PROJECT_CAPTIONS',
-  //       payload: []
-  //     })
-  //   }
-  // }, [isInView])
 
   const containerClasses = classNames(
     'media-section flex justify-center items-center flex-wrap lg:flex-nowrap',
@@ -75,6 +54,10 @@ const MediaSection = ({ block, title }) => {
               height={media.media.height}
               className="w-full"
             />
+
+            {media.caption && (
+              <p className="media-caption text-md lg:text-center text-base font-secondary mt-4 lg:mt-5">{media.caption}</p>
+            )}
           </div>
         )
       })}

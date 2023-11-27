@@ -29,7 +29,10 @@ Social-links:
 
 ----
 
-Screensaver-image: - file://suXoKV7QtsVMRA5R
+Screensaver-images:
+
+- file://9JkmYYZ5TO3OIN2f
+- file://49UGrUxhvoovoCm4
 
 ----
 
@@ -38,6 +41,10 @@ Site-description: Flowers Full Service is a...
 ----
 
 Og-image: - file://8dgrjWRwLHEs5Sve
+
+----
+
+Screensaver-image: - file://suXoKV7QtsVMRA5R
 
 ----
 

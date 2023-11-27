@@ -53,7 +53,7 @@ Gallery (LG)
 
 @media (min-width: theme('screens.lg')) {
   .gallery-item {
-    padding: 0 1rem 2rem 1rem;
+    padding: 0 1rem 2rem 1rem !important;
     transition: opacity .3s;
     margin: 0;
   }

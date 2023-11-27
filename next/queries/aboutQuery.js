@@ -58,7 +58,7 @@ export async function getAboutData() {
       query: `page('Projects')`,
       select: {
         projects: {
-          query: 'page.children',
+          query: 'page.children.listed',
           select: {
             title: true,
             slug: true,

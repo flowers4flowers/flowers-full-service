@@ -18,6 +18,10 @@ Main Nav
   transition: opacity .3s;
 }
 
+#home-link .caption svg {
+  width: 1.6rem;
+}
+
 #home-link.show-captions .caption {
   opacity: 1;
   pointer-events: auto;
@@ -28,7 +32,7 @@ Main Nav
 }
 
 #home-link a {
-  transition: width .3s, opacity .3s;
+  transition: opacity .3s;
 }
 
 #secondary-home-link a {
@@ -64,19 +68,28 @@ Main Nav
   align-items: center;
 }
 
+#main-nav .main-nav-links a span {
+  transition: opacity .3s;
+}
+
 #main-nav .main-nav-links a::after {
   content: '';
-  width: 1.4rem;
-  height: 1.4rem;
+  width: .7rem;
+  height: .7rem;
   background-color: black;
   border-radius: 50%;
   margin-left: 2rem;
   display: none;
   pointer-events: none;
+  transform: translateY(-2px);
 }
 
 #main-nav .main-nav-links a.active::after {
   display: block;
+}
+
+#main-nav .up svg {
+  width: 1.4rem;
 }
 
 #home-carousel-counter span::before {
@@ -116,12 +129,12 @@ Main Nav
 #mobile-menu {
   transition: transform .3s;
   pointer-events: none;
-  transform: translateX(-100%);
+  transform: translateY(100%);
   z-index: 3500;
 }
 
 #mobile-menu.active {
-  transform: translateX(0%);
+  transform: translateY(0%);
   pointer-events: auto;
 }
 
@@ -153,7 +166,7 @@ Main Nav (LG)
     padding-top: 25.4vw;
   }
 
-  #main-nav .main-nav-links a:hover::after {
-    display: block;
+  #main-nav .main-nav-links a:hover span {
+    opacity: .5;
   }
 }

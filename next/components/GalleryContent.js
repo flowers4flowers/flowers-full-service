@@ -3,26 +3,12 @@
 import DefImage from "@/components/DefImage"
 import classNames from "classnames"
 import GalleryImage from "./GalleryImage"
-import { useState } from "react"
 
 const GalleryContent = ({ mediaItems }) => {
-  const [currentHovered, setCurrentHovered] = useState(null)
   let isLargeQuery = false
 
   if (typeof window !== 'undefined') {
     isLargeQuery = window.matchMedia('(min-width: 992px)').matches
-  }
-
-  const handleMouseEnter = (index) => {
-    if (isLargeQuery) {
-      setCurrentHovered(index)
-    }
-  }
-
-  const handleMouseLeave = () => {
-    if (isLargeQuery) {
-      setCurrentHovered(null)
-    }
   }
 
   if (mediaItems.length > 0) {
@@ -33,8 +19,7 @@ const GalleryContent = ({ mediaItems }) => {
             'gallery-item',
             {
               'w-1/2 lg:w-1/4': item.image.width <= item.image.height,
-              'w-1/2 lg:w-1/3': item.image.width > item.image.height,
-              'inactive': currentHovered !== null && index !== currentHovered,
+              'w-1/2 lg:w-1/3': item.image.width > item.image.height
             }
           )
             
@@ -45,8 +30,6 @@ const GalleryContent = ({ mediaItems }) => {
                 item={item}
                 classes={classes}
                 index={index}
-                handleMouseEnter={handleMouseEnter}
-                handleMouseLeave={handleMouseLeave}
               />
             )
           }
@@ -55,8 +38,6 @@ const GalleryContent = ({ mediaItems }) => {
             <div
               key={index}
               className={classes}
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
             >
               <div className="bg-white">
                 <DefImage

@@ -16,7 +16,7 @@ COMPONENT LOGIC
 export default async function RootLayout({ children }) {
   const data = await getGlobalData()
 
-  const { socialLinks, screensaverImage } = data.result
+  const { socialLinks, screensaverImages } = data.result
 
   return (
     <html lang="en">
@@ -36,9 +36,9 @@ export default async function RootLayout({ children }) {
             socialLinks={socialLinks}
           />
 
-          {screensaverImage && (
+          {screensaverImages.length > 0 && (
             <Screensaver
-              image={screensaverImage}
+              images={screensaverImages}
             />
           )}
         </body>

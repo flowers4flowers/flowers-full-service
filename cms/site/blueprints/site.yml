@@ -28,6 +28,13 @@ tabs:
         status: listed
         parent: site.find('Projects')
         templates: [project]
+      projects_unlisted:
+        type: pages
+        layout: cards
+        label: Projects (Unlisted)
+        status: unlisted
+        parent: site.find('Projects')
+        templates: [project]
   Clients:
     label: Clients
     sections:
@@ -46,18 +53,6 @@ tabs:
               name:
                 label: Name
                 type: text
-      # clients_drafts:
-      #   type: pages
-      #   label: Clients (Drafts)
-      #   status: drafts
-      #   parent: site.find('Clients')
-      #   templates: [client]
-      # clients_published:
-      #   type: pages
-      #   label: Clients (Published)
-      #   status: listed
-      #   parent: site.find('Clients')
-      #   templates: [client]
   GlobalData:
     label: Global Data
     columns:
@@ -66,19 +61,6 @@ tabs:
           nav_links:
             type: fields
             fields:
-              # nav_links:
-              #   type: structure
-              #   label: Nav Links
-              #   help: These links will appear on the left side of the nav.
-              #   fields:
-              #     title:
-              #       label: Title
-              #       type: text
-              #       required: true
-              #     link:
-              #       label: Link
-              #       type: text
-              #       required: true
               social_links:
                 type: structure
                 label: Social Links
@@ -97,10 +79,10 @@ tabs:
           social:
             type: fields
             fields:
-              screensaver_image:
+              screensaver_images:
                 type: files
-                label: Screensaver Image
-                multiple: false
+                label: Screensaver Images
+                multiple: true
                 query: page.images
   Metadata:
     label: Metadata

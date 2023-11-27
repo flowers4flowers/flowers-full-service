@@ -6,9 +6,67 @@ Home
   width: 100%;
 }
 
+/* #home-carousel .carousel-container .swiper {
+  padding: 10rem 0;
+} */
+
 #home-carousel .carousel-container .swiper-slide {
   backface-visibility: hidden;
   overflow: hidden;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  /* padding: 10rem;
+  position: relative; */
+  display: flex;
+}
+
+#home-carousel .swiper-slide {
+  display: flex;
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+#home-carousel .carousel-container .swiper-slide img {
+  /* max-width: 100%;
+  max-height: 100%; */
+  /* max-height: 100%;
+  width: auto; */
+  height: 100%;
+  width: auto;
+}
+
+#home-carousel .counter p:before {
+  content: '';
+  width: .8rem;
+  height: .8rem;
+  background-color: black;
+  border-radius: 50%;
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  left: 0px;
+  transform: translate(-20px, -6px);
+  bottom: 0px;
+}
+
+#home-carousel .counter p:after {
+  content: '';
+  width: .8rem;
+  height: .8rem;
+  background-color: black;
+  border-radius: 50%;
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  right: 0px;
+  transform: translate(20px, -6px);
+  bottom: 0px;
+}
+
+#home-carousel .counter.left p::before,
+#home-carousel .counter.right p::after {
+  display: block;
 }
 
 
@@ -29,10 +87,10 @@ Home (LG)
     opacity: 1;
   }
 
-  #home-carousel .carousel-container {
+  /* #home-carousel .carousel-container {
     width: 64%;
     height: 70%;
     max-width: 1000px;
     max-height: 800px;
-  }
+  } */
 }

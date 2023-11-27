@@ -5,9 +5,8 @@ import { useAppState } from "@/context"
 import DefImage from "@/components/DefImage"
 import { useRef, useState } from "react"
 import classNames from "classnames"
-import { PlayButton } from "./Icons"
 
-const GalleryImage = ({ item, classes, index, handleMouseEnter, handleMouseLeave }) => {
+const GalleryImage = ({ item, classes, index }) => {
   const { state, dispatch } = useAppState()
   const [showVideo, setShowVideo] = useState(false)
   const [hideImage, setHideImage] = useState(false)
@@ -47,8 +46,6 @@ const GalleryImage = ({ item, classes, index, handleMouseEnter, handleMouseLeave
       <Link
         key={index}
         className={classes}
-        onMouseEnter={() => handleMouseEnter(index)}
-        onMouseLeave={handleMouseLeave}
         href={`/projects/${item.project.slug}${item.slug ? `#${item.slug}` : ''}`}
         onClick={() => {
           dispatch({
@@ -83,11 +80,9 @@ const GalleryImage = ({ item, classes, index, handleMouseEnter, handleMouseLeave
         key={index}
         className={classes}
         onMouseEnter={() => {
-          handleMouseEnter(index)
           handleVideoEnter()
         }}
         onMouseLeave={() => {
-          handleMouseLeave()
           handleVideoLeave()
         }}
         href={`/projects/${item.project.slug}${item.slug ? `#${item.slug}` : ''}`}
@@ -99,8 +94,6 @@ const GalleryImage = ({ item, classes, index, handleMouseEnter, handleMouseLeave
         }}
       >
         <div className={videoClasses}>
-          <PlayButton />
-          
           {item.videoPreview && showVideo && (
             <div className="fill-parent">
               <video

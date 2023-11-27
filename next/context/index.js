@@ -15,6 +15,7 @@ const initialState = {
   currentProjectTitle: null,
   currentProjectCaptions: [],
   mobileMenuOpen: false,
+  showViewImages: false
 }
 
 function reducer(state, action) {
@@ -63,6 +64,11 @@ function reducer(state, action) {
       return {
         ...state,
         mobileMenuOpen: action.payload
+      }
+    case 'SET_SHOW_VIEW_IMAGES':
+      return {
+        ...state,
+        showViewImages: action.payload
       }
     default:
       return state

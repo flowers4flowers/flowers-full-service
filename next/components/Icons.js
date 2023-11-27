@@ -60,3 +60,12 @@ export const PlayButton = () => {
     </svg>
   )
 }
+
+export const UpArrow = () => {
+  return (
+    <svg viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8.90039 19L8.90039 19.5L9.90039 19.5L9.90039 19L8.90039 19ZM9.90039 19L9.90039 1L8.90039 1L8.90039 19L9.90039 19Z" fill="black" />
+      <path d="M1 9.4L9.4 1L17.8 9.4" stroke="black" />
+    </svg>
+  )
+}

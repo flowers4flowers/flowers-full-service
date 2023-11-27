@@ -4,9 +4,14 @@ import DefImage from "./DefImage"
 import classNames from "classnames"
 import { useEffect, useState } from "react"
 
-const Screensaver = ({ image }) => {
+const Screensaver = ({ images }) => {
   let inactiveTimer = null
+  let stampInterval = null
   const [active, setActive] = useState(false)
+
+  console.log(images)
+
+  const [imageItems, setImageItems] = useState([])
 
   // classes for screensaver
   const classes = classNames(
@@ -15,6 +20,23 @@ const Screensaver = ({ image }) => {
       'active': active
     }
   )
+
+  const getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+  }
+
+  const addImage = () => {
+    const randomImage = images[Math.floor(Math.random() * images.length)]
+
+    const randomImageObj = {
+      image: randomImage,
+      top: getRandomInt(-3, 103),
+      left: getRandomInt(-3, 103),
+      rotation: getRandomInt(0, 360)
+    }
+
+    setImageItems(prevState => [...prevState, randomImageObj])
+  }
   
   // function to reset screensaver timer
   const reset = () => {
@@ -23,11 +45,18 @@ const Screensaver = ({ image }) => {
 
     // clear timer
     clearTimeout(inactiveTimer)
+    clearInterval(stampInterval)
 
     // set new timer
     inactiveTimer = setTimeout(() => {
+      setImageItems([])
       setActive(true)
-    }, 300000) // 5 minutes
+      addImage()
+
+      stampInterval = setInterval(() => {
+        addImage()
+      }, 3000) // 20 seconds
+    }, 300000) // 300000 = 5 minutes
   }
 
   // on load, reset, and then add event listeners if document exists
@@ -55,13 +84,27 @@ const Screensaver = ({ image }) => {
       className={classes}
       onClick={() => setActive(false)}
     >
-      <DefImage 
-        src={image.url} 
-        width={image.width} 
-        height={image.height}
-        alt={image.alt}
-        className="media-cover"
-      />
+      {imageItems.map((item, index) => {
+        return (
+          <div
+            style={{
+              top: `${item.top}%`,
+              left: `${item.left}%`,
+              transform: `rotate(${item.rotation}deg)`
+            }}
+            className="absolute w-[100px] lg:w-[200px]"
+          >
+            <DefImage 
+              key={index}
+              src={item.image.url} 
+              width={item.image.width} 
+              height={item.image.height}
+              alt={item.image.alt}
+              className="media-cover"
+            />
+          </div>
+        )
+      })}
     </div>
   )
 }
