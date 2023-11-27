@@ -9,8 +9,6 @@ const Screensaver = ({ images }) => {
   let stampInterval = null
   const [active, setActive] = useState(false)
 
-  console.log(images)
-
   const [imageItems, setImageItems] = useState([])
 
   // classes for screensaver

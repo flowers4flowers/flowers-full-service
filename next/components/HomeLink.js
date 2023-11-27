@@ -115,8 +115,6 @@ const HomeLink = () => {
         const diff = maxTitleSizeInt - targetSizeInt
         const newTitleSize = maxTitleSizeInt - (diff * progress)
 
-        console.log(progress, newTitleSize)
-
         setTitleSize(newTitleSize)
       }
     }
