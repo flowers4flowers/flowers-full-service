@@ -87,6 +87,7 @@ const Screensaver = ({ images }) => {
       {imageItems.map((item, index) => {
         return (
           <div
+            key={index}
             style={{
               top: `${item.top}%`,
               left: `${item.left}%`,
