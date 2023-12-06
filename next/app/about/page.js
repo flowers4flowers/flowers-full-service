@@ -42,8 +42,8 @@ export default async function About() {
   }, [])
 
   const sortByDate = (a, b) => {
-    const aDate = new Date(a.date)
-    const bDate = new Date(b.date)
+    const aDate = new Date(a.endDate ? a.endDate : a.startDate)
+    const bDate = new Date(b.endDate ? b.endDate : b.startDate)
 
     return bDate - aDate
   }

@@ -52,7 +52,7 @@ const ProjectLink = ({ project }) => {
       onMouseMove={handleMouseMove}
       className={classes}
     >
-      <p className="text-content col-span-1 lg:col-span-2 text-md lg:text-lg font-primary uppercase">{project.date}</p>
+      <p className="text-content col-span-1 lg:col-span-2 text-md lg:text-lg font-primary uppercase">{`${project.startDate}${project.endDate && project.endDate !== project.startDate ? `- ${project.endDate}` : ''}`}</p>
 
       <div className="text-content col-span-3 lg:col-span-6 mb-2 lg:mb-0">
         <p className="text-md lg:text-lg font-primary uppercase block lg:inline leading-[1.5]">{project.title}</p>

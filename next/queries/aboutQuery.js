@@ -63,7 +63,8 @@ export async function getAboutData() {
             title: true,
             slug: true,
             client: true,
-            date: `page.date.toDate('Y')`,
+            startDate: `page.start_date.toDate('Y')`,
+            endDate: `page.end_date.toDate('Y')`,
             location: true,
             description: {
               query: 'page.description.kirbyText'

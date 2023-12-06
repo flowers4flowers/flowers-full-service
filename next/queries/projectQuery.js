@@ -13,7 +13,8 @@ export async function getProjectData(slug) {
         description: 'page.description.kirbyText',
         location: true,
         client: true,
-        date: `page.date.toDate('Y')`,
+        startDate: `page.start_date.toDate('Y')`,
+        endDate: `page.end_date.toDate('Y')`,
         mediaContent: {
           query: 'page.media_content.toBlocks',
           select: {
