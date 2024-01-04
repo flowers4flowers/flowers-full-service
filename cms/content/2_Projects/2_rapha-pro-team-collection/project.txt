@@ -2,7 +2,11 @@ Title: Rapha Pro Team Collection
 
 ----
 
-Date: 2022-11-11
+Start-date: 2022-11-11
+
+----
+
+End-date: 
 
 ----
 
@@ -28,7 +32,7 @@ Client: Rapha
 
 ----
 
-Featured-image: - file://XWDe979VYpr2PfK2
+Featured-image: - file://Z96M4BiRiCtHN7Fr
 
 ----
 

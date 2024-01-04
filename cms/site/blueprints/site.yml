@@ -21,6 +21,7 @@ tabs:
         status: drafts
         parent: site.find('Projects')
         templates: [project]
+        image: page.featured_image.toFile
       projects_published:
         type: pages
         layout: cards
@@ -28,6 +29,7 @@ tabs:
         status: listed
         parent: site.find('Projects')
         templates: [project]
+        image: page.featured_image.toFile
       projects_unlisted:
         type: pages
         layout: cards
@@ -35,6 +37,7 @@ tabs:
         status: unlisted
         parent: site.find('Projects')
         templates: [project]
+        image: page.featured_image.toFile
   Clients:
     label: Clients
     sections:

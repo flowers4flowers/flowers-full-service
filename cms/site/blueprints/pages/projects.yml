@@ -10,6 +10,7 @@ columns:
         status: drafts
         parent: site.find('Projects')
         templates: [project]
+        image: page.featured_image.toFile
       projects_published:
         type: pages
         layout: cards
@@ -17,6 +18,7 @@ columns:
         status: listed
         parent: site.find('Projects')
         templates: [project]
+        image: page.featured_image.toFile
       projects_unlisted:
         type: pages
         layout: cards
@@ -24,3 +26,4 @@ columns:
         status: unlisted
         parent: site.find('Projects')
         templates: [project]
+        image: page.featured_image.toFile

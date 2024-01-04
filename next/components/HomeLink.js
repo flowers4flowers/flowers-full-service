@@ -101,7 +101,7 @@ const HomeLink = () => {
 
   useMotionValueEvent(scrollY, 'change', (latestScrollY) => {
     // only do animation if not on gallery page
-    if (!pathname.includes('/gallery') && !pathname.includes('/about')) {
+    if (!pathname.includes('/gallery')) {
       if (latestScrollY >= scrollTriggerVal) {
         setTitleSize(targetSize)
         setShowCaptions(true)
@@ -153,72 +153,56 @@ const HomeLink = () => {
     }
   )
 
-  if (pathname !== '/about') {
-    return (
-      <nav 
-        id="home-link" 
-        className={classes}
+  return (
+    <nav 
+      id="home-link" 
+      className={classes}
+    >
+      <div
+        ref={container}
+        className="flex justify-center"
       >
-        <div
-          ref={container}
-          className="flex justify-center"
-        >
-          {pathname.includes('/projects') && (
-            <div
-              className="caption hidden lg:block absolute left-14 text-lg font-secondary"
-            >
-              {state.currentProjectTitle && (
-                <p>{state.currentProjectTitle}</p>
-              )}
-            </div>
-          )}
+        {pathname.includes('/projects') && (
+          <div
+            className="caption hidden lg:block absolute left-14 text-lg font-secondary"
+          >
+            {state.currentProjectTitle && (
+              <p>{state.currentProjectTitle}</p>
+            )}
+          </div>
+        )}
 
-          {titleSize && (
-            <Link
-              href="/"
-              className="flex justify-center"
-              onMouseEnter={handleHomeLinkMouseEnter}
-              onMouseLeave={handleHomeLinkMouseLeave}
-              onClick={handleHomeLinkClick}
-              style={{
-                width: `${titleSize}px`
-              }}
-            >
-              <WordMark />
-            </Link>
-          )}
+        {titleSize && (
+          <Link
+            href="/"
+            className="flex justify-center"
+            onMouseEnter={handleHomeLinkMouseEnter}
+            onMouseLeave={handleHomeLinkMouseLeave}
+            onClick={handleHomeLinkClick}
+            style={{
+              width: `${titleSize}px`
+            }}
+          >
+            <WordMark />
+          </Link>
+        )}
 
-          {pathname.includes('/projects') && (
-            <button
-              className="caption lg:hidden absolute top-[16px] right-5 lg:right-14 text-lg font-secondary lg:hover:opacity-50 transition-opacity duration-300"
-              onClick={() => {
-                window.scrollTo({
-                  top: 0,
-                  behavior: 'smooth'
-                })
-              }}
-            >
-              <UpArrow />
-            </button>
-          )}
-        </div>
-      </nav>
-    )
-  } else {
-    return (
-      <nav
-        id="secondary-home-link"
-        className="fixed top-0 left-0 w-full flex justify-center px-5 lg:px-14 py-5 lg:py-10"
-      >
-        <Link
-          href="/"
-          className="flex justify-center lg:hover:opacity-70 w-full"
-        >
-          <SecondaryMark />
-        </Link>
-      </nav>
-    )
-  }
+        {pathname.includes('/projects') && (
+          <button
+            className="caption lg:hidden absolute top-[16px] right-5 lg:right-14 text-lg font-secondary lg:hover:opacity-50 transition-opacity duration-300"
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              })
+            }}
+          >
+            <UpArrow />
+          </button>
+        )}
+      </div>
+    </nav>
+  )
 }
 
 export default HomeLink

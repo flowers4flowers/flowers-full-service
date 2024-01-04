@@ -1,1 +1,1 @@
-<h1><?= $page->title() ?></h1>
+<h1>Flowers Full Service API</h1>

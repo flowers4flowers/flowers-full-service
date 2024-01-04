@@ -16,21 +16,21 @@ Given a POST request to: `/api/query`
 
 ```json
 {
-  "query": "page('photography').children",
-  "select": {
-    "url": true,
-    "title": true,
-    "text": "page.text.markdown",
-    "images": {
-      "query": "page.images",
-      "select": {
-        "url": true
-      }
+    "query": "page('photography').children",
+    "select": {
+        "url": true,
+        "title": true,
+        "text": "page.text.markdown",
+        "images": {
+            "query": "page.images",
+            "select": {
+                "url": true
+            }
+        }
+    },
+    "pagination": {
+        "limit": 10
     }
-  },
-  "pagination": {
-    "limit": 10
-  }
 }
 ```
 
@@ -39,48 +39,48 @@ Given a POST request to: `/api/query`
 
 ```json
 {
-  "code": 200,
-  "result": {
-    "data": [
-      {
-        "url": "https://example.com/photography/trees",
-        "title": "Trees",
-        "text": "Lorem <strong>ipsum</strong> …",
-        "images": [
-          {
-            "url": "https://example.com/media/pages/photography/trees/1353177920-1579007734/cheesy-autumn.jpg"
-          },
-          {
-            "url": "https://example.com/media/pages/photography/trees/1940579124-1579007734/last-tree-standing.jpg"
-          },
-          {
-            "url": "https://example.com/media/pages/photography/trees/3506294441-1579007734/monster-trees-in-the-fog.jpg"
-          }
-        ]
-      },
-      {
-        "url": "https://example.com/photography/sky",
-        "title": "Sky",
-        "text": "<h1>Dolor sit amet</h1> …",
-        "images": [
-          {
-            "url": "https://example.com/media/pages/photography/sky/183363500-1579007734/blood-moon.jpg"
-          },
-          {
-            "url": "https://example.com/media/pages/photography/sky/3904851178-1579007734/coconut-milkyway.jpg"
-          }
-        ]
-      }
-    ],
-    "pagination": {
-      "page": 1,
-      "pages": 1,
-      "offset": 0,
-      "limit": 10,
-      "total": 2
-    }
-  },
-  "status": "ok"
+    "code": 200,
+    "result": {
+        "data": [
+            {
+                "url": "https://example.com/photography/trees",
+                "title": "Trees",
+                "text": "Lorem <strong>ipsum</strong> …",
+                "images": [
+                    {
+                        "url": "https://example.com/media/pages/photography/trees/1353177920-1579007734/cheesy-autumn.jpg"
+                    },
+                    {
+                        "url": "https://example.com/media/pages/photography/trees/1940579124-1579007734/last-tree-standing.jpg"
+                    },
+                    {
+                        "url": "https://example.com/media/pages/photography/trees/3506294441-1579007734/monster-trees-in-the-fog.jpg"
+                    }
+                ]
+            },
+            {
+                "url": "https://example.com/photography/sky",
+                "title": "Sky",
+                "text": "<h1>Dolor sit amet</h1> …",
+                "images": [
+                    {
+                        "url": "https://example.com/media/pages/photography/sky/183363500-1579007734/blood-moon.jpg"
+                    },
+                    {
+                        "url": "https://example.com/media/pages/photography/sky/3904851178-1579007734/coconut-milkyway.jpg"
+                    }
+                ]
+            }
+        ],
+        "pagination": {
+            "page": 1,
+            "pages": 1,
+            "offset": 0,
+            "limit": 10,
+            "total": 2
+        }
+    },
+    "status": "ok"
 }
 ```
 
@@ -126,21 +126,21 @@ const username = "apiuser";
 const password = "strong-secret-api-password";
 
 const headers = {
-  Authorization: Buffer.from(`${username}:${password}`).toString("base64"),
+    Authorization: Buffer.from(`${username}:${password}`).toString("base64"),
 };
 
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "page('notes').children",
-    select: {
-      title: true,
-      text: "page.text.kirbytext",
-      slug: true,
-      date: "page.date.toDate('d.m.Y')",
+    method: "post",
+    body: {
+        query: "page('notes').children",
+        select: {
+            title: true,
+            text: "page.text.kirbytext",
+            slug: true,
+            date: "page.date.toDate('d.m.Y')",
+        },
     },
-  },
-  headers,
+    headers,
 });
 
 console.log(response);
@@ -158,11 +158,11 @@ When you don't pass the select option, Kirby will try to come up with the most u
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "site.title",
-  },
-  headers,
+    method: "post",
+    body: {
+        query: "site.title",
+    },
+    headers,
 });
 
 console.log(response);
@@ -185,11 +185,11 @@ console.log(response);
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "site.children",
-  },
-  headers,
+    method: "post",
+    body: {
+        query: "site.children",
+    },
+    headers,
 });
 
 console.log(response);
@@ -220,11 +220,11 @@ Queries can even execute field methods.
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "site.title.upper",
-  },
-  headers,
+    method: "post",
+    body: {
+        query: "site.title.upper",
+    },
+    headers,
 });
 
 console.log(response);
@@ -253,12 +253,12 @@ To include a property or field in your results, list them as an array. Check out
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "site.children",
-    select: ["title", "url"],
-  },
-  headers,
+    method: "post",
+    body: {
+        query: "site.children",
+        select: ["title", "url"],
+    },
+    headers,
 });
 
 console.log(response);
@@ -311,15 +311,15 @@ You can also use the object notation and pass true for each key/property you wan
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "site.children",
-    select: {
-      title: true,
-      url: true,
+    method: "post",
+    body: {
+        query: "site.children",
+        select: {
+            title: true,
+            url: true,
+        },
     },
-  },
-  headers,
+    headers,
 });
 
 console.log(response);
@@ -368,14 +368,14 @@ Instead of passing true, you can also pass a string query to specify what you wa
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "site.children",
-    select: {
-      title: "page.title",
+    method: "post",
+    body: {
+        query: "site.children",
+        select: {
+            title: "page.title",
+        },
     },
-  },
-  headers,
+    headers,
 });
 
 console.log(response);
@@ -409,14 +409,14 @@ console.log(response);
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "site.children",
-    select: {
-      title: "page.title.upper",
+    method: "post",
+    body: {
+        query: "site.children",
+        select: {
+            title: "page.title.upper",
+        },
     },
-  },
-  headers,
+    headers,
 });
 
 console.log(response);
@@ -452,19 +452,19 @@ String queries are a perfect way to create aliases or return variations of the s
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "page('notes').children",
-    select: {
-      title: "page.title",
-      upperCaseTitle: "page.title.upper",
-      lowerCaseTitle: "page.title.lower",
-      guid: "page.id",
-      date: "page.date.toDate('d.m.Y')",
-      timestamp: "page.date.toTimestamp",
+    method: "post",
+    body: {
+        query: "page('notes').children",
+        select: {
+            title: "page.title",
+            upperCaseTitle: "page.title.upper",
+            lowerCaseTitle: "page.title.lower",
+            guid: "page.id",
+            date: "page.date.toDate('d.m.Y')",
+            timestamp: "page.date.toTimestamp",
+        },
     },
-  },
-  headers,
+    headers,
 });
 ```
 
@@ -502,15 +502,15 @@ With such string queries you can of course also include nested data
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "page('photography').children",
-    select: {
-      title: "page.title",
-      images: "page.images",
+    method: "post",
+    body: {
+        query: "page('photography').children",
+        select: {
+            title: "page.title",
+            images: "page.images",
+        },
     },
-  },
-  headers,
+    headers,
 });
 ```
 
@@ -550,20 +550,20 @@ You can also pass an object with a `query` and a `select` option
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "page('photography').children",
-    select: {
-      title: "page.title",
-      images: {
-        query: "page.images",
+    method: "post",
+    body: {
+        query: "page('photography').children",
         select: {
-          filename: true,
+            title: "page.title",
+            images: {
+                query: "page.images",
+                select: {
+                    filename: true,
+                },
+            },
         },
-      },
     },
-  },
-  headers,
+    headers,
 });
 ```
 
@@ -617,17 +617,17 @@ You can specify a custom limit with the limit option. The default limit for coll
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "page('notes').children",
-    pagination: {
-      limit: 5,
+    method: "post",
+    body: {
+        query: "page('notes').children",
+        pagination: {
+            limit: 5,
+        },
+        select: {
+            title: "page.title",
+        },
     },
-    select: {
-      title: "page.title",
-    },
-  },
-  headers,
+    headers,
 });
 ```
 
@@ -675,18 +675,18 @@ You can jump to any page in the resultset with the `page` option.
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "page('notes').children",
-    pagination: {
-      page: 2,
-      limit: 5,
+    method: "post",
+    body: {
+        query: "page('notes').children",
+        pagination: {
+            page: 2,
+            limit: 5,
+        },
+        select: {
+            title: "page.title",
+        },
     },
-    select: {
-      title: "page.title",
-    },
-  },
-  headers,
+    headers,
 });
 ```
 
@@ -725,24 +725,24 @@ Pagination settings also work for subqueries.
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "page('photography').children",
-    select: {
-      title: "page.title",
-      images: {
-        query: "page.images",
-        pagination: {
-          page: 2,
-          limit: 5,
-        },
+    method: "post",
+    body: {
+        query: "page('photography').children",
         select: {
-          filename: true,
+            title: "page.title",
+            images: {
+                query: "page.images",
+                pagination: {
+                    page: 2,
+                    limit: 5,
+                },
+                select: {
+                    filename: true,
+                },
+            },
         },
-      },
     },
-  },
-  headers,
+    headers,
 });
 ```
 
@@ -752,41 +752,41 @@ With the power of selects and subqueries you can basically query the entire site
 
 ```js
 const response = await $fetch(api, {
-  method: "post",
-  body: {
-    query: "site",
-    select: {
-      title: "site.title",
-      url: "site.url",
-      notes: {
-        query: "page('notes').children.listed",
+    method: "post",
+    body: {
+        query: "site",
         select: {
-          title: true,
-          url: true,
-          date: "page.date.toDate('d.m.Y')",
-          text: "page.text.kirbytext",
-        },
-      },
-      photography: {
-        query: "page('photography').children.listed",
-        select: {
-          title: true,
-          images: {
-            query: "page.images",
-            select: {
-              url: true,
-              alt: true,
-              caption: "file.caption.kirbytext",
+            title: "site.title",
+            url: "site.url",
+            notes: {
+                query: "page('notes').children.listed",
+                select: {
+                    title: true,
+                    url: true,
+                    date: "page.date.toDate('d.m.Y')",
+                    text: "page.text.kirbytext",
+                },
             },
-          },
+            photography: {
+                query: "page('photography').children.listed",
+                select: {
+                    title: true,
+                    images: {
+                        query: "page.images",
+                        select: {
+                            url: true,
+                            alt: true,
+                            caption: "file.caption.kirbytext",
+                        },
+                    },
+                },
+            },
+            about: {
+                text: "page.text.kirbytext",
+            },
         },
-      },
-      about: {
-        text: "page.text.kirbytext",
-      },
     },
-  },
-  headers,
+    headers,
 });
 ```
 
@@ -952,7 +952,7 @@ KQL only offers access to data in your site. It does not support any mutations. 
 
 ## Plugins
 
-- [nuxt-kql](https://nuxt-kql.jhnn.dev): A Nuxt 3 module for KQL.
+-   [nuxt-kql](https://nuxt-kql.jhnn.dev): A Nuxt 3 module for KQL.
 
 ## License
 

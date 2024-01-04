@@ -1,7 +1,7 @@
 import { getAboutData } from "@/queries/aboutQuery"
 import ProjectLink from "@/components/ProjectLink"
 
-export default async function About() {
+export default async function Work() {
   const data = await getAboutData()
 
   const { description } = data.aboutData.result || {}
@@ -49,7 +49,7 @@ export default async function About() {
   }
 
   return (
-    <div className="pb-60">
+    <div className="pb-[30rem]">
       {description && (
         <div
           className="font-primary text-base lg:text-xxl leading-[1.2] rich-text rt-lg"

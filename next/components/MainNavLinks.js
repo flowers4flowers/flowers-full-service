@@ -65,10 +65,10 @@ const MainNavLinks = () => {
 
         <li className="col-span-2">
           <Link
-            href="/about"
-            className={checkLinkActive('/about') ? 'active': ''}
+            href="/work"
+            className={checkLinkActive('/work') ? 'active': ''}
           >
-            <span>About</span>
+            <span>Work</span>
           </Link>
         </li>
 

@@ -10,10 +10,15 @@ columns:
             type: text
             label: Title
             required: true
-          date:
+          start_date:
             type: date
-            label: Date
+            label: Start Date
             required: true
+            info: The start date of the project.
+          end_date:
+            type: date
+            label: End Date
+            info: The end date of the project. If present, a date range will be displayed on the project/about page.
           location:
             type: text
             label: Location
