@@ -13,7 +13,11 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: 'flowers.local.com',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'admin.flowersfullservice.art',
+      },
     ]
   },
 }
