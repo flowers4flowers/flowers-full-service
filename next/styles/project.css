@@ -4,7 +4,7 @@ Project
 
 .media-section {
   opacity: 0;
-  transition: opacity .4s;
+  transition: opacity 0.4s;
 }
 
 .media-section.show {
@@ -12,7 +12,7 @@ Project
 }
 
 .media-section .video-container button {
-  transition: opacity .3s;
+  transition: opacity 0.3s;
   pointer-events: auto;
 }
 
@@ -31,8 +31,8 @@ Project
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
-
 
 /*
 Project (LG)
@@ -56,7 +56,7 @@ Project (LG)
 
   .media-section .media-section-item .media-caption {
     opacity: 0;
-    transition: opacity .3s;
+    transition: opacity 0.3s;
   }
 
   .media-section .media-section-item:hover .media-caption {

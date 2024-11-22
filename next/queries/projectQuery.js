@@ -24,6 +24,14 @@ export async function getProjectData(slug) {
               select: {
                 vimeoUrl: 'block.vimeo_url',
                 caption: 'block.caption',
+                videoMp4: {
+                  query: 'block.video_mp4.toFile',
+                  select: {
+                    url: true,
+                    mime: true,
+                    type: true,
+                  },
+                },
                 media: {
                   query: 'block.media.toFile',
                   select: {
@@ -32,21 +40,21 @@ export async function getProjectData(slug) {
                     height: true,
                     alt: true,
                     mime: true,
-                    type: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    })
+                    type: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
   })
- 
+
   // Handle errors
   if (!res.ok) {
     throw new Error('Failed to fetch data')
   }
- 
+
   return res.json()
 }

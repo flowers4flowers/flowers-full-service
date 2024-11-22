@@ -34,7 +34,6 @@ Tailwind/Variables
   }
 }
 
-
 /*
 Global
 */
@@ -59,20 +58,18 @@ main {
   padding-bottom: var(--nav-height);
 }
 
-
 /*
 Def Image
 */
 
 .def-image {
   opacity: 0;
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
 
 .def-image.loaded {
   opacity: 1;
 }
-
 
 /*
 Screensaver
@@ -86,18 +83,17 @@ Screensaver
 }
 
 #screensaver.active {
-  pointer-events: auto; 
+  pointer-events: auto;
   opacity: 1;
   transition: opacity 2.5s;
 }
-
 
 /*
 Rich Text
 */
 
 .rich-text a {
-  transition: opacity .3s;
+  transition: opacity 0.3s;
 }
 
 .rich-text * + p {
@@ -115,18 +111,17 @@ Rich Text
   margin-top: 2rem;
 }
 
-
 /*
 Rich Text (LG)
 */
 
 @media (min-width: theme('screens.lg')) {
-  .rich-text.rt-lg *+p {
+  .rich-text.rt-lg * + p {
     margin-top: 4rem;
   }
 
   .rich-text a:hover {
-    opacity: .5;
+    opacity: 0.5;
   }
 
   .rich-text.rt-underline a:hover {
