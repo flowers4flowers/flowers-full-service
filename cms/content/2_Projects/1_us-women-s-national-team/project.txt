@@ -26,7 +26,7 @@ Featured-image: - file://6vNdDShbz1VIfavr
 
 ----
 
-Media-content: [{"content":{"slug":"section-1","media":"[{\"content\":{\"media\":[\"file://6vNdDShbz1VIfavr\"],\"vimeo_url\":\"\",\"caption\":\"\"},\"id\":\"f8e7ce85-16c5-4649-b08e-563aa3d4e07f\",\"isHidden\":false,\"type\":\"imageSectionMedia\"}]"},"id":"0acaea10-18fc-4abf-be53-afb89fd558ad","isHidden":false,"type":"imageSection"}]
+Media-content: [{"content":{"slug":"section-1","media":"[{\"content\":{\"media\":[\"file://6vNdDShbz1VIfavr\"],\"video_mp4\":[],\"vimeo_url\":\"\",\"caption\":\"\"},\"id\":\"f8e7ce85-16c5-4649-b08e-563aa3d4e07f\",\"isHidden\":false,\"type\":\"imageSectionMedia\"}]"},"id":"0acaea10-18fc-4abf-be53-afb89fd558ad","isHidden":false,"type":"imageSection"},{"content":{"slug":"","media":"[{\"content\":{\"media\":[\"file://6vNdDShbz1VIfavr\"],\"video_mp4\":[\"file://rg2qWyzTylze46kh\"],\"vimeo_url\":\"\",\"caption\":\"\"},\"id\":\"8a901549-0229-484d-961a-3e920fe79049\",\"isHidden\":false,\"type\":\"imageSectionMedia\"}]"},"id":"4cd21358-afb8-41af-bde8-7d5def03b655","isHidden":false,"type":"imageSection"},{"content":{"slug":"","media":"[{\"content\":{\"media\":[\"file://6vNdDShbz1VIfavr\"],\"video_mp4\":[],\"vimeo_url\":\"https://vimeo.com/110208064\",\"caption\":\"\"},\"id\":\"b325077f-b468-4955-9a1d-d521f3f070a2\",\"isHidden\":false,\"type\":\"imageSectionMedia\"}]"},"id":"fd094252-0cf1-4cba-a200-d0b84d377fa7","isHidden":false,"type":"imageSection"}]
 
 ----
 

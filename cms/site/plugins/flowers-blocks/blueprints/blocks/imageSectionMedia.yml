@@ -6,8 +6,14 @@ fields:
     multiple: false
     label: Media
     required: true
-    help: An image to display.
+    help: An image to display. Will be used as a preview image for the video if present.
     query: page.images
+  video_mp4:
+    type: files
+    label: Video MP4
+    help: A video file to display. Will override the vimeo url if present.
+    multiple: false
+    accept: video/mp4
   vimeo_url:
     type: text
     label: Vimeo URL

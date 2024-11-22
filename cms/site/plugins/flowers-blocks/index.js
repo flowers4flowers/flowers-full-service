@@ -6,6 +6,7 @@ panel.plugin("flowers/flowers-blocks", {
           <div v-if="content.media" class="images">
             <div v-for="(image, index) in content.media" :key="index" class="image-section-media-item">
               <img v-if="image.content.media[0]" :src="image.content.media[0].url">
+              <video v-if="image.content.video_mp4[0]" :src="image.content.video_mp4[0].url" preload="metadata" width="200"></video>
               <p>Caption: <span>{{ image.content.caption ? image.content.caption : '-----' }}</span></p>
               <p>Vimeo URL: <span>{{ image.content.vimeo_url ? image.content.vimeo_url : '-----' }}</span></p>
             </div>
@@ -15,7 +16,7 @@ panel.plugin("flowers/flowers-blocks", {
             <p>Slug: <span>{{ content.slug ? content.slug : '-----' }}</span></p>
           </div>
         </div>
-      `
+      `,
     },
     imageSectionMedia: {
       template: `
@@ -25,12 +26,16 @@ panel.plugin("flowers/flowers-blocks", {
             <p v-else>No file</p>
           </div>
 
+          <div v-if="content.video_mp4[0]" class="video">
+            <video :src="content.video_mp4[0].url" preload="metadata" width="200"></video>
+          </div>
+
           <div class="info">
             <p>Caption: <span>{{ content.caption ? content.caption : '-----' }}</span></p>
             <p>Vimeo URL: <span>{{ content.vimeo_url ? content.vimeo_url : '-----' }}</span></p>
           </div>
         </div>
-      `
+      `,
     },
     mediaItem: {
       template: `
@@ -45,7 +50,7 @@ panel.plugin("flowers/flowers-blocks", {
             <p>Slug: <span>{{ content.slug ? content.slug : '-----' }}</span></p>
           </div>
         </div>
-      `
-    }
-  }
+      `,
+    },
+  },
 });
