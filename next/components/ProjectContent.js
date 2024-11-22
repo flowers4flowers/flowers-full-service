@@ -9,6 +9,7 @@ const ProjectContent = ({ data }) => {
   const { title, description, location, client, startDate, endDate, mediaContent } = data.result
 
   console.log(data.result)
+  console.log(mediaContent)
 
   useEffect(() => {
     dispatch({
