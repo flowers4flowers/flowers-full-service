@@ -1,17 +1,19 @@
 'use client'
 
-import MediaSection from "@/components/MediaSection"
-import { useAppState } from "@/context"
-import { useEffect } from "react"
+import MediaSection from '@/components/MediaSection'
+import { useAppState } from '@/context'
+import { useEffect } from 'react'
 
 const ProjectContent = ({ data }) => {
   const { state, dispatch } = useAppState()
   const { title, description, location, client, startDate, endDate, mediaContent } = data.result
 
+  console.log(data.result)
+
   useEffect(() => {
     dispatch({
       type: 'SET_CURRENT_PROJECT_TITLE',
-      payload: title
+      payload: title,
     })
   }, [])
 
@@ -39,9 +41,13 @@ const ProjectContent = ({ data }) => {
         )}
       </section>
 
-      {mediaContent.map((block, index) => { 
+      {mediaContent.map((block, index) => {
         return (
-          <MediaSection key={index} block={block} title={title} />
+          <MediaSection
+            key={index}
+            block={block}
+            title={title}
+          />
         )
       })}
     </div>
