@@ -10,6 +10,7 @@ const ProjectContent = ({ data }) => {
 
   console.log(data.result)
   console.log(mediaContent)
+  console.log(title)
 
   useEffect(() => {
     dispatch({
