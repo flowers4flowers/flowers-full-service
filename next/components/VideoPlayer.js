@@ -38,6 +38,8 @@ const Video = React.forwardRef(({ block }, ref) => {
   return null
 })
 
+Video.displayName = 'Video'
+
 const VideoPlayer = ({ block, className }) => {
   const video = useRef(null)
   const [videoStarted, setVideoStarted] = useState(false)
