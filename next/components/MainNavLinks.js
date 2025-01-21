@@ -1,8 +1,8 @@
 'use client'
 
-import { usePathname } from "next/navigation"
-import { useAppState } from "@/context"
-import Link from "next/link"
+import { usePathname } from 'next/navigation'
+import { useAppState } from '@/context'
+import Link from 'next/link'
 // import classNames from "classnames"
 
 // const CarouselInfo = ({ state, dispatch }) => {
@@ -57,7 +57,7 @@ const MainNavLinks = () => {
         <li className="col-span-2">
           <Link
             href="/gallery"
-            className={checkLinkActive('/gallery') ? 'active': ''}
+            className={checkLinkActive('/gallery') ? 'active' : ''}
           >
             <span>Gallery</span>
           </Link>
@@ -66,7 +66,7 @@ const MainNavLinks = () => {
         <li className="col-span-2">
           <Link
             href="/work"
-            className={checkLinkActive('/work') ? 'active': ''}
+            className={checkLinkActive('/work') ? 'active' : ''}
           >
             <span>Work</span>
           </Link>
@@ -74,8 +74,8 @@ const MainNavLinks = () => {
 
         <li className="col-span-2">
           <Link
-            href="/shop"
-            className={checkLinkActive('/shop') ? 'active': ''}
+            href="https://shop.flowersfullservice.art"
+            target="_blank"
           >
             <span>Shop</span>
           </Link>
