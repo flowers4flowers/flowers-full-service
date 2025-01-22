@@ -91,4 +91,6 @@ const VideoPlayer = ({ block, className }) => {
   )
 }
 
+VideoPlayer.displayName = 'VideoPlayer'
+
 export default VideoPlayer
