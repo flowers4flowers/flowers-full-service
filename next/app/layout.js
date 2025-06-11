@@ -21,8 +21,32 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      <head>
+        {/* Google Tag Manager - Head */}
+        <Script
+          id="gtm-head"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TNKNK842');`,
+          }}
+        />
+      </head>
       <AppWrapper>
         <body>
+          {/* Google Tag Manager - Body (noscript) */}
+          <noscript>
+            <iframe 
+              src="https://www.googletagmanager.com/ns.html?id=GTM-TNKNK842"
+              height="0" 
+              width="0" 
+              style={{display: 'none', visibility: 'hidden'}}
+            />
+          </noscript>
+
           <Script
             src="https://cdn.amplitude.com/script/49900a6abbaf3be1288f2fe1813d60a7.js"
             strategy="afterInteractive"
@@ -32,22 +56,39 @@ export default async function RootLayout({ children }) {
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
-      // Initialize Amplitude first
-      window.amplitude.init('49900a6abbaf3be1288f2fe1813d60a7', {
-        "fetchRemoteConfig": true,
-        "autocapture": true
-      });
+      // Wait for Amplitude to be available
+      function initAmplitude() {
+        if (typeof window !== 'undefined' && window.amplitude && window.amplitude.init) {
+          try {
+            // Initialize Amplitude
+            window.amplitude.init('49900a6abbaf3be1288f2fe1813d60a7', {
+              "fetchRemoteConfig": true,
+              "autocapture": true
+            });
+            
+            // Add session replay after initialization
+            if (window.sessionReplay && window.sessionReplay.plugin) {
+              window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));
+            }
+            
+            // Send a test event to verify installation
+            window.amplitude.track('Page View', {
+              page: window.location.pathname,
+              timestamp: new Date().toISOString()
+            });
+            
+            console.log('✅ Amplitude initialized successfully');
+          } catch (error) {
+            console.error('❌ Amplitude initialization failed:', error);
+          }
+        } else {
+          // If Amplitude isn't ready, try again in 100ms
+          setTimeout(initAmplitude, 100);
+        }
+      }
       
-      // Add session replay after initialization
-      window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));
-      
-      // Send a test event to verify installation
-      window.amplitude.track('Page View', {
-        page: window.location.pathname,
-        timestamp: new Date().toISOString()
-      });
-      
-      console.log('Amplitude initialized and test event sent');
+      // Start trying to initialize
+      initAmplitude();
     `,
             }}
           />
