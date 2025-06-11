@@ -1,5 +1,5 @@
-import { getHomeData } from "@/queries/homeQuery"
-import HomeContent from "@/components/HomeContent"
+import { getHomeData } from "../queries/homeQuery"
+import HomeContent from "../components/HomeContent"
 
 export default async function Home() {
   const data = await getHomeData()
