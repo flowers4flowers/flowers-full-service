@@ -17,7 +17,7 @@ const ProjectContent = ({ data }) => {
       type: 'SET_CURRENT_PROJECT_TITLE',
       payload: title,
     })
-  }, [])
+  }, [dispatch, title]) // Added missing dependencies
 
   return (
     <div className="pb-60">

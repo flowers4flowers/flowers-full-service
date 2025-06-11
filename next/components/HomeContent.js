@@ -61,15 +61,18 @@ const HomeContent = ({ description, carouselImages }) => {
         }
       })
     }
-
+  
     // set timer if cookie doesnt exist
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       dispatch({
         type: 'SET_HOME_CAROUSEL_OPEN',
         payload: true
       })
     }, 6000)
-  }, [])
+  
+    // Cleanup function to clear timeout if component unmounts
+    return () => clearTimeout(timer)
+  }, [carouselImages.length, dispatch])
 
   const counterClasses = classNames(
     'counter flex-none flex justify-center items-center pt-6 lg:pt-12',
