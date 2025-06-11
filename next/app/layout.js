@@ -1,11 +1,11 @@
-import '@/styles/global.css'
-import { AppWrapper } from '@/context'
-import MainNav from '@/components/MainNav'
-import MobileNav from '@/components/MobileNav'
-import HomeLink from '@/components/HomeLink'
-import MobileMenu from '@/components/MobileMenu'
-import Screensaver from '@/components/Screensaver'
-import { getGlobalData } from '@/queries/layoutQuery'
+import '../styles/global.css'
+import { AppWrapper } from '../context'
+import MainNav from '../components/MainNav'
+import MobileNav from '../components/MobileNav'
+import HomeLink from '../components/HomeLink'
+import MobileMenu from '../components/MobileMenu'
+import Screensaver from '../components/Screensaver'
+import { getGlobalData } from '../queries/layoutQuery'  
 
 /*
 ----------
@@ -20,6 +20,17 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      <head>
+        <script src="https://cdn.amplitude.com/script/49900a6abbaf3be1288f2fe1813d60a7.js"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));
+              window.amplitude.init('49900a6abbaf3be1288f2fe1813d60a7', {"fetchRemoteConfig":true,"autocapture":true});
+            `
+          }}
+        />
+      </head>
       <AppWrapper>
         <body>
           <MainNav

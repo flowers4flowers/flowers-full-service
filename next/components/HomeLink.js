@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { WordMark, SecondaryMark } from "./Icons"
 import { useMotionValueEvent, useScroll } from "framer-motion"
 import { useState, useEffect, useRef } from "react"
-import { useAppState } from "@/context"
+import { useAppState } from "../context"
 import classNames from "classnames"
 import { UpArrow } from "./Icons"
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useAppState } from "@/context"
+import { useAppState } from "../context"
 
 const MobileNav = () => {
   const { state, dispatch } = useAppState()
