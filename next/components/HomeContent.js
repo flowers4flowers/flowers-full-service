@@ -1,6 +1,6 @@
 'use client'
 
-import { useAppState } from "@/context"
+import { useAppState } from "../context"
 import classNames from "classnames"
 import { useEffect, useRef, useState } from "react"
 import { Swiper, SwiperSlide } from 'swiper/react'
