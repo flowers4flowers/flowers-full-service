@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { WordMark, SecondaryMark } from "./Icons"
 import { useMotionValueEvent, useScroll } from "framer-motion"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { useAppState } from "../context"
 import classNames from "classnames"
 import { UpArrow } from "./Icons"
@@ -33,7 +33,7 @@ const HomeLink = () => {
   const [prevScroll, setPrevScroll] = useState(0)
   const [showCaptions, setShowCaptions] = useState(false)
 
-  const handleResize = ({ initialLoad }) => {
+  const handleResize = useCallback(({ initialLoad }) => {
     if (container.current) {
       setMaxTitleSize(container.current.offsetWidth)
 
@@ -43,7 +43,7 @@ const HomeLink = () => {
         setTitleSize(targetSize)
       }
     }
-  }
+  }, [targetSize])
 
   useEffect(() => {
     handleResize({
@@ -60,14 +60,14 @@ const HomeLink = () => {
         window.removeEventListener('resize', handleResize)
       }
     }
-  }, [])
+  }, [handleResize])
 
   // on pathname change, reset title size
   useEffect(() => {
     handleResize({
       initialLoad: true
     })
-  }, [pathname])
+  }, [pathname, handleResize])
 
   const handleHomeLinkClick = () => {
     // if on home page, set homeCarouselOpen to true

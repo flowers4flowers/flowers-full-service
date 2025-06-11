@@ -28,7 +28,7 @@ const MobileMenu = ({ socialLinks }) => {
       type: 'SET_MOBILE_MENU_OPEN',
       payload: false
     })
-  }, [pathname])
+  }, [pathname, dispatch])
 
   return (
     <div id="mobile-menu" className={classes}>
