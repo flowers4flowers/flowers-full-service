@@ -1,4 +1,5 @@
 import '../styles/global.css'
+import Script from 'next/script'
 import { AppWrapper } from '../context'
 import MainNav from '../components/MainNav'
 import MobileNav from '../components/MobileNav'
@@ -20,19 +21,22 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <head>
-        <script src="https://cdn.amplitude.com/script/49900a6abbaf3be1288f2fe1813d60a7.js"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));
-              window.amplitude.init('49900a6abbaf3be1288f2fe1813d60a7', {"fetchRemoteConfig":true,"autocapture":true});
-            `
-          }}
-        />
-      </head>
       <AppWrapper>
         <body>
+          <Script
+            src="https://cdn.amplitude.com/script/49900a6abbaf3be1288f2fe1813d60a7.js"
+            strategy="afterInteractive"
+          />
+          <Script
+            id="amplitude-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));
+                window.amplitude.init('49900a6abbaf3be1288f2fe1813d60a7', {"fetchRemoteConfig":true,"autocapture":true});
+              `
+            }}
+          />
           <MainNav
             socialLinks={socialLinks}
           />
