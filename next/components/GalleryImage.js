@@ -19,6 +19,40 @@ const GalleryImage = ({ item, classes, index }) => {
     isLargeQuery = window.matchMedia('(min-width: 992px)').matches
   }
 
+  // NEW: Function to track gallery image clicks
+  const handleGalleryClick = () => {
+    // Check if we're in browser and Amplitude is fully loaded
+    if (typeof window !== 'undefined' && window.amplitude && window.amplitude.track) {
+      try {
+        window.amplitude.track('Gallery to Project Click', {
+          source: 'gallery',
+          image_index: index,
+          image_url: item.image.url,
+          image_alt: item.image.alt,
+          image_width: item.image.width,
+          image_height: item.image.height,
+          has_video_preview: !!item.videoPreview,
+          project_slug: item.project?.slug || null,
+          item_slug: item.slug || null,
+          destination_url: `/projects/${item.project.slug}${item.slug ? `#${item.slug}` : ''}`,
+          timestamp: new Date().toISOString()
+        })
+        
+        console.log('✅ Tracked gallery → project click:', item.project?.slug || 'unknown project')
+      } catch (error) {
+        console.log('⚠️ Amplitude tracking failed:', error)
+      }
+    } else {
+      console.log('⏳ Amplitude not ready yet, skipping tracking')
+    }
+
+    // Keep the existing navigation behavior
+    dispatch({
+      type: 'SET_HIDE_NAV',
+      payload: true
+    })
+  }
+
   const handleVideoEnter = () => {
     if (item.videoPreview && isLargeQuery) {
       if (!showVideo) {
@@ -47,12 +81,7 @@ const GalleryImage = ({ item, classes, index }) => {
         key={index}
         className={classes}
         href={`/projects/${item.project.slug}${item.slug ? `#${item.slug}` : ''}`}
-        onClick={() => {
-          dispatch({
-            type: 'SET_HIDE_NAV',
-            payload: true
-          })
-        }}
+        onClick={handleGalleryClick} // NEW: Add click tracking
       >
         <div className="bg-white">
           <DefImage
@@ -86,12 +115,7 @@ const GalleryImage = ({ item, classes, index }) => {
           handleVideoLeave()
         }}
         href={`/projects/${item.project.slug}${item.slug ? `#${item.slug}` : ''}`}
-        onClick={() => {
-          dispatch({
-            type: 'SET_HIDE_NAV',
-            payload: true
-          })
-        }}
+        onClick={handleGalleryClick} // NEW: Add click tracking
       >
         <div className={videoClasses}>
           {item.videoPreview && showVideo && (
