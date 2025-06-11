@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { useAppState } from '@/context'
+import { useAppState } from '../context'
 import Link from 'next/link'
 // import classNames from "classnames"
 

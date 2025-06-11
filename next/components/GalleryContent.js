@@ -1,13 +1,13 @@
 'use client'
 
-import DefImage from "@/components/DefImage"
+import DefImage from "../components/DefImage"
 import classNames from "classnames"
 import GalleryImage from "./GalleryImage"
 
 const GalleryContent = ({ mediaItems }) => {
   let isLargeQuery = false
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined') { 
     isLargeQuery = window.matchMedia('(min-width: 992px)').matches
   }
 

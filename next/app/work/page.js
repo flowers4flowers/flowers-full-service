@@ -1,5 +1,5 @@
-import { getAboutData } from "@/queries/aboutQuery"
-import ProjectLink from "@/components/ProjectLink"
+import { getAboutData } from "../../queries/aboutQuery"
+import ProjectLink from "../../components/ProjectLink"
 
 export default async function Work() {
   const data = await getAboutData()

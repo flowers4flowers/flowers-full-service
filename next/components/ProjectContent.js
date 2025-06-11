@@ -1,7 +1,7 @@
 'use client'
 
-import MediaSection from '@/components/MediaSection'
-import { useAppState } from '@/context'
+import MediaSection from '../components/MediaSection'
+import { useAppState } from '../context'
 import { useEffect } from 'react'
 
 const ProjectContent = ({ data }) => {
