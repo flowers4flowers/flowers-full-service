@@ -1,4 +1,4 @@
-import { getShopData } from "@/queries/shopQuery"
+import { getShopData } from "../../queries/shopQuery"
 
 export default async function Shop() {
   const data = await getShopData()
