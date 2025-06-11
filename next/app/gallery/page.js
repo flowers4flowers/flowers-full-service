@@ -1,5 +1,5 @@
-import { getGalleryData } from "@/queries/galleryQuery"
-import GalleryContent from "@/components/GalleryContent"
+import { getGalleryData } from "../../queries/galleryQuery"
+import GalleryContent from "../../components/GalleryContent"
 
 export default async function Gallery() {
   const data = await getGalleryData()
@@ -9,4 +9,4 @@ export default async function Gallery() {
   return (
     <GalleryContent mediaItems={mediaItems} />
   )
-}
+} 
