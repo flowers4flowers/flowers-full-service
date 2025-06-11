@@ -22,10 +22,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* Google Tag Manager - Head */}
-        <Script
-          id="gtm-head"
-          strategy="beforeInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -47,6 +44,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             />
           </noscript>
 
+          {/* Move all other scripts after GTM */}
           <Script
             src="https://cdn.amplitude.com/script/49900a6abbaf3be1288f2fe1813d60a7.js"
             strategy="afterInteractive"
