@@ -1,8 +1,8 @@
 'use client'
 
 import Link from "next/link"
-import { useAppState } from "@/context"
-import DefImage from "@/components/DefImage"
+import { useAppState } from "../context"
+import DefImage from "../components/DefImage"
 import { useRef, useState } from "react"
 import classNames from "classnames"
 
