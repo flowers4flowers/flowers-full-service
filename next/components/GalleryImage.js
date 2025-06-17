@@ -24,7 +24,7 @@ const GalleryImage = ({ item, classes, index }) => {
     // Check if we're in browser and Amplitude is fully loaded
     if (typeof window !== 'undefined' && window.amplitude && window.amplitude.track) {
       try {
-        window.amplitude.track('Gallery to Project Click', {
+        window.amplitude.track('Project Clicked from /gallery', {
           source: 'gallery',
           image_index: index,
           image_url: item.image.url,
