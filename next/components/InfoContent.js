@@ -2,7 +2,7 @@
 
 import { useAppState } from "../context";
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import DefImage from "./DefImage";
 
@@ -43,6 +43,8 @@ const clientLogos = [
 
 const InfoContent = () => {
   const [copied, setCopied] = useState(false);
+  const [visibleImages, setVisibleImages] = useState(new Set());
+  const imageRefs = useRef([]);
 
   const copyToClipboard = async () => {
     try {
@@ -53,6 +55,44 @@ const InfoContent = () => {
       console.error("Failed to copy: ", err);
     }
   };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = parseInt(entry.target.getAttribute('data-index'));
+          if (entry.isIntersecting) {
+            setVisibleImages(prev => new Set([...prev, index]));
+          } else {
+            // Optional: Remove from visible set when out of view if you want images to fade out again
+            // setVisibleImages(prev => {
+            //   const newSet = new Set(prev);
+            //   newSet.delete(index);
+            //   return newSet;
+            // });
+          }
+        });
+      },
+      {
+        threshold: 0.2, // Trigger when 20% of the image is visible
+        rootMargin: '0px 0px -100px 0px' // Start animation 100px before the image enters viewport
+      }
+    );
+
+    // Clean up refs array to match clientLogos length
+    imageRefs.current = imageRefs.current.slice(0, clientLogos.length);
+
+    imageRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => {
+      imageRefs.current.forEach((ref) => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
+  }, []);
+
   return (
     <div className="h-full flex flex-col">
       {/* Main content spread across full page */}
@@ -198,15 +238,26 @@ const InfoContent = () => {
         </div>
       </div>
 
-      {/* Client Logos Row at Bottom */}
+      {/* Client Logos Column - Fixed fade-in animation */}
       <div className="w-full px-8 lg:px-16 xl:px-24 mt-16 mb-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 lg:gap-8">
+        <div className="flex flex-col space-y-10">
           {clientLogos.map((logo, index) => (
-            <div key={index} className="flex items-center justify-center p-4 grayscale hover:grayscale-0 hover:-translate-y-2 hover:scale-125 transition-all duration-300 cursor-pointer">
+            <div 
+              key={index} 
+              ref={(el) => imageRefs.current[index] = el}
+              data-index={index}
+              className={`flex items-center justify-center p-4 cursor-pointer transition-all duration-1000 ease-out transform ${
+                visibleImages.has(index) 
+                  ? 'opacity-100 translate-y-0 scale-100' 
+                  : 'opacity-0 translate-y-12 scale-95'
+              }`}
+            >
               <img
                 src={logo.src}
                 alt={logo.name}
-                className="max-w-full max-h-75 object-contain"
+                className="max-w-full object-contain"
+                style={{ maxHeight: '500px' }}
+                loading="lazy" // Add lazy loading for better performance
               />
             </div>
           ))}
