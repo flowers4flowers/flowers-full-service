@@ -7,7 +7,6 @@ import MobileNav from "../components/MobileNav";
 import HomeLink from "../components/HomeLink";
 import MobileMenu from "../components/MobileMenu";
 import Screensaver from "../components/Screensaver";
-import FloatingFormButton from "../components/CTAButton"; 
 import { getGlobalData } from "../queries/layoutQuery";
 
 /*
@@ -105,9 +104,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           {screensaverImages.length > 0 && (
             <Screensaver images={screensaverImages} />
           )}
-
-          {/* Add the floating form button */}
-          <FloatingFormButton />
         </body>
       </AppWrapper>
     </html>
