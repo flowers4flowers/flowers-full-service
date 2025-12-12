@@ -158,7 +158,7 @@ function extractLastScrapeDate(record) {
 // Calculate engagement status based on last interaction date
 function calculateEngagementStatus(lastInteractionDate) {
   if (!lastInteractionDate) {
-    return "Dormant";
+    return "No Engagement"; // Changed from "Dormant"
   }
 
   const now = new Date();
@@ -191,12 +191,6 @@ function getCurrentEngagementStatus(record) {
     if (!activeValue) {
       return null;
     }
-
-    // Debug: log the structure to see what we're working with
-    console.log(
-      "Active value structure:",
-      JSON.stringify(activeValue, null, 2)
-    );
 
     // For select fields, the value is in option.title
     if (activeValue.option && activeValue.option.title) {
