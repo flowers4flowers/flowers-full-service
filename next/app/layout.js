@@ -23,6 +23,20 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <Head>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-YSM33VGFQP"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YSM33VGFQP');
+    `,
+          }}
+        />
         {/* Google Tag Manager - Head */}
         <script
           dangerouslySetInnerHTML={{
