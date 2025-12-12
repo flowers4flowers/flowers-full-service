@@ -16,7 +16,7 @@
     "react": "^18",
     "react-dom": "^18",
     "swiper": "^11.0.3",
-    "@types/node": "^20.0.0",
+    "@types/node": "^24.x",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "typescript": "^5.0.0"
