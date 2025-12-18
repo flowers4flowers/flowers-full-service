@@ -1,0 +1,32 @@
+name: Update Attio Engagement Status
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs at 00:00 UTC daily
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  update-engagement:
+    runs-on: ubuntu-latest
+    environment: Production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Run engagement status updater
+        env:
+          ATTIO_API_KEY: ${{ secrets.ATTIO_API_KEY }}
+          ENGAGEMENT_STATUS_SLUG: ${{ secrets.ENGAGEMENT_STATUS_SLUG || 'engagement_status' }}
+          LAST_INTERACTION_SLUG: ${{ secrets.LAST_INTERACTION_SLUG || 'last_interaction' }}
+          ENGAGEMENT_STATUS_SCRAPE_SLUG: ${{ secrets.ENGAGEMENT_STATUS_SCRAPE_SLUG || 'engagement_status_scrape' }}
+          BATCH_SIZE: ${{ secrets.BATCH_SIZE || '20' }}
+          RATE_LIMIT_DELAY_MS: ${{ secrets.RATE_LIMIT_DELAY_MS || '100' }}
+          DRY_RUN: ${{ secrets.DRY_RUN || 'false' }}
+          NODE_ENV: production
+        run: node update-attio-engagement.js
