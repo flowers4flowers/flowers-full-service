@@ -1,6 +1,5 @@
 import "../styles/global.css";
 import Script from "next/script";
-import Head from "next/head";
 import { AppWrapper } from "../context";
 import MainNav from "../components/MainNav";
 import MobileNav from "../components/MobileNav";
@@ -22,7 +21,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <Head>
+      <head>
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-YSM33VGFQP"
@@ -37,7 +36,6 @@ export default async function RootLayout({ children }) {
     `,
           }}
         />
-        {/* Google Tag Manager - Head */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -47,7 +45,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-TNKNK842');`,
           }}
         />
-      </Head>
+      </head>
       <AppWrapper>
         <body>
           {/* Google Tag Manager - Body (noscript) */}
