@@ -29,4 +29,4 @@ jobs:
           RATE_LIMIT_DELAY_MS: ${{ secrets.RATE_LIMIT_DELAY_MS || '100' }}
           DRY_RUN: ${{ secrets.DRY_RUN || 'false' }}
           NODE_ENV: production
-        run: node update-attio-engagement.js
+        run: node next/scripts/update-attio-engagement.js
