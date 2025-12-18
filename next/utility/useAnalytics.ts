@@ -1,8 +1,8 @@
 'use client'
 
 import { useCallback } from 'react'
-import { trackEvent, trackButtonClick, trackLinkClick, trackSocialClick } from '../lib/analytics'
-import { AnalyticsEventParams } from '../lib/analytics-events'
+import { trackEvent, trackButtonClick, trackLinkClick, trackSocialClick } from '../utility/analytics'
+import { AnalyticsEventParams } from '../utility/analytics-events'
 
 export const useAnalytics = () => {
   const track = useCallback((params: AnalyticsEventParams) => {
