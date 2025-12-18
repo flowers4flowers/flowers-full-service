@@ -8,6 +8,7 @@ import HomeLink from "../components/HomeLink";
 import MobileMenu from "../components/MobileMenu";
 import Screensaver from "../components/Screensaver";
 import { getGlobalData } from "../queries/layoutQuery";
+import AnalyticsPageTracker from "../components/AnalyticsPageTracker";
 
 /*
 ----------
@@ -50,6 +51,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <AppWrapper>
         <body>
           <GoogleAnalytics gaId="G-YSM33VGFQP" />
+          <AnalyticsPageTracker />
           {/* Google Tag Manager - Body (noscript) */}
           <noscript>
             <iframe
