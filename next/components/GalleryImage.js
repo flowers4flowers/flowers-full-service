@@ -1,31 +1,42 @@
-'use client'
+"use client";
 
-import Link from "next/link"
-import { useAppState } from "../context"
-import DefImage from "../components/DefImage"
-import { useRef, useState } from "react"
-import classNames from "classnames"
+import Link from "next/link";
+import { useAppState } from "../context";
+import DefImage from "../components/DefImage";
+import { useRef, useState } from "react";
+import classNames from "classnames";
+import { useAnalytics } from "../utility/useAnalytics";
 
 const GalleryImage = ({ item, classes, index }) => {
-  const { state, dispatch } = useAppState()
-  const [showVideo, setShowVideo] = useState(false)
-  const [hideImage, setHideImage] = useState(false)
-  const hoverVideo = useRef(null)
-  const [hoverTimeout, setHoverTimeout] = useState(null)
+  const { state, dispatch } = useAppState();
+  const { trackLink } = useAnalytics();
+  const [showVideo, setShowVideo] = useState(false);
+  const [hideImage, setHideImage] = useState(false);
+  const hoverVideo = useRef(null);
+  const [hoverTimeout, setHoverTimeout] = useState(null);
 
-  let isLargeQuery = false
+  let isLargeQuery = false;
 
-  if (typeof window !== 'undefined') {
-    isLargeQuery = window.matchMedia('(min-width: 992px)').matches
+  if (typeof window !== "undefined") {
+    isLargeQuery = window.matchMedia("(min-width: 992px)").matches;
   }
 
   // NEW: Function to track gallery image clicks
   const handleGalleryClick = () => {
+    const destination = `/projects/${item.project.slug}${
+      item.slug ? `#${item.slug}` : ""
+    }`;
+    trackLink(`Gallery Image: ${item.project?.slug || "unknown"}`, destination);
+
     // Check if we're in browser and Amplitude is fully loaded
-    if (typeof window !== 'undefined' && window.amplitude && window.amplitude.track) {
+    if (
+      typeof window !== "undefined" &&
+      window.amplitude &&
+      window.amplitude.track
+    ) {
       try {
-        window.amplitude.track('Project Clicked from /gallery', {
-          source: 'gallery',
+        window.amplitude.track("Project Clicked from /gallery", {
+          source: "gallery",
           image_index: index,
           image_url: item.image.url,
           image_alt: item.image.alt,
@@ -34,53 +45,62 @@ const GalleryImage = ({ item, classes, index }) => {
           has_video_preview: !!item.videoPreview,
           project_slug: item.project?.slug || null,
           item_slug: item.slug || null,
-          destination_url: `/projects/${item.project.slug}${item.slug ? `#${item.slug}` : ''}`,
-          timestamp: new Date().toISOString()
-        })
-        
-        console.log('✅ Tracked gallery → project click:', item.project?.slug || 'unknown project')
+          destination_url: `/projects/${item.project.slug}${
+            item.slug ? `#${item.slug}` : ""
+          }`,
+          timestamp: new Date().toISOString(),
+        });
+
+        console.log(
+          "✅ Tracked gallery → project click:",
+          item.project?.slug || "unknown project"
+        );
       } catch (error) {
-        console.log('⚠️ Amplitude tracking failed:', error)
+        console.log("⚠️ Amplitude tracking failed:", error);
       }
     } else {
-      console.log('⏳ Amplitude not ready yet, skipping tracking')
+      console.log("⏳ Amplitude not ready yet, skipping tracking");
     }
 
     // Keep the existing navigation behavior
     dispatch({
-      type: 'SET_HIDE_NAV',
-      payload: true
-    })
-  }
+      type: "SET_HIDE_NAV",
+      payload: true,
+    });
+  };
 
   const handleVideoEnter = () => {
     if (item.videoPreview && isLargeQuery) {
       if (!showVideo) {
-        setShowVideo(true)
-        setHideImage(true)
+        setShowVideo(true);
+        setHideImage(true);
       } else {
-        hoverTimeout && clearTimeout(hoverTimeout)
-        setShowVideo(true)
-        setHideImage(true)
+        hoverTimeout && clearTimeout(hoverTimeout);
+        setShowVideo(true);
+        setHideImage(true);
       }
     }
-  }
+  };
 
   const handleVideoLeave = () => {
     if (item.videoPreview && isLargeQuery) {
-      setHideImage(false)
-      setHoverTimeout(setTimeout(() => {
-        setShowVideo(false)
-      }, 400))
+      setHideImage(false);
+      setHoverTimeout(
+        setTimeout(() => {
+          setShowVideo(false);
+        }, 400)
+      );
     }
-  }
+  };
 
   if (!item.videoPreview) {
     return (
       <Link
         key={index}
         className={classes}
-        href={`/projects/${item.project.slug}${item.slug ? `#${item.slug}` : ''}`}
+        href={`/projects/${item.project.slug}${
+          item.slug ? `#${item.slug}` : ""
+        }`}
         onClick={handleGalleryClick} // NEW: Add click tracking
       >
         <div className="bg-white">
@@ -93,28 +113,27 @@ const GalleryImage = ({ item, classes, index }) => {
           />
         </div>
       </Link>
-    )
+    );
   }
 
   if (item.videoPreview) {
-    const videoClasses = classNames(
-      'video-gallery-image bg-white relative',
-      {
-        'show-video': hideImage,
-      }
-    )
+    const videoClasses = classNames("video-gallery-image bg-white relative", {
+      "show-video": hideImage,
+    });
 
     return (
       <Link
         key={index}
         className={classes}
         onMouseEnter={() => {
-          handleVideoEnter()
+          handleVideoEnter();
         }}
         onMouseLeave={() => {
-          handleVideoLeave()
+          handleVideoLeave();
         }}
-        href={`/projects/${item.project.slug}${item.slug ? `#${item.slug}` : ''}`}
+        href={`/projects/${item.project.slug}${
+          item.slug ? `#${item.slug}` : ""
+        }`}
         onClick={handleGalleryClick} // NEW: Add click tracking
       >
         <div className={videoClasses}>
@@ -132,7 +151,7 @@ const GalleryImage = ({ item, classes, index }) => {
               ></video>
             </div>
           )}
-          
+
           <DefImage
             src={item.image.url}
             width={item.image.width}
@@ -142,8 +161,8 @@ const GalleryImage = ({ item, classes, index }) => {
           />
         </div>
       </Link>
-    )
+    );
   }
-}
+};
 
-export default GalleryImage
+export default GalleryImage;
