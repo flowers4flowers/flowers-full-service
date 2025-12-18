@@ -74,6 +74,16 @@ const MainNavLinks = () => {
 
         <li className="col-span-2">
           <Link
+            href="/info"
+            className={checkLinkActive('/work') ? 'active' : ''}
+          >
+            <span>Info</span>
+          </Link>
+        </li>
+       
+
+        <li className="col-span-2">
+          <Link
             href="https://shop.flowersfullservice.art"
             target="_blank"
           >

@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import DefImage from "./DefImage";
+import { useAnalytics } from "../utility/useAnalytics"
 
 const clientLinks = {
   AG1: "/projects/ag-evergreen",
@@ -44,11 +45,13 @@ const clientLogos = [
 ];
 
 const InfoContent = () => {
+  const { trackLink } = useAnalytics()
   const [copied, setCopied] = useState(false);
   const [visibleImages, setVisibleImages] = useState(new Set());
   const imageRefs = useRef([]);
 
   const handleClientClick = (clientName, url) => {
+    trackLink(`Client: ${clientName}`, url)
     // Check if we're in browser and Amplitude is fully loaded
     if (
       typeof window !== "undefined" &&
