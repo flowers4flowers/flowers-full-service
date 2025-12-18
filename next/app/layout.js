@@ -1,5 +1,6 @@
 import "../styles/global.css";
 import Script from "next/script";
+import { GoogleAnalytics } from '@next/third-parties/google'
 import { AppWrapper } from "../context";
 import MainNav from "../components/MainNav";
 import MobileNav from "../components/MobileNav";
@@ -48,6 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </head>
       <AppWrapper>
         <body>
+          <GoogleAnalytics gaId="G-YSM33VGFQP" />
           {/* Google Tag Manager - Body (noscript) */}
           <noscript>
             <iframe
