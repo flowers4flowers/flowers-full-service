@@ -487,8 +487,21 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
     },
   ];
 
-  // Page Breakdown Section
-  if (Object.keys(combinedData.pages).length > 0) {
+  // Separate pages into regular pages and project/gallery pages
+  const regularPages = [];
+  const projectPages = [];
+
+  Object.entries(combinedData.pages).forEach(([pagePath, data]) => {
+    const isProject = pagePath.includes('/project/') || pagePath.includes('/gallery/');
+    if (isProject) {
+      projectPages.push([pagePath, data]);
+    } else {
+      regularPages.push([pagePath, data]);
+    }
+  });
+
+  // Regular pages section
+  if (regularPages.length > 0) {
     blocks.push({
       type: "section",
       text: {
@@ -497,11 +510,11 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
       },
     });
 
-    const sortedPages = Object.entries(combinedData.pages).sort(
+    const sortedRegularPages = regularPages.sort(
       ([, a], [, b]) => b.pageViews - a.pageViews
     );
 
-    const pageFields = sortedPages.map(([pagePath, data]) => {
+    const pageFields = sortedRegularPages.map(([pagePath, data]) => {
       const displayName = createPageDisplayName(pagePath);
       const userText = data.uniqueUsers > 0 ? ` | ${data.uniqueUsers} users` : "";
 
@@ -523,35 +536,36 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
     });
   }
 
-  // Project Clicks Section - Work List
-  if (projectClicks.workList.length > 0) {
+  // Project & Gallery views section
+  if (projectPages.length > 0) {
     blocks.push({
       type: "section",
       text: {
         type: "mrkdwn",
-        text: "*Most Clicked Projects (Work List):*",
+        text: "*Project & Gallery Views:*",
       },
     });
 
-    const workListFields = projectClicks.workList.map((project) => ({
-      type: "mrkdwn",
-      text: `*${project.projectName}:*\n${project.clicks} clicks`,
-    }));
+    const sortedProjectPages = projectPages.sort(
+      ([, a], [, b]) => b.pageViews - a.pageViews
+    );
 
-    blocks.push({
-      type: "section",
-      fields: workListFields,
+    const projectFields = sortedProjectPages.map(([pagePath, data]) => {
+      const displayName = createPageDisplayName(pagePath);
+      const userText = data.uniqueUsers > 0 ? ` | ${data.uniqueUsers} users` : "";
+
+      return {
+        type: "mrkdwn",
+        text: `*${displayName}:*\n${data.pageViews} views${userText}`,
+      };
     });
 
-    blocks.push({
-      type: "context",
-      elements: [
-        {
-          type: "mrkdwn",
-          text: `Total Work List Clicks: ${projectClicks.totalWorkListClicks}`,
-        },
-      ],
-    });
+    for (let i = 0; i < projectFields.length; i += 10) {
+      blocks.push({
+        type: "section",
+        fields: projectFields.slice(i, i + 10),
+      });
+    }
 
     blocks.push({
       type: "divider",
