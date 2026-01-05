@@ -1,10 +1,8 @@
-
-
 // next/components/CTAButton.js
 
-'use client';
+"use client";
 
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from "react";
 
 export default function FloatingFormButton() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -14,13 +12,13 @@ export default function FloatingFormButton() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
-    
+
     // Handle form submission here
-    console.log('Form submitted:', data);
-    
+    console.log("Form submitted:", data);
+
     // Close form after submission
     setIsFormOpen(false);
-    
+
     // You can add your form submission logic here
     // For example: send to API, show success message, etc.
   };
@@ -44,22 +42,22 @@ export default function FloatingFormButton() {
       <button
         onClick={() => setIsFormOpen(true)}
         className={`fixed bottom-6 right-6 bg-black text-white px-4 py-2 shadow-lg hover:bg-gray-800 transition-colors duration-200 z-[9999] ${
-          isWiggling ? 'animate-wiggle' : ''
+          isWiggling ? "animate-wiggle" : ""
         }`}
         style={{
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
+          position: "fixed",
+          bottom: "24px",
+          right: "24px",
           zIndex: 9999,
-          backgroundColor: 'black',
-          color: 'white',
-          padding: '8px 16px',
-          borderRadius: '0px',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: '14px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-          fontFamily: 'LetterGothicMT, sans-serif'
+          backgroundColor: "black",
+          color: "white",
+          padding: "8px 16px",
+          borderRadius: "0px",
+          border: "none",
+          cursor: "pointer",
+          fontSize: "14px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+          fontFamily: "LetterGothicMT, sans-serif",
         }}
       >
         MAKE SOMETHING WITH FLOWERS
@@ -69,13 +67,13 @@ export default function FloatingFormButton() {
       {isFormOpen && (
         <>
           {/* Backdrop for closing when clicking outside */}
-          <div 
+          <div
             className="fixed inset-0 z-[9998] bg-black bg-opacity-50 md:bg-transparent"
             onClick={() => setIsFormOpen(false)}
           />
-          
+
           {/* Form - centered on mobile, positioned by button on desktop */}
-          <div 
+          <div
             className="fixed bg-white shadow-xl z-[10000] 
                        /* Mobile: centered and full width with margins */
                        left-4 right-4 top-1/2 -translate-y-1/2
@@ -83,13 +81,15 @@ export default function FloatingFormButton() {
                        md:left-auto md:right-6 md:top-auto md:bottom-20 md:translate-y-0 md:w-[500px]"
             style={{
               zIndex: 10000,
-              maxHeight: 'calc(100vh - 120px)', // Prevent overflow
-              overflow: 'hidden'
+              maxHeight: "calc(100vh - 120px)", // Prevent overflow
+              overflow: "hidden",
             }}
           >
             {/* Form Header */}
             <div className="flex justify-between items-center p-6 border-b">
-              <h2 className="text-xl font-semibold text-gray-900">Get in touch</h2>
+              <h2 className="text-xl font-semibold text-gray-900">
+                Get in touch
+              </h2>
               <button
                 onClick={() => setIsFormOpen(false)}
                 className="text-gray-400 hover:text-gray-600 text-2xl"
@@ -102,7 +102,10 @@ export default function FloatingFormButton() {
             <div className="max-h-[600px] overflow-y-auto">
               <form onSubmit={handleSubmit} className="p-6 space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Name *
                   </label>
                   <input
@@ -116,7 +119,10 @@ export default function FloatingFormButton() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Email *
                   </label>
                   <input
@@ -130,7 +136,10 @@ export default function FloatingFormButton() {
                 </div>
 
                 <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="company"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Company *
                   </label>
                   <input
@@ -144,7 +153,10 @@ export default function FloatingFormButton() {
                 </div>
 
                 <div>
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="role"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Role *
                   </label>
                   <input
@@ -158,7 +170,10 @@ export default function FloatingFormButton() {
                 </div>
 
                 <div>
-                  <label htmlFor="challenge" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="challenge"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Creative Challenge *
                   </label>
                   <textarea
@@ -172,7 +187,10 @@ export default function FloatingFormButton() {
                 </div>
 
                 <div>
-                  <label htmlFor="timeline" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label
+                    htmlFor="timeline"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
                     Timeline *
                   </label>
                   <select
@@ -185,9 +203,13 @@ export default function FloatingFormButton() {
                     <option value="asap">ASAP (Within 2 weeks)</option>
                     <option value="this-month">This Month</option>
                     <option value="next-month">Next Month</option>
-                    <option value="next-quarter">Next Quarter (3 months)</option>
+                    <option value="next-quarter">
+                      Next Quarter (3 months)
+                    </option>
                     <option value="next-6-months">Next 6 Months</option>
-                    <option value="planning-ahead">Planning Ahead (6+ months)</option>
+                    <option value="planning-ahead">
+                      Planning Ahead (6+ months)
+                    </option>
                     <option value="exploring">Just Exploring Options</option>
                   </select>
                 </div>
@@ -217,19 +239,26 @@ export default function FloatingFormButton() {
       {/* Custom CSS for wiggle animation and font loading */}
       <style jsx>{`
         @font-face {
-          font-family: 'LetterGothicMT';
-          src: url('/LetterGothicMTStd.woff2') format('woff2');
+          font-family: "LetterGothicMT";
+          src: url("/LetterGothicMTStd.woff2") format("woff2");
           font-weight: normal;
           font-style: normal;
           font-display: swap;
         }
 
         @keyframes wiggle {
-          0%, 100% { transform: rotate(0deg) scale(1); }
-          25% { transform: rotate(-3deg) scale(1.1); }
-          75% { transform: rotate(3deg) scale(1); }
+          0%,
+          100% {
+            transform: rotate(0deg) scale(1);
+          }
+          25% {
+            transform: rotate(-3deg) scale(1.1);
+          }
+          75% {
+            transform: rotate(3deg) scale(1);
+          }
         }
-        
+
         .animate-wiggle {
           animation: wiggle 0.5s ease-in-out;
         }

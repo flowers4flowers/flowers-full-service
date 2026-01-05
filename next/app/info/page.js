@@ -1,4 +1,3 @@
-
 // next/app/info/page.js
 
 import InfoContent from "../../components/InfoContent";

@@ -1,11 +1,9 @@
-
-
 // next/queries/homeQuery.js
 
 export async function getHomeData() {
   const res = await fetch(process.env.API_HOST, {
-    cache: 'no-store',
-    method: 'POST',
+    cache: "no-store",
+    method: "POST",
     headers: {
       Authorization: `Basic ${process.env.AUTH}`,
     },
@@ -13,25 +11,25 @@ export async function getHomeData() {
       query: `site.find('home')`,
       select: {
         description: {
-          query: 'page.description.kirbyText'
+          query: "page.description.kirbyText",
         },
         carouselImages: {
-          query: 'page.carousel_images.toFiles',
+          query: "page.carousel_images.toFiles",
           select: {
             url: true,
             width: true,
             height: true,
             alt: true,
-          }
-        }
-      }
-    })
-  })
- 
+          },
+        },
+      },
+    }),
+  });
+
   // Handle errors
   if (!res.ok) {
-    throw new Error('Failed to fetch data')
+    throw new Error("Failed to fetch data");
   }
- 
-  return res.json()
+
+  return res.json();
 }

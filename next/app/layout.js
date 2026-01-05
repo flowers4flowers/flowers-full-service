@@ -2,7 +2,7 @@
 
 import "../styles/global.css";
 import Script from "next/script";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { AppWrapper } from "../context";
 import MainNav from "../components/MainNav";
 import MobileNav from "../components/MobileNav";
