@@ -1,3 +1,6 @@
+
+// next/components/DefImage.js
+
 'use client'
 
 import Image from 'next/image'

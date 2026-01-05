@@ -1,3 +1,7 @@
+
+
+// next/components/Icons.js
+
 export const WordMark = () => {
   return(
     <svg 

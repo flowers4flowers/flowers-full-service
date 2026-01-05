@@ -1,3 +1,6 @@
+
+// next/components/GalleryContent.js
+
 'use client'
 
 import DefImage from "../components/DefImage"

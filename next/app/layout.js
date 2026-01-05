@@ -1,3 +1,5 @@
+// next/app/layout.js
+
 import "../styles/global.css";
 import Script from "next/script";
 import { GoogleAnalytics } from '@next/third-parties/google'

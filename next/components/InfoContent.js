@@ -1,4 +1,8 @@
-"use client";
+
+
+// next/components/InfoContent.js
+
+'use client'
 
 import { useAppState } from "../context";
 import classNames from "classnames";

@@ -1,3 +1,7 @@
+
+
+// next/components/Screensaver.js
+
 'use client'
 
 import DefImage from "./DefImage"

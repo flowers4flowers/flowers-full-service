@@ -1,3 +1,7 @@
+
+
+// next/components/MediaSection.js
+
 import classNames from 'classnames'
 import DefImage from './DefImage'
 import VideoPlayer from './VideoPlayer'

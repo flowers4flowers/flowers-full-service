@@ -1,3 +1,5 @@
+// next/app/page.js
+
 import { getHomeData } from "../queries/homeQuery"
 import HomeContent from "../components/HomeContent"
 

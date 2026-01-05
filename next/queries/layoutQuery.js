@@ -1,3 +1,7 @@
+
+
+// next/queries/layoutQuery.js
+
 export async function getGlobalData() {
   const res = await fetch(process.env.API_HOST, {
     cache: 'no-store',

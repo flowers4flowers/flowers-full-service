@@ -1,3 +1,7 @@
+
+
+// next/queries/projectQuery.js
+
 export async function getProjectData(slug) {
   const res = await fetch(process.env.API_HOST, {
     cache: 'no-store',

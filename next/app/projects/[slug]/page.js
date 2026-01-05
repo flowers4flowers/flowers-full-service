@@ -1,3 +1,7 @@
+
+
+// next/app/projects/[slug]/page.js
+
 import { getProjectData } from "../../../queries/projectQuery"
 import ProjectContent from "../../../components/ProjectContent"
 

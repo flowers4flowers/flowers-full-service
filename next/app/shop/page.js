@@ -1,3 +1,5 @@
+// next/app/shop/page.js
+
 import { getShopData } from "../../queries/shopQuery"
 
 export default async function Shop() {

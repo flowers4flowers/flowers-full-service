@@ -1,3 +1,6 @@
+
+// next/components/CopyLink.js
+
 'use client'
 
 import { useState } from "react"

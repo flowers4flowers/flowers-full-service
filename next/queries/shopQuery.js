@@ -1,3 +1,7 @@
+
+
+// next/queries/shopQuery.js
+
 export async function getShopData() {
   const res = await fetch(process.env.API_HOST, {
     cache: 'no-store',

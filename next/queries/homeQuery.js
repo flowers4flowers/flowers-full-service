@@ -1,3 +1,7 @@
+
+
+// next/queries/homeQuery.js
+
 export async function getHomeData() {
   const res = await fetch(process.env.API_HOST, {
     cache: 'no-store',

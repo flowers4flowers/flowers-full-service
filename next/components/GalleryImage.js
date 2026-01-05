@@ -1,4 +1,8 @@
-"use client";
+
+
+// next/components/GalleryImage.js
+
+'use client'
 
 import Link from "next/link";
 import { useAppState } from "../context";

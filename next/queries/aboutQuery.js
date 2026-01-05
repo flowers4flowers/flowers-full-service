@@ -1,3 +1,7 @@
+
+
+// next/queries/aboutQuery.js
+
 export async function getAboutData() {
   const aboutRes = await fetch(process.env.API_HOST, {
     cache: 'no-store',

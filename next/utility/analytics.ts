@@ -1,3 +1,5 @@
+// next/utility/analytics.ts
+
 import { sendGAEvent } from '@next/third-parties/google'
 import { AnalyticsEvent, AnalyticsCategory, AnalyticsEventParams } from './analytics-events'
 

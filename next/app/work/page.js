@@ -1,3 +1,5 @@
+// next/app/work/page.js
+
 import { getAboutData } from "../../queries/aboutQuery"
 import ProjectLink from "../../components/ProjectLink"
 

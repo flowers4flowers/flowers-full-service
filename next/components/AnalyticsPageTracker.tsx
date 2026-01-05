@@ -1,3 +1,6 @@
+
+// next/components/AnalyticsPageTracker.tsx
+
 'use client'
 
 import { useEffect } from 'react'

@@ -1,3 +1,5 @@
+// next/utility/analytics-events.ts
+
 export enum AnalyticsEvent {
   BUTTON_CLICK = 'button_click',
   LINK_CLICK = 'link_click',

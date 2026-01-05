@@ -1,3 +1,7 @@
+
+
+// next/context/index.js
+
 'use client'
 
 import { createContext, useContext, useReducer } from 'react'

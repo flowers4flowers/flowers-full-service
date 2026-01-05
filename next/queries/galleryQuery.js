@@ -1,3 +1,8 @@
+
+
+
+// next/queries/galleryQuery.js
+
 export async function getGalleryData() {
   const res = await fetch(process.env.API_HOST, {
     cache: 'no-store',

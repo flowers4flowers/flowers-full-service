@@ -1,3 +1,7 @@
+
+
+// next/components/HomeContent.js
+
 'use client'
 
 import { useAppState } from "../context"

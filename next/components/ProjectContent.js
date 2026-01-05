@@ -1,3 +1,7 @@
+
+
+// next/components/ProjectContent.js
+
 'use client'
 
 import MediaSection from '../components/MediaSection'
