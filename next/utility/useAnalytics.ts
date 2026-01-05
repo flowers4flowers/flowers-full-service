@@ -1,34 +1,49 @@
-
-
 // next/utility/useAnalytics.ts
 
-'use client'
+"use client";
 
-import { useCallback } from 'react'
-import { trackEvent, trackButtonClick, trackLinkClick, trackSocialClick } from '../utility/analytics'
-import { AnalyticsEventParams } from '../utility/analytics-events'
+import { useCallback } from "react";
+import {
+  trackEvent,
+  trackButtonClick,
+  trackLinkClick,
+  trackSocialClick,
+  trackVideoPlay,
+} from "../utility/analytics";
+import { AnalyticsEventParams } from "../utility/analytics-events";
 
 export const useAnalytics = () => {
   const track = useCallback((params: AnalyticsEventParams) => {
-    trackEvent(params)
-  }, [])
+    trackEvent(params);
+  }, []);
 
-  const trackButton = useCallback((label: string, additionalParams?: Record<string, any>) => {
-    trackButtonClick(label, additionalParams)
-  }, [])
+  const trackButton = useCallback(
+    (label: string, additionalParams?: Record<string, any>) => {
+      trackButtonClick(label, additionalParams);
+    },
+    []
+  );
 
   const trackLink = useCallback((label: string, href: string) => {
-    trackLinkClick(label, href)
-  }, [])
+    trackLinkClick(label, href);
+  }, []);
 
   const trackSocial = useCallback((platform: string) => {
-    trackSocialClick(platform)
-  }, [])
+    trackSocialClick(platform);
+  }, []);
+
+  const trackVideo = useCallback(
+    (label: string, additionalParams?: Record<string, any>) => {
+      trackVideoPlay(label, additionalParams);
+    },
+    []
+  );
 
   return {
     track,
     trackButton,
     trackLink,
     trackSocial,
-  }
-}
+    trackVideo,
+  };
+};

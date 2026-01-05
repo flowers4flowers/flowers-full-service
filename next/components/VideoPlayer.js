@@ -1,16 +1,17 @@
-
-
 // next/components/VideoPlayer.js
 
-'use client'
+"use client";
 
-import React, { useRef, useState } from 'react'
-import Vimeo from '@u-wave/react-vimeo'
-import DefImage from './DefImage'
-import classNames from 'classnames'
-import { PlayButton } from './Icons'
+import React, { useRef, useState } from "react";
+import Vimeo from "@u-wave/react-vimeo";
+import DefImage from "./DefImage";
+import classNames from "classnames";
+import { PlayButton } from "./Icons";
+import { useAnalytics } from "../utility/useAnalytics";
 
 const Video = React.forwardRef(({ block }, ref) => {
+  const { trackLink } = useAnalytics();
+
   if (block.videoMp4) {
     return (
       <video
@@ -20,7 +21,7 @@ const Video = React.forwardRef(({ block }, ref) => {
         preload
         className="w-full video"
       ></video>
-    )
+    );
   }
 
   if (block.vimeoUrl) {
@@ -36,41 +37,55 @@ const Video = React.forwardRef(({ block }, ref) => {
         showByline={false}
         className="video"
       />
-    )
+    );
   }
 
-  return null
-})
+  return null;
+});
 
-Video.displayName = 'Video'
+Video.displayName = "Video";
 
 const VideoPlayer = ({ block, className }) => {
-  const video = useRef(null)
-  const [videoStarted, setVideoStarted] = useState(false)
+  const video = useRef(null);
+  const [videoStarted, setVideoStarted] = useState(false);
 
   const playVideo = () => {
-    setVideoStarted(true)
+    // Determine video type and track
+    let videoType = "unknown";
+    let videoUrl = "";
 
     if (block.videoMp4) {
-      video.current.play()
+      videoType = "mp4";
+      videoUrl = block.videoMp4.url;
+    } else if (block.vimeoUrl) {
+      videoType = "vimeo";
+      videoUrl = block.vimeoUrl;
+    }
+
+    trackVideo(`Video Play: ${videoType}`, {
+      video_type: videoType,
+      video_url: videoUrl,
+    });
+
+    setVideoStarted(true);
+
+    if (block.videoMp4) {
+      video.current.play();
     }
 
     if (block.vimeoUrl) {
-      video.current.player.play()
+      video.current.player.play();
     }
-  }
+  };
 
-  const videoClasses = classNames(className, 'video-container relative', {
-    'video-started': videoStarted,
-  })
+  const videoClasses = classNames(className, "video-container relative", {
+    "video-started": videoStarted,
+  });
 
   return (
     <div className={videoClasses}>
       <div className="relative w-full">
-        <Video
-          block={block}
-          ref={video}
-        />
+        <Video block={block} ref={video} />
 
         {block.media && (
           <button
@@ -92,9 +107,9 @@ const VideoPlayer = ({ block, className }) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-VideoPlayer.displayName = 'VideoPlayer'
+VideoPlayer.displayName = "VideoPlayer";
 
-export default VideoPlayer
+export default VideoPlayer;

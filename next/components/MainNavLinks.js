@@ -1,12 +1,11 @@
-
-
 // next/components/MainNavLinks.js
 
-'use client'
+"use client";
 
-import { usePathname } from 'next/navigation'
-import { useAppState } from '../context'
-import Link from 'next/link'
+import { usePathname } from "next/navigation";
+import { useAppState } from "../context";
+import Link from "next/link";
+import { useAnalytics } from "../utility/useAnalytics";
 // import classNames from "classnames"
 
 // const CarouselInfo = ({ state, dispatch }) => {
@@ -48,12 +47,13 @@ import Link from 'next/link'
 // }
 
 const MainNavLinks = () => {
-  const { state, dispatch } = useAppState()
-  const pathname = usePathname()
+  const { state, dispatch } = useAppState();
+  const pathname = usePathname();
+  const { trackLink } = useAnalytics();
 
   const checkLinkActive = (link) => {
-    return pathname === link
-  }
+    return pathname === link;
+  };
 
   return (
     <nav className="main-nav-links col-span-9">
@@ -61,7 +61,8 @@ const MainNavLinks = () => {
         <li className="col-span-2">
           <Link
             href="/gallery"
-            className={checkLinkActive('/gallery') ? 'active' : ''}
+            className={checkLinkActive("/gallery") ? "active" : ""}
+            onClick={() => trackLink("Main Nav: Gallery", "/gallery")}
           >
             <span>Gallery</span>
           </Link>
@@ -70,7 +71,8 @@ const MainNavLinks = () => {
         <li className="col-span-2">
           <Link
             href="/work"
-            className={checkLinkActive('/work') ? 'active' : ''}
+            className={checkLinkActive("/work") ? "active" : ""}
+            onClick={() => trackLink("Main Nav: Work", "/work")}
           >
             <span>Work</span>
           </Link>
@@ -79,17 +81,20 @@ const MainNavLinks = () => {
         <li className="col-span-2">
           <Link
             href="/info"
-            className={checkLinkActive('/work') ? 'active' : ''}
+            className={checkLinkActive("/work") ? "active" : ""}
+            onClick={() => trackLink("Main Nav: Info", "/info")}
           >
             <span>Info</span>
           </Link>
         </li>
-       
 
         <li className="col-span-2">
           <Link
             href="https://shop.flowersfullservice.art"
             target="_blank"
+            onClick={() =>
+              trackLink("Main Nav: Shop", "https://shop.flowersfullservice.art")
+            }
           >
             <span>Shop</span>
           </Link>
@@ -103,7 +108,7 @@ const MainNavLinks = () => {
         )} */}
       </ul>
     </nav>
-  )
-}
+  );
+};
 
-export default MainNavLinks
+export default MainNavLinks;
