@@ -38,26 +38,7 @@ const ProjectLink = ({ project }) => {
 
   // Function to track project clicks
   const handleProjectClick = () => {
-    // Check if we're in browser and Amplitude is fully loaded
-    if (typeof window !== 'undefined' && window.amplitude && window.amplitude.track) {
-      try {
-        window.amplitude.track('Project Clicked From /work', {
-          project_title: project.title,
-          project_slug: project.slug,
-          project_client: project.client,
-          project_start_date: project.startDate,
-          project_end_date: project.endDate,
-          project_location: project.location,
-          timestamp: new Date().toISOString()
-        })
-        
-        console.log('✅ Tracked project click:', project.title)
-      } catch (error) {
-        console.log('⚠️ Amplitude tracking failed:', error)
-      }
-    } else {
-      console.log('⏳ Amplitude not ready yet, skipping tracking')
-    }
+
   }
 
   const classes = classNames(
