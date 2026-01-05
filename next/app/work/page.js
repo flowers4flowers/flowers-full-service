@@ -1,52 +1,52 @@
-import { getAboutData } from "../../queries/aboutQuery"
-import ProjectLink from "../../components/ProjectLink"
+// next/app/work/page.js
+
+import { getAboutData } from "../../queries/aboutQuery";
+import ProjectLink from "../../components/ProjectLink";
 
 export default async function Work() {
-  const data = await getAboutData()
+  const data = await getAboutData();
 
-  const { description } = data.aboutData.result || {}
-  const { projects } = data.projectsData.result || {}
-  const { clients } = data.clientsData.result || {}
+  const { description } = data.aboutData.result || {};
+  const { projects } = data.projectsData.result || {};
+  const { clients } = data.clientsData.result || {};
 
   // group projects by client property
   const projectsByClient = projects.reduce((acc, project) => {
-    const { client } = project
+    const { client } = project;
 
     if (!acc.some((item) => item.client === client)) {
       acc.push({
         client,
-        projects: [
-          project
-        ]
-      })
+        projects: [project],
+      });
     } else {
-      const index = acc.findIndex((item) => item.client === client)
+      const index = acc.findIndex((item) => item.client === client);
 
-      acc[index].projects.push(project)
+      acc[index].projects.push(project);
     }
 
-    return acc
-  }, [])
+    return acc;
+  }, []);
 
   // order projectsByClient array to be same as clients array
   const orderedProjectsByClient = clients.reduce((acc, client) => {
-    const { name } = client
+    const { name } = client;
 
-    const index = projectsByClient.findIndex((item) => item.client === name)
+    const index = projectsByClient.findIndex((item) => item.client === name);
 
     if (index > -1) {
-      acc.push(projectsByClient[index])
+      acc.push(projectsByClient[index]);
     }
 
-    return acc
-  }, [])
+    return acc;
+  }, []);
 
   const sortByDate = (a, b) => {
-    const aDate = new Date(a.endDate ? a.endDate : a.startDate)
-    const bDate = new Date(b.endDate ? b.endDate : b.startDate)
+    const aDate = new Date(a.endDate ? a.endDate : a.startDate);
+    const bDate = new Date(b.endDate ? b.endDate : b.startDate);
 
-    return bDate - aDate
-  }
+    return bDate - aDate;
+  };
 
   return (
     <div className="pb-[30rem]">
@@ -59,23 +59,26 @@ export default async function Work() {
 
       {orderedProjectsByClient.length > 0 && (
         <div className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14">
-          {orderedProjectsByClient.map((item, index) => { 
+          {orderedProjectsByClient.map((item, index) => {
             return (
-              <div className="client-group grid grid-cols-6 lg:grid-cols-12 gap-4 lg:gap-6" key={index}>
-                <h3 className="col-span-2 text-md lg:text-lg font-primary uppercase pr-4">{item.client}</h3>
+              <div
+                className="client-group grid grid-cols-6 lg:grid-cols-12 gap-4 lg:gap-6"
+                key={index}
+              >
+                <h3 className="col-span-2 text-md lg:text-lg font-primary uppercase pr-4">
+                  {item.client}
+                </h3>
 
                 <div className="col-span-4 lg:col-span-8">
-                  {item.projects.sort(sortByDate).map(project => {
-                    return (
-                      <ProjectLink project={project} key={project.slug} />
-                    )
+                  {item.projects.sort(sortByDate).map((project) => {
+                    return <ProjectLink project={project} key={project.slug} />;
                   })}
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       )}
     </div>
-  )
+  );
 }

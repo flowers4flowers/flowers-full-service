@@ -1,13 +1,15 @@
-'use client'
+// next/components/AnalyticsPageTracker.tsx
 
-import { useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { trackEvent } from '../utility/analytics'
-import { AnalyticsEvent, AnalyticsCategory } from '../utility/analytics-events'
+"use client";
+
+import { useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { trackEvent } from "../utility/analytics";
+import { AnalyticsEvent, AnalyticsCategory } from "../utility/analytics-events";
 
 export default function AnalyticsPageTracker() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (pathname) {
@@ -16,10 +18,10 @@ export default function AnalyticsPageTracker() {
         category: AnalyticsCategory.NAVIGATION,
         label: pathname,
         page_path: pathname,
-        page_search: searchParams?.toString() || '',
-      })
+        page_search: searchParams?.toString() || "",
+      });
     }
-  }, [pathname, searchParams])
+  }, [pathname, searchParams]);
 
-  return null
+  return null;
 }

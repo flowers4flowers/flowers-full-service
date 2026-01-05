@@ -1,12 +1,12 @@
-import { getGalleryData } from "../../queries/galleryQuery"
-import GalleryContent from "../../components/GalleryContent"
+// next/app/gallery/page.js
+
+import { getGalleryData } from "../../queries/galleryQuery";
+import GalleryContent from "../../components/GalleryContent";
 
 export default async function Gallery() {
-  const data = await getGalleryData()
+  const data = await getGalleryData();
 
-  const { mediaItems } = data.result
+  const { mediaItems } = data.result;
 
-  return (
-    <GalleryContent mediaItems={mediaItems} />
-  )
-} 
+  return <GalleryContent mediaItems={mediaItems} />;
+}

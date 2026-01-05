@@ -1,6 +1,8 @@
+// next/app/layout.js
+
 import "../styles/global.css";
 import Script from "next/script";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { AppWrapper } from "../context";
 import MainNav from "../components/MainNav";
 import MobileNav from "../components/MobileNav";
@@ -62,51 +64,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             />
           </noscript>
 
-          <Script
-            src="https://cdn.amplitude.com/script/49900a6abbaf3be1288f2fe1813d60a7.js"
-            strategy="afterInteractive"
-          />
-          <Script
-            id="amplitude-init"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-      // Wait for Amplitude to be available
-      function initAmplitude() {
-        if (typeof window !== 'undefined' && window.amplitude && window.amplitude.init) {
-          try {
-            // Initialize Amplitude
-            window.amplitude.init('49900a6abbaf3be1288f2fe1813d60a7', {
-              "fetchRemoteConfig": true,
-              "autocapture": true
-            });
-            
-            // Add session replay after initialization
-            if (window.sessionReplay && window.sessionReplay.plugin) {
-              window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));
-            }
-            
-            // Send a test event to verify installation
-            window.amplitude.track('Page View', {
-              page: window.location.pathname,
-              timestamp: new Date().toISOString()
-            });
-            
-            console.log('✅ Amplitude initialized successfully');
-          } catch (error) {
-            console.error('❌ Amplitude initialization failed:', error);
-          }
-        } else {
-          // If Amplitude isn't ready, try again in 100ms
-          setTimeout(initAmplitude, 100);
-        }
-      }
-      
-      // Start trying to initialize
-      initAmplitude();
-    `,
-            }}
-          />
           <MainNav socialLinks={socialLinks} />
 
           <MobileNav />

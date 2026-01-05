@@ -1,7 +1,9 @@
+// next/queries/aboutQuery.js
+
 export async function getAboutData() {
   const aboutRes = await fetch(process.env.API_HOST, {
-    cache: 'no-store',
-    method: 'POST',
+    cache: "no-store",
+    method: "POST",
     headers: {
       Authorization: `Basic ${process.env.AUTH}`,
     },
@@ -9,22 +11,22 @@ export async function getAboutData() {
       query: `site.find('about')`,
       select: {
         description: {
-          query: 'page.description.kirbyText'
-        }
-      }
-    })
-  })
- 
+          query: "page.description.kirbyText",
+        },
+      },
+    }),
+  });
+
   // Handle errors
   if (!aboutRes.ok) {
-    throw new Error('Failed to fetch data')
+    throw new Error("Failed to fetch data");
   }
 
-  const aboutData = await aboutRes.json()
+  const aboutData = await aboutRes.json();
 
   const clientsRes = await fetch(process.env.API_HOST, {
-    cache: 'no-store',
-    method: 'POST',
+    cache: "no-store",
+    method: "POST",
     headers: {
       Authorization: `Basic ${process.env.AUTH}`,
     },
@@ -32,25 +34,25 @@ export async function getAboutData() {
       query: `site`,
       select: {
         clients: {
-          query: 'site.clients.toStructure',
+          query: "site.clients.toStructure",
           select: {
-            name: true
-          }
-        }
-      }
-    })
-  })
- 
+            name: true,
+          },
+        },
+      },
+    }),
+  });
+
   // Handle errors
   if (!clientsRes.ok) {
-    throw new Error('Failed to fetch data')
+    throw new Error("Failed to fetch data");
   }
 
-  const clientsData = await clientsRes.json()
+  const clientsData = await clientsRes.json();
 
   const projectsRes = await fetch(process.env.API_HOST, {
-    cache: 'no-store',
-    method: 'POST',
+    cache: "no-store",
+    method: "POST",
     headers: {
       Authorization: `Basic ${process.env.AUTH}`,
     },
@@ -58,7 +60,7 @@ export async function getAboutData() {
       query: `page('Projects')`,
       select: {
         projects: {
-          query: 'page.children.listed',
+          query: "page.children.listed",
           select: {
             title: true,
             slug: true,
@@ -67,32 +69,32 @@ export async function getAboutData() {
             endDate: `page.end_date.toDate('Y')`,
             location: true,
             description: {
-              query: 'page.description.kirbyText'
+              query: "page.description.kirbyText",
             },
             featuredImage: {
-              query: 'page.featured_image.toFile',
+              query: "page.featured_image.toFile",
               select: {
                 url: true,
                 width: true,
                 height: true,
-                alt: true
-              }
+                alt: true,
+              },
             },
-          }
-        }
-      }
-    })
-  })
+          },
+        },
+      },
+    }),
+  });
 
   if (!projectsRes.ok) {
-    throw new Error('Failed to fetch data')
+    throw new Error("Failed to fetch data");
   }
 
-  const projectsData = await projectsRes.json()
+  const projectsData = await projectsRes.json();
 
   return {
     aboutData,
     projectsData,
-    clientsData
-  }
+    clientsData,
+  };
 }

@@ -1,86 +1,88 @@
-'use client'
+// next/components/HomeContent.js
 
-import { useAppState } from "../context"
-import classNames from "classnames"
-import { useEffect, useRef, useState } from "react"
-import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/css'
-import DefImage from "./DefImage"
+"use client";
+
+import { useAppState } from "../context";
+import classNames from "classnames";
+import { useEffect, useRef, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import DefImage from "./DefImage";
 
 const HomeContent = ({ description, carouselImages }) => {
-  const { state, dispatch } = useAppState()
-  const swiperRef = useRef(null)
-  const [transitioning, setTransitioning] = useState(false)
+  const { state, dispatch } = useAppState();
+  const swiperRef = useRef(null);
+  const [transitioning, setTransitioning] = useState(false);
 
   // classnames for the carousel container
   const classes = classNames(
-    'relative lg:fixed lg:top-0 lg:left-0 w-full lg:h-full lg:py-[120px] flex flex-col mt-6 lg:mt-0',
+    "relative lg:fixed lg:top-0 lg:left-0 w-full lg:h-full lg:py-[120px] flex flex-col mt-6 lg:mt-0",
     {
-      'active': state.homeCarouselOpen
+      active: state.homeCarouselOpen,
     }
-  )
+  );
 
   const imageLinkClasses = classNames(
-    'flex-1 flex justify-center items-center pointer-events-none font-secondary text-base',
+    "flex-1 flex justify-center items-center pointer-events-none font-secondary text-base",
     {
-      'opacity-0': !state.showViewImages,
-      'opacity-100': state.showViewImages
+      "opacity-0": !state.showViewImages,
+      "opacity-100": state.showViewImages,
     }
-  )
+  );
 
   const closeCarousel = () => {
     dispatch({
-      type: 'SET_HOME_CAROUSEL_OPEN',
-      payload: false
-    })
-  }
+      type: "SET_HOME_CAROUSEL_OPEN",
+      payload: false,
+    });
+  };
 
   const handleCarouselMouseEnter = (className) => {
     dispatch({
-      type: 'SET_HOME_CAROUSEL_SIDE',
-      payload: className
-    })
-  }
+      type: "SET_HOME_CAROUSEL_SIDE",
+      payload: className,
+    });
+  };
 
   const handleCarouselMouseLeave = () => {
     dispatch({
-      type: 'SET_HOME_CAROUSEL_SIDE',
-      payload: null
-    })
-  }
+      type: "SET_HOME_CAROUSEL_SIDE",
+      payload: null,
+    });
+  };
 
   // after six seconds, open carousel
   useEffect(() => {
     // if carousel images exist, set carousel data
     if (carouselImages.length > 0) {
       dispatch({
-        type: 'SET_HOME_CAROUSEL_DATA',
+        type: "SET_HOME_CAROUSEL_DATA",
         payload: {
           total: carouselImages.length,
-          currentIndex: 1
-        }
-      })
+          currentIndex: 1,
+        },
+      });
     }
-  
+
     // set timer if cookie doesnt exist
     const timer = setTimeout(() => {
       dispatch({
-        type: 'SET_HOME_CAROUSEL_OPEN',
-        payload: true
-      })
-    }, 6000)
-  
+        type: "SET_HOME_CAROUSEL_OPEN",
+        payload: true,
+      });
+    }, 6000);
+
     // Cleanup function to clear timeout if component unmounts
-    return () => clearTimeout(timer)
-  }, [carouselImages.length, dispatch])
+    return () => clearTimeout(timer);
+  }, [carouselImages.length, dispatch]);
 
   const counterClasses = classNames(
-    'counter flex-none flex justify-center items-center pt-6 lg:pt-12',
+    "counter flex-none flex justify-center items-center pt-6 lg:pt-12",
     {
-      'left': state.homeCarouselSide === 'left',
-      'right': state.homeCarouselSide === 'right'
+      left: state.homeCarouselSide === "left",
+      right: state.homeCarouselSide === "right",
     }
-  )
+  );
 
   return (
     <div className="h-full flex flex-col">
@@ -93,17 +95,14 @@ const HomeContent = ({ description, carouselImages }) => {
         )}
 
         {carouselImages.length > 0 && (
-          <div
-            id="home-carousel"
-            className={classes}
-          >
+          <div id="home-carousel" className={classes}>
             <button
               onClick={closeCarousel}
               onMouseEnter={() => {
                 dispatch({
-                  type: 'SET_HOME_CAROUSEL_CLOSE',
-                  payload: true
-                })
+                  type: "SET_HOME_CAROUSEL_CLOSE",
+                  payload: true,
+                });
               }}
               className="hidden lg:block fill-parent"
             ></button>
@@ -118,15 +117,15 @@ const HomeContent = ({ description, carouselImages }) => {
                 className="w-full h-full aspect-[4/3] lg:aspect-[unset]"
                 onSlideChange={(swiper) => {
                   dispatch({
-                    type: 'SET_HOME_CAROUSEL_DATA',
+                    type: "SET_HOME_CAROUSEL_DATA",
                     payload: {
                       total: carouselImages.length,
-                      currentIndex: swiper.realIndex + 1
-                    }
-                  })
+                      currentIndex: swiper.realIndex + 1,
+                    },
+                  });
                 }}
                 onSlideChangeTransitionEnd={() => {
-                  setTransitioning(false)
+                  setTransitioning(false);
                 }}
               >
                 {carouselImages.map((image, index) => (
@@ -138,9 +137,9 @@ const HomeContent = ({ description, carouselImages }) => {
                       onClick={closeCarousel}
                       onMouseEnter={() => {
                         dispatch({
-                          type: 'SET_HOME_CAROUSEL_CLOSE',
-                          payload: true
-                        })
+                          type: "SET_HOME_CAROUSEL_CLOSE",
+                          payload: true,
+                        });
                       }}
                       className="fill-parent"
                     ></button>
@@ -148,9 +147,9 @@ const HomeContent = ({ description, carouselImages }) => {
                     <div
                       onMouseEnter={() => {
                         dispatch({
-                          type: 'SET_HOME_CAROUSEL_CLOSE',
-                          payload: false
-                        })
+                          type: "SET_HOME_CAROUSEL_CLOSE",
+                          payload: false,
+                        });
                       }}
                       className="relative h-full w-auto"
                     >
@@ -165,19 +164,19 @@ const HomeContent = ({ description, carouselImages }) => {
                       <div className="fill-parent hidden lg:flex">
                         <button
                           onClick={() => {
-                            setTransitioning(true)
-                            swiperRef.current.swiper.slidePrev()
+                            setTransitioning(true);
+                            swiperRef.current.swiper.slidePrev();
                           }}
-                          onMouseEnter={() => handleCarouselMouseEnter('left')}
+                          onMouseEnter={() => handleCarouselMouseEnter("left")}
                           onMouseLeave={() => handleCarouselMouseLeave()}
                           className="prev w-1/2 h-full"
                         ></button>
                         <button
                           onClick={() => {
-                            setTransitioning(true)
-                            swiperRef.current.swiper.slideNext()
+                            setTransitioning(true);
+                            swiperRef.current.swiper.slideNext();
                           }}
-                          onMouseEnter={() => handleCarouselMouseEnter('right')}
+                          onMouseEnter={() => handleCarouselMouseEnter("right")}
                           onMouseLeave={() => handleCarouselMouseLeave()}
                           className="next w-1/2 h-full"
                         ></button>
@@ -192,18 +191,24 @@ const HomeContent = ({ description, carouselImages }) => {
               className={counterClasses}
               onMouseEnter={() => {
                 dispatch({
-                  type: 'SET_HOME_CAROUSEL_CLOSE',
-                  payload: true
-                })
+                  type: "SET_HOME_CAROUSEL_CLOSE",
+                  payload: true,
+                });
               }}
             >
               {state.homeCarouselData && (
-                <p className="text-md font-secondary relative">{ transitioning ? `${state.homeCarouselData?.currentIndex}/${state.homeCarouselData?.total}` : state.homeCarouselClose ? '[close images]' : `${state.homeCarouselData?.currentIndex}/${state.homeCarouselData?.total}` }</p>
+                <p className="text-md font-secondary relative">
+                  {transitioning
+                    ? `${state.homeCarouselData?.currentIndex}/${state.homeCarouselData?.total}`
+                    : state.homeCarouselClose
+                    ? "[close images]"
+                    : `${state.homeCarouselData?.currentIndex}/${state.homeCarouselData?.total}`}
+                </p>
               )}
             </div>
           </div>
         )}
-        
+
         {/* {carouselImages.length > 0 && (
           <>
             <div
@@ -308,7 +313,7 @@ const HomeContent = ({ description, carouselImages }) => {
         <p>[view images]</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HomeContent
+export default HomeContent;
