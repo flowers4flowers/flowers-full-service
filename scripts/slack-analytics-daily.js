@@ -492,7 +492,7 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
   const projectPages = [];
 
   Object.entries(combinedData.pages).forEach(([pagePath, data]) => {
-    const isProject = pagePath.includes('/project/') || pagePath.includes('/gallery/');
+    const isProject = pagePath.startsWith('/projects/') || pagePath === '/gallery';
     if (isProject) {
       projectPages.push([pagePath, data]);
     } else {
@@ -520,7 +520,7 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
 
       return {
         type: "mrkdwn",
-        text: `*${displayName}:*\n${data.pageViews} views${userText} | ${data.eventCount} events`,
+        text: `*${displayName}:*\n${data.pageViews} views${userText}`,
       };
     });
 
@@ -566,41 +566,6 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
         fields: projectFields.slice(i, i + 10),
       });
     }
-
-    blocks.push({
-      type: "divider",
-    });
-  }
-
-  // Project Clicks Section - Gallery
-  if (projectClicks.gallery.length > 0) {
-    blocks.push({
-      type: "section",
-      text: {
-        type: "mrkdwn",
-        text: "*Most Clicked Projects (Gallery):*",
-      },
-    });
-
-    const galleryFields = projectClicks.gallery.map((project) => ({
-      type: "mrkdwn",
-      text: `*${project.projectName}:*\n${project.clicks} clicks`,
-    }));
-
-    blocks.push({
-      type: "section",
-      fields: galleryFields,
-    });
-
-    blocks.push({
-      type: "context",
-      elements: [
-        {
-          type: "mrkdwn",
-          text: `Total Gallery Clicks: ${projectClicks.totalGalleryClicks}`,
-        },
-      ],
-    });
 
     blocks.push({
       type: "divider",
