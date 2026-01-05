@@ -28,7 +28,14 @@ const GalleryImage = ({ item, classes, index }) => {
     const destination = `/projects/${item.project.slug}${
       item.slug ? `#${item.slug}` : ""
     }`;
-    trackLink(`Gallery Image: ${item.project?.slug || "unknown"}`, destination);
+    trackLink(
+      `Gallery Image: ${item.project?.title || "unknown"}`,
+      destination,
+      {
+        project_slug: item.project?.slug,
+        project_title: item.project?.title,
+      }
+    );
 
     // Keep the existing navigation behavior
     dispatch({

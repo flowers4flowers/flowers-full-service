@@ -42,7 +42,10 @@ const ProjectLink = ({ project }) => {
 
   // Function to track project clicks
   const handleProjectClick = () => {
-    trackLink(`Work List: ${project.slug}`, `/projects/${project.slug}`);
+    trackLink(`Work List: ${project.title}`, `/projects/${project.slug}`, {
+      project_slug: project.slug,
+      project_title: project.title,
+    });
   };
 
   const classes = classNames(

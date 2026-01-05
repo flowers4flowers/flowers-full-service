@@ -24,9 +24,12 @@ export const useAnalytics = () => {
     []
   );
 
-  const trackLink = useCallback((label: string, href: string) => {
-    trackLinkClick(label, href);
-  }, []);
+  const trackLink = useCallback(
+    (label: string, href: string, additionalParams?: Record<string, any>) => {
+      trackLinkClick(label, href, additionalParams);
+    },
+    []
+  );
 
   const trackSocial = useCallback((platform: string) => {
     trackSocialClick(platform);

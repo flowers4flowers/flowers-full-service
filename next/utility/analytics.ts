@@ -41,12 +41,13 @@ export const trackButtonClick = (
   });
 };
 
-export const trackLinkClick = (label: string, href: string) => {
+export const trackLinkClick = (label: string, href: string, additionalParams?: Record<string, any>) => {
   trackEvent({
     event: AnalyticsEvent.LINK_CLICK,
     category: AnalyticsCategory.NAVIGATION,
     label,
     destination: href,
+    ...additionalParams,
   });
 };
 
