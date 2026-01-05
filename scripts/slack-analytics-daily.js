@@ -28,6 +28,28 @@ if (missingEnvVars.length > 0) {
 
 console.log("Environment variables loaded successfully");
 
+async function retryWithBackoff(fn, maxRetries = 3, baseDelay = 1000) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      const isLastAttempt = i === maxRetries - 1;
+      const isRetryable =
+        error.code === 4 || // DEADLINE_EXCEEDED
+        error.code === 14 || // UNAVAILABLE
+        error.code === 8; // RESOURCE_EXHAUSTED
+
+      if (isLastAttempt || !isRetryable) {
+        throw error;
+      }
+
+      const delay = baseDelay * Math.pow(2, i);
+      console.log(`Attempt ${i + 1} failed. Retrying in ${delay}ms...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+}
+
 async function getGA4TrafficData() {
   try {
     console.log("Fetching GA4 traffic data...");
@@ -44,35 +66,43 @@ async function getGA4TrafficData() {
 
     const analyticsDataClient = new BetaAnalyticsDataClient({
       authClient: oauth2Client,
+      clientConfig: {
+        apiEndpoint: "analyticsdata.googleapis.com",
+      },
+      gaxOptions: {
+        timeout: 120000, // 2 minutes
+      },
     });
 
-    const [response] = await analyticsDataClient.runReport({
-      property: `properties/${process.env.GA4_PROPERTY_ID}`,
-      dateRanges: [
-        {
-          startDate: "yesterday",
-          endDate: "yesterday",
-        },
-      ],
-      dimensions: [
-        {
-          name: "sessionSource",
-        },
-        {
-          name: "sessionMedium",
-        },
-      ],
-      metrics: [
-        {
-          name: "sessions",
-        },
-        {
-          name: "engagedSessions",
-        },
-        {
-          name: "totalUsers",
-        },
-      ],
+    const [response] = await retryWithBackoff(async () => {
+      return await analyticsDataClient.runReport({
+        property: `properties/${process.env.GA4_PROPERTY_ID}`,
+        dateRanges: [
+          {
+            startDate: "yesterday",
+            endDate: "yesterday",
+          },
+        ],
+        dimensions: [
+          {
+            name: "sessionSource",
+          },
+          {
+            name: "sessionMedium",
+          },
+        ],
+        metrics: [
+          {
+            name: "sessions",
+          },
+          {
+            name: "engagedSessions",
+          },
+          {
+            name: "totalUsers",
+          },
+        ],
+      });
     });
 
     const trafficData = {};
@@ -91,7 +121,9 @@ async function getGA4TrafficData() {
     });
 
     console.log(
-      `Found ${totalSessions} total sessions across ${Object.keys(trafficData).length} channels`
+      `Found ${totalSessions} total sessions across ${
+        Object.keys(trafficData).length
+      } channels`
     );
     return { channels: trafficData, totalSessions };
   } catch (error) {
@@ -119,7 +151,9 @@ async function sendToSlack(ga4Data) {
       elements: [
         {
           type: "mrkdwn",
-          text: `*Date:* ${dateString} | *Total Sessions:* ${ga4Data.totalSessions} | *Unique Channels:* ${Object.keys(ga4Data.channels).length}`,
+          text: `*Date:* ${dateString} | *Total Sessions:* ${
+            ga4Data.totalSessions
+          } | *Unique Channels:* ${Object.keys(ga4Data.channels).length}`,
         },
       ],
     },
@@ -204,7 +238,9 @@ async function main() {
           channel: "#daily-analytics",
           username: "GA4 Traffic Bot",
           icon_emoji: ":chart_with_upwards_trend:",
-          text: `GA4 Traffic Report - ${yesterday.toISOString().split("T")[0]}\n\nNo traffic data recorded yesterday.`,
+          text: `GA4 Traffic Report - ${
+            yesterday.toISOString().split("T")[0]
+          }\n\nNo traffic data recorded yesterday.`,
         });
         console.log("Empty report sent to Slack");
       }
@@ -231,7 +267,9 @@ async function main() {
           channel: "#daily-analytics",
           username: "GA4 Traffic Bot",
           icon_emoji: ":warning:",
-          text: `GA4 Traffic Report Failed\n\n**Error:** ${error.message}\n**Date:** ${new Date().toISOString().split("T")[0]}`,
+          text: `GA4 Traffic Report Failed\n\n**Error:** ${
+            error.message
+          }\n**Date:** ${new Date().toISOString().split("T")[0]}`,
         });
       }
     } catch (slackError) {
