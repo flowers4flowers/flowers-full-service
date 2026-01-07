@@ -352,7 +352,7 @@ async function getSearchConsoleData() {
     });
 
     const endDate = new Date();
-    endDate.setDate(endDate.getDate() - 1);
+    endDate.setDate(endDate.getDate() - 3);
     const startDate = new Date(endDate);
 
     const siteUrl =
@@ -686,7 +686,7 @@ function formatSlackBlocks(
       type: "section",
       text: {
         type: "mrkdwn",
-        text: "*Search Queries:*",
+        text: "*Search Queries (last 3 days):*",
       },
     });
 
