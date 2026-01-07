@@ -11,6 +11,9 @@ const requiredEnvVars = [
   "GOOGLE_CLIENT_ID",
   "GOOGLE_CLIENT_SECRET",
   "GOOGLE_REFRESH_TOKEN",
+  "GOOGLE_SEARCH_CLIENT_ID",
+  "GOOGLE_SEARCH_CLIENT_SECRET",
+  "GOOGLE_SEARCH_REFRESH_TOKEN",
 ];
 
 const missingEnvVars = requiredEnvVars.filter(
@@ -329,6 +332,62 @@ async function getGA4TrafficData() {
   }
 }
 
+async function getSearchConsoleData() {
+  try {
+    console.log("Fetching Google Search Console data...");
+
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_SEARCH_CLIENT_ID,
+      process.env.GOOGLE_SEARCH_CLIENT_SECRET,
+      "https://developers.google.com/oauthplayground"
+    );
+
+    oauth2Client.setCredentials({
+      refresh_token: process.env.GOOGLE_SEARCH_REFRESH_TOKEN,
+    });
+
+    const searchconsole = google.searchconsole({
+      version: "v1",
+      auth: oauth2Client,
+    });
+
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() - 1);
+    const startDate = new Date(endDate);
+    startDate.setDate(startDate.getDate() - 6);
+
+    const siteUrl =
+      process.env.SEARCH_CONSOLE_SITE_URL || "sc-domain:yourdomain.com";
+
+    const response = await searchconsole.searchanalytics.query({
+      siteUrl: siteUrl,
+      requestBody: {
+        startDate: startDate.toISOString().split("T")[0],
+        endDate: endDate.toISOString().split("T")[0],
+        dimensions: ["query"],
+        rowLimit: 10,
+      },
+    });
+
+    const queries = response.data.rows || [];
+    console.log(`Found ${queries.length} search queries`);
+
+    return {
+      queries: queries.map((row) => ({
+        query: row.keys[0],
+        clicks: row.clicks,
+        impressions: row.impressions,
+        ctr: row.ctr,
+        position: row.position,
+      })),
+      totalQueries: queries.length,
+    };
+  } catch (error) {
+    console.error("Search Console data fetch failed:", error.message);
+    return null;
+  }
+}
+
 function combinePageAndEventData(pageData, eventData) {
   const combinedData = {};
   let totalPageViews = 0;
@@ -464,7 +523,13 @@ function createPageDisplayName(pagePath) {
   return normalizedPath;
 }
 
-function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString) {
+function formatSlackBlocks(
+  combinedData,
+  projectClicks,
+  trafficData,
+  searchData,
+  dateString
+) {
   const blocks = [
     {
       type: "header",
@@ -492,7 +557,8 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
   const projectPages = [];
 
   Object.entries(combinedData.pages).forEach(([pagePath, data]) => {
-    const isProject = pagePath.startsWith('/projects/') || pagePath === '/gallery';
+    const isProject =
+      pagePath.startsWith("/projects/") || pagePath === "/gallery";
     if (isProject) {
       projectPages.push([pagePath, data]);
     } else {
@@ -516,7 +582,8 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
 
     const pageFields = sortedRegularPages.map(([pagePath, data]) => {
       const displayName = createPageDisplayName(pagePath);
-      const userText = data.uniqueUsers > 0 ? ` | ${data.uniqueUsers} users` : "";
+      const userText =
+        data.uniqueUsers > 0 ? ` | ${data.uniqueUsers} users` : "";
 
       return {
         type: "mrkdwn",
@@ -552,7 +619,8 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
 
     const projectFields = sortedProjectPages.map(([pagePath, data]) => {
       const displayName = createPageDisplayName(pagePath);
-      const userText = data.uniqueUsers > 0 ? ` | ${data.uniqueUsers} users` : "";
+      const userText =
+        data.uniqueUsers > 0 ? ` | ${data.uniqueUsers} users` : "";
 
       return {
         type: "mrkdwn",
@@ -607,6 +675,37 @@ function formatSlackBlocks(combinedData, projectClicks, trafficData, dateString)
         },
       ],
     });
+
+    blocks.push({
+      type: "divider",
+    });
+  }
+
+  // Search Console Section
+  if (searchData && searchData.queries.length > 0) {
+    blocks.push({
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "*Top Search Queries (Last 7 Days):*",
+      },
+    });
+
+    const queryFields = searchData.queries.map((query) => ({
+      type: "mrkdwn",
+      text: `*${query.query}*\n${query.clicks} clicks | ${
+        query.impressions
+      } impressions | ${(query.ctr * 100).toFixed(
+        1
+      )}% CTR | Pos: ${query.position.toFixed(1)}`,
+    }));
+
+    for (let i = 0; i < queryFields.length; i += 10) {
+      blocks.push({
+        type: "section",
+        fields: queryFields.slice(i, i + 10),
+      });
+    }
 
     blocks.push({
       type: "divider",
@@ -676,7 +775,7 @@ async function main() {
 
     // Fetch all GA4 data in parallel
     console.log("Fetching GA4 data from all sources...");
-    const [pageData, eventData, trafficData] = await Promise.all([
+    const [pageData, eventData, trafficData, searchData] = await Promise.all([
       getGA4PageData().catch((err) => {
         console.error("Page data fetch failed:", err.message);
         return null;
@@ -687,6 +786,10 @@ async function main() {
       }),
       getGA4TrafficData().catch((err) => {
         console.error("Traffic data fetch failed:", err.message);
+        return null;
+      }),
+      getSearchConsoleData().catch((err) => {
+        console.error("Search Console data fetch failed:", err.message);
         return null;
       }),
     ]);
@@ -711,6 +814,7 @@ async function main() {
       combinedData,
       projectClicks,
       trafficData,
+      searchData,
       dateString
     );
 
@@ -740,10 +844,7 @@ async function main() {
         new Date().toISOString().split("T")[0]
       );
     } catch (slackError) {
-      console.error(
-        "Failed to send error notification:",
-        slackError.message
-      );
+      console.error("Failed to send error notification:", slackError.message);
     }
 
     process.exit(1);
