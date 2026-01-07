@@ -354,7 +354,6 @@ async function getSearchConsoleData() {
     const endDate = new Date();
     endDate.setDate(endDate.getDate() - 1);
     const startDate = new Date(endDate);
-    startDate.setDate(startDate.getDate() - 6);
 
     const siteUrl =
       process.env.SEARCH_CONSOLE_SITE_URL || "sc-domain:yourdomain.com";
@@ -687,7 +686,7 @@ function formatSlackBlocks(
       type: "section",
       text: {
         type: "mrkdwn",
-        text: "*Top Search Queries (Last 7 Days):*",
+        text: "*Search Queries:*",
       },
     });
 
