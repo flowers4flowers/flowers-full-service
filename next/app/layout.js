@@ -110,7 +110,7 @@ export async function generateMetadata() {
   // const ogImages = data.ogImage ? [data.ogImage] : []
 
   return {
-    title: data.title,
+    title: "FLOWERS, a creative studio",
     description: data.description ? data.description : data.title,
     // openGraph: {
     //   images: ogImages
