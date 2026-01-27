@@ -6,11 +6,10 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // Make sure the inbound folder exists
-    const inboundDir = path.join(process.cwd(), "public", "inbound");
+    // Writable temp directory (serverless-safe)
+    const inboundDir = path.join("/tmp", "inbound");
     await mkdir(inboundDir, { recursive: true });
 
-    // Create a readable, unique filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const messageIdSafe = body.MessageID
       ? body.MessageID.replace(/[^a-zA-Z0-9]/g, "")
@@ -19,10 +18,9 @@ export async function POST(req: Request) {
     const filename = `postmark-${timestamp}-${messageIdSafe}.json`;
     const filePath = path.join(inboundDir, filename);
 
-    // Save the full raw payload
     await writeFile(filePath, JSON.stringify(body, null, 2), "utf-8");
 
-    console.log("📨 Postmark inbound email saved:", filename);
+    console.log("📨 Postmark inbound email saved to /tmp:", filename);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
