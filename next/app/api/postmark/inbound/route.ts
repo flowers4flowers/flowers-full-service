@@ -1,10 +1,35 @@
 import { NextResponse } from "next/server";
+import { writeFile, mkdir } from "fs/promises";
+import path from "path";
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    const body = await req.json();
 
-  console.log("📨 Postmark inbound email received");
-  console.log(body);
+    // Make sure the inbound folder exists
+    const inboundDir = path.join(process.cwd(), "public", "inbound");
+    await mkdir(inboundDir, { recursive: true });
 
-  return NextResponse.json({ ok: true });
+    // Create a readable, unique filename
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const messageIdSafe = body.MessageID
+      ? body.MessageID.replace(/[^a-zA-Z0-9]/g, "")
+      : "unknown";
+
+    const filename = `postmark-${timestamp}-${messageIdSafe}.json`;
+    const filePath = path.join(inboundDir, filename);
+
+    // Save the full raw payload
+    await writeFile(filePath, JSON.stringify(body, null, 2), "utf-8");
+
+    console.log("📨 Postmark inbound email saved:", filename);
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("❌ Failed to process inbound email", error);
+    return NextResponse.json(
+      { ok: false, error: "Failed to process inbound email" },
+      { status: 500 }
+    );
+  }
 }
