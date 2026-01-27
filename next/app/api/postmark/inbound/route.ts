@@ -2,15 +2,17 @@ import { NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 
+// 👇 THIS IS THE CRITICAL LINE
+export const runtime = "nodejs";
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // Make sure the inbound folder exists
-    const inboundDir = path.join(process.cwd(), "public", "inbound");
+    // Writable temp directory (Node runtime only)
+    const inboundDir = path.join("/tmp", "inbound");
     await mkdir(inboundDir, { recursive: true });
 
-    // Create a readable, unique filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const messageIdSafe = body.MessageID
       ? body.MessageID.replace(/[^a-zA-Z0-9]/g, "")
@@ -19,7 +21,6 @@ export async function POST(req: Request) {
     const filename = `postmark-${timestamp}-${messageIdSafe}.json`;
     const filePath = path.join(inboundDir, filename);
 
-    // Save the full raw payload
     await writeFile(filePath, JSON.stringify(body, null, 2), "utf-8");
 
     console.log("📨 Postmark inbound email saved:", filename);
