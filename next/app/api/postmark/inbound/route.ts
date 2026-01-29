@@ -3,7 +3,7 @@ import { getDb } from "../../../../utility/db";
 import { generateThreadId, generateThreadIdFromParsedMessages } from "../../../../utility/thread-id";
 import { isForwardedEmail, parseForwardedEmail } from "../../../../utility/email-parser";
 import { generateContentHash } from "../../../../utility/content-hash";
-import { checkForDuplicates } from "../../../../utility/duplicate-checker";
+import { checkForDuplicates } from "../../../../utility/duplicate-checker";  
 
 export const runtime = "nodejs";
 
