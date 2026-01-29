@@ -130,6 +130,10 @@ export function parseGmailThread(
       console.log('Content length:', content.length);
       console.log('Content preview:', content.substring(0, 200));
       
+      // Check for nested quoted replies within this content
+      const quotedReplies = extractQuotedReplies(content);
+      console.log(`Found ${quotedReplies.length} quoted replies within this message`);
+      
       if (fromEmail) {
         const message = {
           from: fromEmail,
@@ -149,6 +153,18 @@ export function parseGmailThread(
         });
         
         messages.push(message);
+        
+        // Add the quoted replies as separate messages
+        quotedReplies.forEach((quotedReply, idx) => {
+          console.log(`Adding quoted reply ${idx + 1}:`, {
+            from: quotedReply.from,
+            contentPreview: quotedReply.content.substring(0, 100)
+          });
+          messages.push({
+            ...quotedReply,
+            originalIndex: i - 1 + idx + 1 // Sequential index
+          });
+        });
       } else {
         console.log('Skipping part - no from email found');
       }
@@ -404,6 +420,44 @@ export function parseForwardedEmail(
 function extractEmail(text: string): string {
   const emailMatch = text.match(/<?([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})>?/);
   return emailMatch ? emailMatch[1] : '';
+}
+
+/**
+ * Helper: Extracts quoted inline replies from email content
+ * Looks for pattern: "On [date] [name] <email> wrote:" followed by quoted text (lines starting with >)
+ */
+function extractQuotedReplies(content: string): ParsedMessage[] {
+  const replies: ParsedMessage[] = [];
+  
+  // Pattern: On Thu, Jan 29, 2026 at 3:49 PM FLOWERS (Studio) <studio@flowersfullservice.art> wrote:
+  const quotePattern = /On\s+.+?\s+(.+?)\s+<(.+?)>\s+wrote:\s*\n((?:>.*\n?)*)/gi;
+  
+  let match;
+  while ((match = quotePattern.exec(content)) !== null) {
+    const name = match[1].trim();
+    const email = match[2].trim();
+    const quotedText = match[3];
+    
+    // Remove the > characters from quoted text
+    const cleanedContent = quotedText
+      .split('\n')
+      .map(line => line.replace(/^>\s?/, ''))
+      .join('\n')
+      .trim();
+    
+    if (cleanedContent.length > 0) {
+      replies.push({
+        from: email,
+        to: '', // We don't know the recipient from quoted text
+        date: null, // Could try to parse the date from "On [date]" but it's complex
+        subject: '', // Not available in quoted text
+        content: cleanedContent,
+        originalIndex: 0 // Will be set by caller
+      });
+    }
+  }
+  
+  return replies;
 }
 
 /**
