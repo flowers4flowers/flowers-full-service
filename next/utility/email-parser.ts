@@ -430,7 +430,8 @@ function extractQuotedReplies(content: string): ParsedMessage[] {
   const replies: ParsedMessage[] = [];
   
   // Pattern: On Thu, Jan 29, 2026 at 3:49 PM FLOWERS (Studio) <studio@flowersfullservice.art> wrote:
-  const quotePattern = /On\s+.+?\s+(.+?)\s+<(.+?)>\s+wrote:\s*\n((?:>.*\n?)*)/gi;
+  // Followed by optional blank lines, then quoted text starting with >
+  const quotePattern = /On\s+.+?\s+(.+?)\s*<(.+?)>\s+wrote:\s*\n+((?:(?:>\s*.+\n?)+)?)/gi;
   
   let match;
   while ((match = quotePattern.exec(content)) !== null) {
@@ -438,12 +439,17 @@ function extractQuotedReplies(content: string): ParsedMessage[] {
     const email = match[2].trim();
     const quotedText = match[3];
     
+    console.log('Found potential quoted reply:', { name, email, quotedTextLength: quotedText.length });
+    
     // Remove the > characters from quoted text
     const cleanedContent = quotedText
       .split('\n')
       .map(line => line.replace(/^>\s?/, ''))
+      .filter(line => line.trim().length > 0) // Remove empty lines
       .join('\n')
       .trim();
+    
+    console.log('Cleaned quoted content:', cleanedContent.substring(0, 100));
     
     if (cleanedContent.length > 0) {
       replies.push({
