@@ -145,6 +145,59 @@ export async function POST(req: Request) {
 
         console.log(`Successfully parsed ${parsedMessages.length} messages from forwarded email`);
 
+        // Extract the covering message (the newest one that wraps the forward)
+        const bodyToUse = body.TextBody || body.HtmlBody;
+        const parts = bodyToUse.split('---------- Forwarded message ---------');
+        const coveringMessageRaw = parts[0]?.trim();
+
+        console.log('\n=== Checking for covering message ===');
+        console.log('Parts found:', parts.length);
+        console.log('Covering message raw length:', coveringMessageRaw?.length || 0);
+        console.log('Covering message preview:', coveringMessageRaw?.substring(0, 300));
+
+        // If there's content before the first forward delimiter, it's the newest message
+        if (coveringMessageRaw && coveringMessageRaw.length > 10) {
+          console.log('Found covering message (most recent)');
+          
+          // Clean the covering message content
+          // Stop at common signature markers
+          const cleanedCovering = coveringMessageRaw
+            .split(/Dev work\/play at/)[0] // Stop at signature
+            .split(/--\s*$/m)[0] // Stop at -- signature marker
+            .split(/Best regards/i)[0] // Stop at common closing
+            .split(/Thanks/i)[0] // Stop at common closing
+            .trim();
+          
+          console.log('Cleaned covering message:', cleanedCovering);
+          console.log('Cleaned covering message length:', cleanedCovering.length);
+          
+          if (cleanedCovering.length > 0) {
+            // Add the covering message as the newest message
+            const coveringMessage = {
+              from: body.From,
+              to: body.To,
+              date: new Date(body.Date),
+              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, '').trim(),
+              content: cleanedCovering,
+              originalIndex: parsedMessages.length // This is the newest, so highest index
+            };
+            
+            parsedMessages.push(coveringMessage);
+            
+            console.log('Added covering message:', {
+              from: coveringMessage.from,
+              contentPreview: coveringMessage.content.substring(0, 100),
+              originalIndex: coveringMessage.originalIndex
+            });
+          } else {
+            console.log('Covering message too short after cleaning, skipping');
+          }
+        } else {
+          console.log('No covering message found or too short');
+        }
+
+        console.log(`Total messages including covering: ${parsedMessages.length}`);
+
         // Generate threadId using hybrid strategy
         const threadId = generateThreadIdFromParsedMessages(
           parsedMessages,
@@ -158,12 +211,16 @@ export async function POST(req: Request) {
           generateContentHash(msg.content, msg.from, msg.date)
         );
 
+        console.log('Generated content hashes:', contentHashes);
+
         // Check for duplicates
         const existingHashes = await checkForDuplicates(
           db,
           threadId,
           contentHashes
         );
+
+        console.log('Existing hashes found:', existingHashes);
 
         // Filter out duplicate messages
         const messagesToSave = parsedMessages.filter((msg, index) => 
@@ -193,6 +250,12 @@ export async function POST(req: Request) {
           const originalIndex = parsedMessages.indexOf(msg);
           const contentHash = contentHashes[originalIndex];
           
+          console.log(`Creating document ${index + 1}/${messagesToSave.length}:`, {
+            from: msg.from,
+            contentHash,
+            originalIndex: msg.originalIndex
+          });
+          
           return {
             messageId: `synthetic-${contentHash}`,
             threadId,
@@ -219,10 +282,10 @@ export async function POST(req: Request) {
         // Bulk insert all email documents
         try {
           if (emailDocuments.length > 0) {
-            await db.collection('inbound_emails').insertMany(emailDocuments, {
+            const insertResult = await db.collection('inbound_emails').insertMany(emailDocuments, {
               ordered: false // Continue on duplicate key errors
             });
-            console.log(`Inserted ${emailDocuments.length} email documents`);
+            console.log(`Inserted ${insertResult.insertedCount} email documents`);
           }
         } catch (error: any) {
           // Some inserts may have failed due to duplicate messageId, but that's okay
@@ -242,6 +305,8 @@ export async function POST(req: Request) {
         // Add the person who forwarded
         allParticipants.add(body.From);
 
+        console.log('All participants:', Array.from(allParticipants));
+
         // Calculate date range from parsed messages
         const dates = parsedMessages
           .map(msg => msg.date)
@@ -254,6 +319,11 @@ export async function POST(req: Request) {
         const lastEmailAt = dates.length > 0
           ? new Date(Math.max(...dates.map(d => d.getTime())))
           : new Date();
+
+        console.log('Date range:', {
+          firstEmailAt: firstEmailAt.toISOString(),
+          lastEmailAt: lastEmailAt.toISOString()
+        });
 
         // Update thread metadata
         const threadUpdate = {
@@ -286,6 +356,7 @@ export async function POST(req: Request) {
 
         console.log("Thread metadata updated successfully");
         console.log(`Saved ${messagesToSave.length} messages to thread ${threadId}`);
+        console.log("=== WEBHOOK PROCESSING COMPLETE ===\n");
       })(),
       timeoutPromise
     ]);
