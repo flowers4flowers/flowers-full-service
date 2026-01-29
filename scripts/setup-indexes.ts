@@ -1,3 +1,14 @@
+import { readFileSync } from 'fs';
+import path from 'path';
+
+// Manually load .env file
+try {
+  const envPath = path.resolve(process.cwd(), '.env');
+  const envContent = readFileSync(envPath, 'utf-8');
+} catch (error) {
+  console.error('Error loading .env:', error);
+}
+
 import { getDb } from '../next/utility/db';
 
 async function setupIndexes() {
@@ -13,6 +24,15 @@ async function setupIndexes() {
     );
     await db.collection('inbound_emails').createIndex({ threadId: 1 });
     await db.collection('inbound_emails').createIndex({ receivedAt: -1 });
+    
+    // NEW: Index for content hash (duplicate detection)
+    await db.collection('inbound_emails').createIndex({ contentHash: 1 });
+    
+    // NEW: Compound index for efficient duplicate checking
+    await db.collection('inbound_emails').createIndex({ 
+      threadId: 1, 
+      contentHash: 1 
+    });
     
     console.log('✓ inbound_emails indexes created');
     
