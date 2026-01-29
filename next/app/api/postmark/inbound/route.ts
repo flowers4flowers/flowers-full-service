@@ -3,7 +3,8 @@ import { getDb } from "../../../../utility/db";
 import { generateThreadId, generateThreadIdFromParsedMessages } from "../../../../utility/thread-id";
 import { isForwardedEmail, parseForwardedEmail } from "../../../../utility/email-parser";
 import { generateContentHash } from "../../../../utility/content-hash";
-import { checkForDuplicates } from "../../../../utility/duplicate-checker";  
+import { checkForDuplicates } from "../../../../utility/duplicate-checker";
+import { processThread } from "../../../../utility/thread-processor";
 
 export const runtime = "nodejs";
 
@@ -41,8 +42,6 @@ export async function POST(req: Request) {
             to: body.To,
             subject: body.Subject,
             body: body.TextBody || body.HtmlBody,
-            htmlBody: body.HtmlBody,
-            textBody: body.TextBody,
             headers: body.Headers,
             receivedAt,
             rawPostmarkData: body
@@ -77,6 +76,13 @@ export async function POST(req: Request) {
           );
 
           console.log("Single email saved:", body.MessageID, "Thread:", threadId);
+          
+          // Trigger processing in non-blocking way
+          console.log("Triggering thread processing (non-blocking)...");
+          processThread(threadId).catch(error => {
+            console.error("Background processing failed:", error);
+          });
+          
           return;
         }
 
@@ -103,8 +109,6 @@ export async function POST(req: Request) {
             to: body.To,
             subject: body.Subject,
             body: body.TextBody || body.HtmlBody,
-            htmlBody: body.HtmlBody,
-            textBody: body.TextBody,
             headers: body.Headers,
             receivedAt,
             rawPostmarkData: body,
@@ -140,6 +144,13 @@ export async function POST(req: Request) {
           );
 
           console.log("Fallback save completed:", body.MessageID);
+          
+          // Trigger processing in non-blocking way
+          console.log("Triggering thread processing (non-blocking)...");
+          processThread(threadId).catch(error => {
+            console.error("Background processing failed:", error);
+          });
+          
           return;
         }
 
@@ -240,6 +251,12 @@ export async function POST(req: Request) {
             }
           );
 
+          // Trigger processing in non-blocking way (even for duplicates, in case processing failed before)
+          console.log("Triggering thread processing (non-blocking)...");
+          processThread(threadId).catch(error => {
+            console.error("Background processing failed:", error);
+          });
+
           return;
         }
 
@@ -263,8 +280,6 @@ export async function POST(req: Request) {
             to: msg.to || 'unknown',
             subject: msg.subject || body.Subject.replace(/^(re|fwd|fw):\s*/gi, '').trim(),
             body: msg.content,
-            htmlBody: msg.content,
-            textBody: msg.content,
             headers: [],
             receivedAt: msg.date || new Date(),
             rawPostmarkData: {
@@ -357,6 +372,12 @@ export async function POST(req: Request) {
         console.log("Thread metadata updated successfully");
         console.log(`Saved ${messagesToSave.length} messages to thread ${threadId}`);
         console.log("=== WEBHOOK PROCESSING COMPLETE ===\n");
+        
+        // Trigger processing in non-blocking way
+        console.log("Triggering thread processing (non-blocking)...");
+        processThread(threadId).catch(error => {
+          console.error("Background processing failed:", error);
+        });
       })(),
       timeoutPromise
     ]);

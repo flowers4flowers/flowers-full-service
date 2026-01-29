@@ -9,7 +9,7 @@ try {
   console.error('Error loading .env:', error);
 }
 
-import { getDb } from '../next/utility/db';
+import { getDb } from '../next/utility/db.js';
 
 async function setupIndexes() {
   try {
@@ -25,10 +25,10 @@ async function setupIndexes() {
     await db.collection('inbound_emails').createIndex({ threadId: 1 });
     await db.collection('inbound_emails').createIndex({ receivedAt: -1 });
     
-    // NEW: Index for content hash (duplicate detection)
+    // Index for content hash (duplicate detection)
     await db.collection('inbound_emails').createIndex({ contentHash: 1 });
     
-    // NEW: Compound index for efficient duplicate checking
+    // Compound index for efficient duplicate checking
     await db.collection('inbound_emails').createIndex({ 
       threadId: 1, 
       contentHash: 1 
@@ -46,6 +46,17 @@ async function setupIndexes() {
     await db.collection('email_threads').createIndex({ lastEmailAt: -1 });
     
     console.log('✓ email_threads indexes created');
+    
+    // Indexes for extracted_deals collection
+    await db.collection('extracted_deals').createIndex(
+      { threadId: 1 }, 
+      { unique: true }
+    );
+    await db.collection('extracted_deals').createIndex({ extractedAt: -1 });
+    await db.collection('extracted_deals').createIndex({ dealStage: 1 });
+    await db.collection('extracted_deals').createIndex({ dealOwner: 1 });
+    
+    console.log('✓ extracted_deals indexes created');
     console.log('All indexes set up successfully!');
     
     process.exit(0);
