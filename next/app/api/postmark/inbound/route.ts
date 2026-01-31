@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { getDb } from "../../../../utility/db";
-import { generateThreadId, generateThreadIdFromParsedMessages } from "../../../../utility/thread-id";
-import { isForwardedEmail, parseForwardedEmail } from "../../../../utility/email-parser";
+import {
+  generateThreadId,
+  generateThreadIdFromParsedMessages,
+} from "../../../../utility/thread-id";
+import {
+  isForwardedEmail,
+  parseForwardedEmail,
+} from "../../../../utility/email-parser";
 import { generateContentHash } from "../../../../utility/content-hash";
 import { checkForDuplicates } from "../../../../utility/duplicate-checker";
 import { processThread } from "../../../../utility/thread-processor";
@@ -10,9 +16,9 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   console.log("=== WEBHOOK HIT ===");
-  
-  const timeoutPromise = new Promise((_, reject) => 
-    setTimeout(() => reject(new Error('Request timeout')), 8000)
+
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timeout")), 8000),
   );
 
   try {
@@ -21,88 +27,21 @@ export async function POST(req: Request) {
         const body = await req.json();
         console.log("Received email from:", body.From);
         console.log("Subject:", body.Subject);
-        
+
         const db = await getDb();
         console.log("Connected to DB");
 
         // Check if this is a forwarded email
         const isForwarded = isForwardedEmail(body.Subject);
-        
+
         if (!isForwarded) {
           // NOT FORWARDED - Use existing single-email logic
           console.log("Not a forwarded email, using standard flow");
-          
+
           const threadId = generateThreadId(body.Subject, body.Headers);
           const receivedAt = new Date();
 
-          await db.collection('inbound_emails').insertOne({
-            messageId: body.MessageID,
-            threadId,
-            from: body.From,
-            to: body.To,
-            subject: body.Subject,
-            body: body.TextBody || body.HtmlBody,
-            headers: body.Headers,
-            receivedAt,
-            rawPostmarkData: body
-          });
-
-          const threadUpdate = {
-            $set: {
-              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, '').trim(),
-              lastEmailAt: receivedAt
-            },
-            $addToSet: {
-              participants: { $each: [body.From, body.To] }
-            },
-            $inc: {
-              emailCount: 1
-            },
-            $setOnInsert: {
-              threadId,
-              firstEmailAt: receivedAt,
-              processed: false,
-              processingStatus: 'unprocessed',
-              attioDealId: null,
-              dealData: null,
-              processingError: null
-            }
-          };
-
-          await db.collection('email_threads').updateOne(
-            { threadId },
-            threadUpdate,
-            { upsert: true }
-          );
-
-          console.log("Single email saved:", body.MessageID, "Thread:", threadId);
-          
-          // Trigger processing in non-blocking way
-          console.log("Triggering thread processing (non-blocking)...");
-          processThread(threadId).catch(error => {
-            console.error("Background processing failed:", error);
-          });
-          
-          return;
-        }
-
-        // FORWARDED EMAIL - Parse conversation history
-        console.log("Forwarded email detected, parsing conversation history");
-        
-        const parsedMessages = parseForwardedEmail(
-          body.Subject,
-          body.HtmlBody,
-          body.TextBody
-        );
-
-        if (parsedMessages.length === 0) {
-          // Parsing failed, fall back to single-email save
-          console.warn("Failed to parse forwarded email, falling back to single-email save");
-          
-          const threadId = generateThreadId(body.Subject, body.Headers);
-          const receivedAt = new Date();
-
-          await db.collection('inbound_emails').insertOne({
+          await db.collection("inbound_emails").insertOne({
             messageId: body.MessageID,
             threadId,
             from: body.From,
@@ -112,195 +51,305 @@ export async function POST(req: Request) {
             headers: body.Headers,
             receivedAt,
             rawPostmarkData: body,
-            parsingFailed: true
           });
 
           const threadUpdate = {
             $set: {
-              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, '').trim(),
-              lastEmailAt: receivedAt
+              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
+              lastEmailAt: receivedAt,
             },
             $addToSet: {
-              participants: { $each: [body.From, body.To] }
+              participants: { $each: [body.From, body.To] },
             },
             $inc: {
-              emailCount: 1
+              emailCount: 1,
             },
             $setOnInsert: {
               threadId,
               firstEmailAt: receivedAt,
               processed: false,
-              processingStatus: 'unprocessed',
+              processingStatus: "unprocessed",
               attioDealId: null,
               dealData: null,
-              processingError: 'Failed to parse forwarded email'
-            }
+              processingError: null,
+            },
           };
 
-          await db.collection('email_threads').updateOne(
-            { threadId },
-            threadUpdate,
-            { upsert: true }
+          await db
+            .collection("email_threads")
+            .updateOne({ threadId }, threadUpdate, { upsert: true });
+
+          console.log(
+            "Single email saved:",
+            body.MessageID,
+            "Thread:",
+            threadId,
           );
 
-          console.log("Fallback save completed:", body.MessageID);
-          
           // Trigger processing in non-blocking way
           console.log("Triggering thread processing (non-blocking)...");
-          processThread(threadId).catch(error => {
+          processThread(threadId).catch((error) => {
             console.error("Background processing failed:", error);
           });
-          
+
           return;
         }
 
-        console.log(`Successfully parsed ${parsedMessages.length} messages from forwarded email`);
+        // FORWARDED EMAIL - Parse conversation history
+        console.log("Forwarded email detected, parsing conversation history");
+
+        const parsedMessages = parseForwardedEmail(
+          body.Subject,
+          body.HtmlBody,
+          body.TextBody,
+        );
+
+        if (parsedMessages.length === 0) {
+          // Parsing failed, fall back to single-email save
+          console.warn(
+            "Failed to parse forwarded email, falling back to single-email save",
+          );
+
+          const threadId = generateThreadId(body.Subject, body.Headers);
+          const receivedAt = new Date();
+
+          await db.collection("inbound_emails").insertOne({
+            messageId: body.MessageID,
+            threadId,
+            from: body.From,
+            to: body.To,
+            subject: body.Subject,
+            body: body.TextBody || body.HtmlBody,
+            headers: body.Headers,
+            receivedAt,
+            rawPostmarkData: body,
+            parsingFailed: true,
+          });
+
+          const threadUpdate = {
+            $set: {
+              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
+              lastEmailAt: receivedAt,
+            },
+            $addToSet: {
+              participants: { $each: [body.From, body.To] },
+            },
+            $inc: {
+              emailCount: 1,
+            },
+            $setOnInsert: {
+              threadId,
+              firstEmailAt: receivedAt,
+              processed: false,
+              processingStatus: "unprocessed",
+              attioDealId: null,
+              dealData: null,
+              processingError: "Failed to parse forwarded email",
+            },
+          };
+
+          await db
+            .collection("email_threads")
+            .updateOne({ threadId }, threadUpdate, { upsert: true });
+
+          console.log("Fallback save completed:", body.MessageID);
+
+          // Trigger processing in non-blocking way
+          console.log("Triggering thread processing (non-blocking)...");
+          processThread(threadId).catch((error) => {
+            console.error("Background processing failed:", error);
+          });
+
+          return;
+        }
+
+        console.log(
+          `Successfully parsed ${parsedMessages.length} messages from forwarded email`,
+        );
 
         // Extract the covering message (the newest one that wraps the forward)
         const bodyToUse = body.TextBody || body.HtmlBody;
-        const parts = bodyToUse.split('---------- Forwarded message ---------');
+        const parts = bodyToUse.split("---------- Forwarded message ---------");
         const coveringMessageRaw = parts[0]?.trim();
 
-        console.log('\n=== Checking for covering message ===');
-        console.log('Parts found:', parts.length);
-        console.log('Covering message raw length:', coveringMessageRaw?.length || 0);
-        console.log('Covering message preview:', coveringMessageRaw?.substring(0, 300));
+        console.log("\n=== Checking for covering message ===");
+        console.log("Parts found:", parts.length);
+        console.log(
+          "Covering message raw length:",
+          coveringMessageRaw?.length || 0,
+        );
+        console.log(
+          "Covering message preview:",
+          coveringMessageRaw?.substring(0, 300),
+        );
 
         // If there's content before the first forward delimiter, it's the newest message
+        // If there's content before the first forward delimiter, it's the newest message
         if (coveringMessageRaw && coveringMessageRaw.length > 10) {
-          console.log('Found covering message (most recent)');
-          
-          // Clean the covering message content
-          // Stop at common signature markers
+          console.log("Found covering message (most recent)");
+
+          // Extract the date from the covering message headers
+          const dateMatch = coveringMessageRaw.match(
+            /Date:\s*(.+?)(?=\r?\n(?:Subject:|To:|$))/is,
+          );
+          const dateStr = dateMatch ? dateMatch[1].trim() : "";
+          const coveringDate = dateStr ? new Date(dateStr) : new Date();
+
+          console.log("Covering message date string:", dateStr);
+          console.log("Covering message parsed date:", coveringDate);
+
+          // Clean the covering message content (remove headers)
           const cleanedCovering = coveringMessageRaw
-            .split(/Dev work\/play at/)[0] // Stop at signature
-            .split(/--\s*$/m)[0] // Stop at -- signature marker
-            .split(/Best regards/i)[0] // Stop at common closing
-            .split(/Thanks/i)[0] // Stop at common closing
+            .replace(/From:\s*.+?(?=\r?\n)/is, "") // Remove From header
+            .replace(/Date:\s*.+?(?=\r?\n)/is, "") // Remove Date header
+            .replace(/Subject:\s*.+?(?=\r?\n)/is, "") // Remove Subject header
+            .replace(/To:\s*.+?(?=\r?\n)/is, "") // Remove To header
+            .split(/Dev work\/play at/)[0]
+            .split(/--\s*$/m)[0]
+            .split(/Best regards/i)[0]
+            .split(/Thanks/i)[0]
             .trim();
-          
-          console.log('Cleaned covering message:', cleanedCovering);
-          console.log('Cleaned covering message length:', cleanedCovering.length);
-          
+
+          console.log("Cleaned covering message:", cleanedCovering);
+          console.log(
+            "Cleaned covering message length:",
+            cleanedCovering.length,
+          );
+
           if (cleanedCovering.length > 0) {
             // Add the covering message as the newest message
             const coveringMessage = {
               from: body.From,
               to: body.To,
-              date: new Date(body.Date),
-              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, '').trim(),
+              date: coveringDate,
+              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
               content: cleanedCovering,
-              originalIndex: parsedMessages.length // This is the newest, so highest index
+              originalIndex: parsedMessages.length,
             };
-            
+
             parsedMessages.push(coveringMessage);
-            
-            console.log('Added covering message:', {
+
+            console.log("Added covering message:", {
               from: coveringMessage.from,
               contentPreview: coveringMessage.content.substring(0, 100),
-              originalIndex: coveringMessage.originalIndex
+              originalIndex: coveringMessage.originalIndex,
             });
           } else {
-            console.log('Covering message too short after cleaning, skipping');
+            console.log("Covering message too short after cleaning, skipping");
           }
         } else {
-          console.log('No covering message found or too short');
+          console.log("No covering message found or too short");
         }
 
-        console.log(`Total messages including covering: ${parsedMessages.length}`);
+        console.log(
+          `Total messages including covering: ${parsedMessages.length}`,
+        );
 
         // Generate threadId using hybrid strategy
         const threadId = generateThreadIdFromParsedMessages(
           parsedMessages,
-          body.Subject
+          body.Subject,
         );
 
         console.log("Generated threadId:", threadId);
 
         // Generate content hashes for all messages
-        const contentHashes = parsedMessages.map(msg => 
-          generateContentHash(msg.content, msg.from, msg.date)
+        const contentHashes = parsedMessages.map((msg) =>
+          generateContentHash(msg.content, msg.from, msg.date),
         );
 
-        console.log('Generated content hashes:', contentHashes);
+        console.log("Generated content hashes:", contentHashes);
 
         // Check for duplicates
         const existingHashes = await checkForDuplicates(
           db,
           threadId,
-          contentHashes
+          contentHashes,
         );
 
-        console.log('Existing hashes found:', existingHashes);
+        console.log("Existing hashes found:", existingHashes);
 
         // Filter out duplicate messages
-        const messagesToSave = parsedMessages.filter((msg, index) => 
-          !existingHashes.includes(contentHashes[index])
+        const messagesToSave = parsedMessages.filter(
+          (msg, index) => !existingHashes.includes(contentHashes[index]),
         );
 
         if (messagesToSave.length === 0) {
-          console.log("All messages are duplicates, skipping inserts but updating thread metadata");
-          
+          console.log(
+            "All messages are duplicates, skipping inserts but updating thread metadata",
+          );
+
           // Still update the thread's lastEmailAt
-          await db.collection('email_threads').updateOne(
+          await db.collection("email_threads").updateOne(
             { threadId },
             {
               $set: {
-                lastEmailAt: new Date()
-              }
-            }
+                lastEmailAt: new Date(),
+              },
+            },
           );
 
           // Trigger processing in non-blocking way (even for duplicates, in case processing failed before)
           console.log("Triggering thread processing (non-blocking)...");
-          processThread(threadId).catch(error => {
+          processThread(threadId).catch((error) => {
             console.error("Background processing failed:", error);
           });
 
           return;
         }
 
-        console.log(`${messagesToSave.length} new messages to save (${existingHashes.length} duplicates skipped)`);
+        console.log(
+          `${messagesToSave.length} new messages to save (${existingHashes.length} duplicates skipped)`,
+        );
 
         // Create email documents for all non-duplicate messages
         const emailDocuments = messagesToSave.map((msg, index) => {
           const originalIndex = parsedMessages.indexOf(msg);
           const contentHash = contentHashes[originalIndex];
-          
-          console.log(`Creating document ${index + 1}/${messagesToSave.length}:`, {
-            from: msg.from,
-            contentHash,
-            originalIndex: msg.originalIndex
-          });
-          
+
+          console.log(
+            `Creating document ${index + 1}/${messagesToSave.length}:`,
+            {
+              from: msg.from,
+              contentHash,
+              originalIndex: msg.originalIndex,
+            },
+          );
+
           return {
             messageId: `synthetic-${contentHash}`,
             threadId,
             from: msg.from,
-            to: msg.to || 'unknown',
-            subject: msg.subject || body.Subject.replace(/^(re|fwd|fw):\s*/gi, '').trim(),
+            to: msg.to || "unknown",
+            subject:
+              msg.subject ||
+              body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
             body: msg.content,
             headers: [],
             receivedAt: msg.date || new Date(),
             rawPostmarkData: {
-              note: 'Extracted from forwarded email',
+              note: "Extracted from forwarded email",
               originalForwardId: body.MessageID,
               extractedIndex: msg.originalIndex,
               forwardedBy: body.From,
-              forwardedAt: new Date()
+              forwardedAt: new Date(),
             },
             contentHash,
-            isExtracted: true
+            isExtracted: true,
           };
         });
 
         // Bulk insert all email documents
         try {
           if (emailDocuments.length > 0) {
-            const insertResult = await db.collection('inbound_emails').insertMany(emailDocuments, {
-              ordered: false // Continue on duplicate key errors
-            });
-            console.log(`Inserted ${insertResult.insertedCount} email documents`);
+            const insertResult = await db
+              .collection("inbound_emails")
+              .insertMany(emailDocuments, {
+                ordered: false, // Continue on duplicate key errors
+              });
+            console.log(
+              `Inserted ${insertResult.insertedCount} email documents`,
+            );
           }
         } catch (error: any) {
           // Some inserts may have failed due to duplicate messageId, but that's okay
@@ -313,73 +362,75 @@ export async function POST(req: Request) {
 
         // Extract all unique participants from parsed messages
         const allParticipants = new Set<string>();
-        parsedMessages.forEach(msg => {
+        parsedMessages.forEach((msg) => {
           if (msg.from) allParticipants.add(msg.from);
           if (msg.to) allParticipants.add(msg.to);
         });
         // Add the person who forwarded
         allParticipants.add(body.From);
 
-        console.log('All participants:', Array.from(allParticipants));
+        console.log("All participants:", Array.from(allParticipants));
 
         // Calculate date range from parsed messages
         const dates = parsedMessages
-          .map(msg => msg.date)
-          .filter(d => d !== null) as Date[];
+          .map((msg) => msg.date)
+          .filter((d) => d !== null) as Date[];
 
-        const firstEmailAt = dates.length > 0 
-          ? new Date(Math.min(...dates.map(d => d.getTime())))
-          : new Date();
+        const firstEmailAt =
+          dates.length > 0
+            ? new Date(Math.min(...dates.map((d) => d.getTime())))
+            : new Date();
 
-        const lastEmailAt = dates.length > 0
-          ? new Date(Math.max(...dates.map(d => d.getTime())))
-          : new Date();
+        const lastEmailAt =
+          dates.length > 0
+            ? new Date(Math.max(...dates.map((d) => d.getTime())))
+            : new Date();
 
-        console.log('Date range:', {
+        console.log("Date range:", {
           firstEmailAt: firstEmailAt.toISOString(),
-          lastEmailAt: lastEmailAt.toISOString()
+          lastEmailAt: lastEmailAt.toISOString(),
         });
 
         // Update thread metadata
         const threadUpdate = {
           $set: {
-            subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, '').trim(),
+            subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
             lastEmailAt,
-            firstEmailAt
+            firstEmailAt,
           },
           $addToSet: {
-            participants: { $each: Array.from(allParticipants) }
+            participants: { $each: Array.from(allParticipants) },
           },
           $inc: {
-            emailCount: messagesToSave.length
+            emailCount: messagesToSave.length,
           },
           $setOnInsert: {
             threadId,
             processed: false,
-            processingStatus: 'unprocessed',
+            processingStatus: "unprocessed",
             attioDealId: null,
             dealData: null,
-            processingError: null
-          }
+            processingError: null,
+          },
         };
 
-        await db.collection('email_threads').updateOne(
-          { threadId },
-          threadUpdate,
-          { upsert: true }
-        );
+        await db
+          .collection("email_threads")
+          .updateOne({ threadId }, threadUpdate, { upsert: true });
 
         console.log("Thread metadata updated successfully");
-        console.log(`Saved ${messagesToSave.length} messages to thread ${threadId}`);
+        console.log(
+          `Saved ${messagesToSave.length} messages to thread ${threadId}`,
+        );
         console.log("=== WEBHOOK PROCESSING COMPLETE ===\n");
-        
+
         // Trigger processing in non-blocking way
         console.log("Triggering thread processing (non-blocking)...");
-        processThread(threadId).catch(error => {
+        processThread(threadId).catch((error) => {
           console.error("Background processing failed:", error);
         });
       })(),
-      timeoutPromise
+      timeoutPromise,
     ]);
 
     return NextResponse.json({ ok: true });
