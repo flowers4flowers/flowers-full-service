@@ -474,8 +474,11 @@ function parseEmailDate(dateStr: string): Date | null {
   if (!dateStr) return null;
   
   try {
-    // Try standard Date parsing first
-    const date = new Date(dateStr);
+    // Gmail format: "Sat, Jan 31, 2026 at 11:26 AM"
+    // Need to replace "at" with nothing to make it parseable
+    const normalizedDateStr = dateStr.replace(/ at /i, ' ');
+    
+    const date = new Date(normalizedDateStr);
     if (!isNaN(date.getTime())) {
       return date;
     }
