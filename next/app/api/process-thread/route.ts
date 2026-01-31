@@ -12,3 +12,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: false, error: String(error) }, { status: 500 });
   }
 }
+
+export async function processThreadBackground(threadId: string) {
+  try {
+    await processThread(threadId);
+    console.log('Background processing completed for thread:', threadId);
+  } catch (error) {
+    console.error('Background processing failed for thread:', threadId, error);
+  }
+}
