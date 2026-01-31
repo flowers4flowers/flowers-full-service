@@ -73,18 +73,11 @@ export async function POST(req: Request) {
         .collection("email_threads")
         .updateOne({ threadId }, threadUpdate, { upsert: true });
 
-      console.log(
-        "Single email saved:",
-        body.MessageID,
-        "Thread:",
-        threadId,
-      );
+      console.log("Single email saved:", body.MessageID, "Thread:", threadId);
 
-      // Trigger processing in non-blocking way
-      console.log("Triggering thread processing (non-blocking)...");
-      processThreadBackground(threadId).catch((error) => {
-        console.error("Background processing failed:", error);
-      });
+      // Process the thread before responding
+      console.log("Processing thread (blocking until complete)...");
+      await processThreadBackground(threadId);
 
       return NextResponse.json({ ok: true });
     }
@@ -148,11 +141,9 @@ export async function POST(req: Request) {
 
       console.log("Fallback save completed:", body.MessageID);
 
-      // Trigger processing in non-blocking way
-      console.log("Triggering thread processing (non-blocking)...");
-      processThreadBackground(threadId).catch((error) => {
-        console.error("Background processing failed:", error);
-      });
+      // Process the thread before responding
+      console.log("Processing thread (blocking until complete)...");
+      await processThreadBackground(threadId);
 
       return NextResponse.json({ ok: true });
     }
@@ -204,10 +195,7 @@ export async function POST(req: Request) {
         .trim();
 
       console.log("Cleaned covering message:", cleanedCovering);
-      console.log(
-        "Cleaned covering message length:",
-        cleanedCovering.length,
-      );
+      console.log("Cleaned covering message length:", cleanedCovering.length);
 
       if (cleanedCovering.length > 0) {
         // Add the covering message as the newest message
@@ -234,9 +222,7 @@ export async function POST(req: Request) {
       console.log("No covering message found or too short");
     }
 
-    console.log(
-      `Total messages including covering: ${parsedMessages.length}`,
-    );
+    console.log(`Total messages including covering: ${parsedMessages.length}`);
 
     // Generate threadId using hybrid strategy
     const threadId = generateThreadIdFromParsedMessages(
@@ -282,11 +268,9 @@ export async function POST(req: Request) {
         },
       );
 
-      // Trigger processing in non-blocking way (even for duplicates, in case processing failed before)
-      console.log("Triggering thread processing (non-blocking)...");
-      processThreadBackground(threadId).catch((error) => {
-        console.error("Background processing failed:", error);
-      });
+      // Process the thread before responding
+      console.log("Processing thread (blocking until complete)...");
+      await processThreadBackground(threadId);
 
       return NextResponse.json({ ok: true });
     }
@@ -300,14 +284,11 @@ export async function POST(req: Request) {
       const originalIndex = parsedMessages.indexOf(msg);
       const contentHash = contentHashes[originalIndex];
 
-      console.log(
-        `Creating document ${index + 1}/${messagesToSave.length}:`,
-        {
-          from: msg.from,
-          contentHash,
-          originalIndex: msg.originalIndex,
-        },
-      );
+      console.log(`Creating document ${index + 1}/${messagesToSave.length}:`, {
+        from: msg.from,
+        contentHash,
+        originalIndex: msg.originalIndex,
+      });
 
       return {
         messageId: `synthetic-${contentHash}`,
@@ -315,8 +296,7 @@ export async function POST(req: Request) {
         from: msg.from,
         to: msg.to || "unknown",
         subject:
-          msg.subject ||
-          body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
+          msg.subject || body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
         body: msg.content,
         headers: [],
         receivedAt: msg.date || new Date(),
@@ -340,9 +320,7 @@ export async function POST(req: Request) {
           .insertMany(emailDocuments, {
             ordered: false,
           });
-        console.log(
-          `Inserted ${insertResult.insertedCount} email documents`,
-        );
+        console.log(`Inserted ${insertResult.insertedCount} email documents`);
       }
     } catch (error: any) {
       // Some inserts may have failed due to duplicate messageId, but that's okay
@@ -417,11 +395,9 @@ export async function POST(req: Request) {
     );
     console.log("=== WEBHOOK PROCESSING COMPLETE ===\n");
 
-    // Trigger processing in non-blocking way
-    console.log("Triggering thread processing (non-blocking)...");
-    processThreadBackground(threadId).catch((error) => {
-      console.error("Background processing failed:", error);
-    });
+    // Process the thread before responding
+    console.log("Processing thread (blocking until complete)...");
+    await processThreadBackground(threadId);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
