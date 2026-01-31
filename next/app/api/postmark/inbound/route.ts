@@ -10,7 +10,10 @@ import {
 } from "../../../../utility/email-parser";
 import { generateContentHash } from "../../../../utility/content-hash";
 import { checkForDuplicates } from "../../../../utility/duplicate-checker";
-import { processThreadBackground } from "../../process-thread/route";
+import {
+  processThreadBackground,
+  processThreadDirect,
+} from "../../process-thread/route";
 
 export const runtime = "nodejs";
 
@@ -77,7 +80,7 @@ export async function POST(req: Request) {
 
       // Process the thread before responding
       console.log("Processing thread (blocking until complete)...");
-      await processThreadBackground(threadId);
+      await processThreadDirect(parsedMessages, threadId);
 
       return NextResponse.json({ ok: true });
     }
@@ -143,7 +146,7 @@ export async function POST(req: Request) {
 
       // Process the thread before responding
       console.log("Processing thread (blocking until complete)...");
-      await processThreadBackground(threadId);
+      await processThreadDirect(parsedMessages, threadId);
 
       return NextResponse.json({ ok: true });
     }
@@ -270,7 +273,7 @@ export async function POST(req: Request) {
 
       // Process the thread before responding
       console.log("Processing thread (blocking until complete)...");
-      await processThreadBackground(threadId);
+      await processThreadDirect(parsedMessages, threadId);
 
       return NextResponse.json({ ok: true });
     }
@@ -397,7 +400,7 @@ export async function POST(req: Request) {
 
     // Process the thread before responding
     console.log("Processing thread (blocking until complete)...");
-    await processThreadBackground(threadId);
+    await processThreadDirect(parsedMessages, threadId);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
