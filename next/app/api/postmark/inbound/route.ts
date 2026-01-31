@@ -88,9 +88,13 @@ export async function POST(req: Request) {
 
           // Trigger processing in non-blocking way
           console.log("Triggering thread processing (non-blocking)...");
-          processThread(threadId).catch((error) => {
-            console.error("Background processing failed:", error);
-          });
+          fetch(`${process.env.NEXT_PUBLIC_URL}/api/process-thread`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ threadId }),
+          }).catch((err) =>
+            console.error("Failed to trigger processing:", err),
+          );
 
           return;
         }
@@ -156,9 +160,13 @@ export async function POST(req: Request) {
 
           // Trigger processing in non-blocking way
           console.log("Triggering thread processing (non-blocking)...");
-          processThread(threadId).catch((error) => {
-            console.error("Background processing failed:", error);
-          });
+          fetch(`${process.env.NEXT_PUBLIC_URL}/api/process-thread`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ threadId }),
+          }).catch((err) =>
+            console.error("Failed to trigger processing:", err),
+          );
 
           return;
         }
@@ -291,9 +299,13 @@ export async function POST(req: Request) {
 
           // Trigger processing in non-blocking way (even for duplicates, in case processing failed before)
           console.log("Triggering thread processing (non-blocking)...");
-          processThread(threadId).catch((error) => {
-            console.error("Background processing failed:", error);
-          });
+          fetch(`${process.env.NEXT_PUBLIC_URL}/api/process-thread`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ threadId }),
+          }).catch((err) =>
+            console.error("Failed to trigger processing:", err),
+          );
 
           return;
         }
@@ -426,9 +438,11 @@ export async function POST(req: Request) {
 
         // Trigger processing in non-blocking way
         console.log("Triggering thread processing (non-blocking)...");
-        processThread(threadId).catch((error) => {
-          console.error("Background processing failed:", error);
-        });
+        fetch(`${process.env.NEXT_PUBLIC_URL}/api/process-thread`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ threadId }),
+        }).catch((err) => console.error("Failed to trigger processing:", err));
       })(),
       timeoutPromise,
     ]);
