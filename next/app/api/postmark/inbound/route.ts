@@ -30,6 +30,12 @@ export async function POST(req: Request) {
 
     // Check if this is a forwarded email
     const isForwarded = isForwardedEmail(body.Subject);
+    
+    const parsedMessages = parseForwardedEmail(
+      body.Subject,
+      body.HtmlBody,
+      body.TextBody,
+    );
 
     if (!isForwarded) {
       // NOT FORWARDED - Use existing single-email logic
@@ -87,12 +93,6 @@ export async function POST(req: Request) {
 
     // FORWARDED EMAIL - Parse conversation history
     console.log("Forwarded email detected, parsing conversation history");
-
-    const parsedMessages = parseForwardedEmail(
-      body.Subject,
-      body.HtmlBody,
-      body.TextBody,
-    );
 
     if (parsedMessages.length === 0) {
       // Parsing failed, fall back to single-email save
