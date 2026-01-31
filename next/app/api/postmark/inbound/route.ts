@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   console.log("=== WEBHOOK HIT ===");
 
   const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("Request timeout")), 800000),
+    setTimeout(() => reject(new Error("Request timeout")), 80000000000),
   );
 
   try {
