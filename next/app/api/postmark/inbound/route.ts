@@ -3,15 +3,14 @@ import { getDb } from "../../../../utility/db";
 import {
   generateThreadId,
   generateThreadIdFromParsedMessages,
-} from "../../../../utility/thread-id";
+} from "../../../../utility/cc-attio/thread-id";
 import {
   isForwardedEmail,
   parseForwardedEmail,
-} from "../../../../utility/email-parser";
-import { generateContentHash } from "../../../../utility/content-hash";
-import { checkForDuplicates } from "../../../../utility/duplicate-checker";
+} from "../../../../utility/cc-attio/email-parser";
+import { generateContentHash } from "../../../../utility/cc-attio/content-hash";
+import { checkForDuplicates } from "../../../../utility/cc-attio/duplicate-checker";
 import {
-  processThreadBackground,
   processThreadDirect,
 } from "../../process-thread/route";
 import { inngest } from "../../../../utility/inngest/client";

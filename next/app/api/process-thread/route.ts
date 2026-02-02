@@ -1,40 +1,24 @@
-import { cleanEmailBody } from "../../../utility/email-cleaner";
-import { extractDealData } from "../../../utility/deal-extractor";
+import { cleanEmailBody } from "../../../utility/cc-attio/email-cleaner";
+import { extractDealData } from "../../../utility/cc-attio/deal-extractor";
 import { getDb } from "../../../utility/db";
-import { processThread } from "../../../utility/thread-processor";
-import { NextResponse } from "next/server";
-import { syncDealToAttio } from "../../../utility/attio-sync";
+import { syncDealToAttio } from "../../../utility/cc-attio/attio-sync";
+import { extractValidParticipants } from "../../../utility/cc-attio/participant-utils";
 
-// Timeout helper to prevent hanging requests
-const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
-  return Promise.race([
-    promise,
-    new Promise<T>((_, reject) =>
-      setTimeout(
-        () => reject(new Error(`Timeout after ${timeoutMs}ms`)),
-        timeoutMs,
-      ),
-    ),
-  ]);
-};
-
-// Keep the existing POST handler for manual triggers
-export async function POST(req: Request) {
-  const { threadId } = await req.json();
-
-  try {
-    await processThread(threadId);
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Processing failed:", error);
-    return NextResponse.json(
-      { success: false, error: String(error) },
-      { status: 500 },
-    );
-  }
-}
-
-// Add new function that processes messages directly
+/**
+ * Processes a thread of parsed email messages:
+ * 1. Cleans each email using AI (removes greetings, signatures, etc.)
+ * 2. Combines cleaned emails into single thread text
+ * 3. Extracts deal data using AI
+ * 4. Saves to extracted_deals collection
+ * 5. Syncs to Attio CRM
+ * 6. Updates thread status
+ * 
+ * @param parsedMessages - Array of parsed email objects from webhook
+ * @param threadId - Unique thread identifier
+ * 
+ * Note: This function operates on in-memory parsed messages, not DB records.
+ * This avoids redundant DB queries since data is already in memory from webhook.
+ */
 export async function processThreadDirect(
   parsedMessages: any[],
   threadId: string,
@@ -46,17 +30,33 @@ export async function processThreadDirect(
   try {
     console.log(`Processing ${parsedMessages.length} messages`);
 
-    // TEMPORARILY SKIP AI CLEANING FOR TESTING
-    console.log("\n--- SKIPPING AI cleaning (using raw content) ---");
-    const cleanedEmails = parsedMessages.map((msg, index) => {
+    // Clean emails with AI
+    console.log("\n--- Cleaning emails with AI ---");
+    const cleanedEmails: Array<{ from: string; cleaned: string }> = [];
+
+    for (let i = 0; i < parsedMessages.length; i++) {
+      const msg = parsedMessages[i];
       console.log(
-        `Using raw content for email ${index + 1}/${parsedMessages.length}`,
+        `Cleaning email ${i + 1}/${parsedMessages.length} from ${msg.from}`,
       );
-      return {
-        from: msg.from,
-        cleaned: msg.content,
-      };
-    });
+
+      try {
+        const cleaned = await cleanEmailBody(msg.content);
+        console.log(`Successfully cleaned email ${i + 1}`);
+
+        cleanedEmails.push({
+          from: msg.from,
+          cleaned: cleaned,
+        });
+      } catch (error) {
+        console.error(`Error cleaning email ${i + 1}:`, error);
+        // Fallback to raw content on error
+        cleanedEmails.push({
+          from: msg.from,
+          cleaned: msg.content,
+        });
+      }
+    }
 
     // Combine cleaned emails
     console.log("\n--- Combining cleaned emails ---");
@@ -74,18 +74,11 @@ export async function processThreadDirect(
     const extractedData = await extractDealData(combinedThread);
     console.log("Extracted deal data:", JSON.stringify(extractedData, null, 2));
 
-    // Get participants
-    const allParticipants = new Set<string>();
-    parsedMessages.forEach((msg) => {
-      if (!msg.from.includes("@fullservice.art")) {
-        allParticipants.add(msg.from);
-      }
-      if (msg.to && !msg.to.includes("@fullservice.art")) {
-        allParticipants.add(msg.to);
-      }
-    });
-
-    const associatedPeople = Array.from(allParticipants);
+    // Get participants using utility function
+    console.log("\n--- Extracting valid participants ---");
+    const associatedPeople = extractValidParticipants(parsedMessages);
+    console.log(`Found ${associatedPeople.length} valid participants`);
+    console.log("Participants:", associatedPeople);
 
     // Convert dates
     const shootDate = extractedData.shootDate
@@ -176,15 +169,5 @@ export async function processThreadDirect(
   } catch (error) {
     console.error("Processing failed:", error);
     throw error;
-  }
-}
-
-// Keep existing processThreadBackground for backward compatibility
-export async function processThreadBackground(threadId: string) {
-  try {
-    await processThread(threadId);
-    console.log("Background processing completed for thread:", threadId);
-  } catch (error) {
-    console.error("Background processing failed for thread:", threadId, error);
   }
 }
