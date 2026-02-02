@@ -224,6 +224,20 @@ class AttioClient {
           );
           const attribute: AttioAttribute = attributeResponse.data.data;
           const existingOptions = attribute.config?.options || [];
+
+          // Log all available options for debugging
+          console.log(
+            `Available options for ${attributeSlug}:`,
+            existingOptions.map((opt) => ({
+              id: opt.id,
+              title: opt.title,
+              titleLower: opt.title.toLowerCase(),
+            })),
+          );
+          console.log(
+            `Looking for: "${optionTitle}" (lowercase: "${optionTitle.toLowerCase()}")`,
+          );
+
           const existingOption = existingOptions.find(
             (opt) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
           );
@@ -237,6 +251,7 @@ class AttioClient {
           console.error(
             `Option "${optionTitle}" still not found after conflict resolution`,
           );
+          console.error(`Searched in ${existingOptions.length} total options`);
           return null;
         } catch (retryError) {
           console.error(`Error fetching after conflict:`, retryError);
