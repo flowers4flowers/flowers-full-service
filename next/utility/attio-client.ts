@@ -78,7 +78,7 @@ class AttioClient {
   async findUserByName(name: string): Promise<string | null> {
     try {
       console.log(`Searching for user: ${name}`);
-      const response = await axios.get(`${this.baseUrl}/self/team`, {
+      const response = await axios.get(`${this.baseUrl}/workspace_members`, {
         headers: this.getHeaders(),
       });
 
@@ -106,39 +106,39 @@ class AttioClient {
     }
   }
 
-  async findOrCreatePerson(email: string): Promise<string | null> {
+  async findOrCreateSelectOption(
+    attributeSlug: string,
+    optionTitle: string,
+  ): Promise<string | null> {
     try {
-      console.log(`Searching for person: ${email}`);
+      console.log(
+        `Checking select option: ${attributeSlug} = "${optionTitle}"`,
+      );
 
-      const searchResponse = await axios.post(
-        `${this.baseUrl}/objects/people/records/query`,
-        {
-          filter: {
-            primary_email_address: email,
-          },
-          limit: 1,
-        },
+      const listResponse = await axios.get(
+        `${this.baseUrl}/objects/${this.dealsObjectId}/attributes/${attributeSlug}/options`,
         {
           headers: this.getHeaders(),
         },
       );
 
-      if (searchResponse.data.data && searchResponse.data.data.length > 0) {
-        const personId = searchResponse.data.data[0].id.record_id;
-        console.log(`Found existing person: ${email} (${personId})`);
-        return personId;
+      const existingOption = listResponse.data.data.find(
+        (opt: any) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
+      );
+
+      if (existingOption) {
+        console.log(
+          `Found existing option: ${optionTitle} (${existingOption.id.option_id})`,
+        );
+        return existingOption.id.option_id;
       }
 
-      console.log(`Person not found, creating: ${email}`);
+      console.log(`Option not found, creating: "${optionTitle}"`);
       const createResponse = await axios.post(
-        `${this.baseUrl}/objects/people/records`,
+        `${this.baseUrl}/objects/${this.dealsObjectId}/attributes/${attributeSlug}/options`,
         {
-          values: {
-            primary_email_address: [
-              {
-                email_address: email,
-              },
-            ],
+          option: {
+            title: optionTitle,
           },
         },
         {
@@ -146,11 +146,14 @@ class AttioClient {
         },
       );
 
-      const personId = createResponse.data.data.id.record_id;
-      console.log(`Created person: ${email} (${personId})`);
-      return personId;
+      const optionId = createResponse.data.data.id.option_id;
+      console.log(`Created option: ${optionTitle} (${optionId})`);
+      return optionId;
     } catch (error) {
-      console.error(`Error finding/creating person ${email}:`, error);
+      console.error(
+        `Error finding/creating option for ${attributeSlug}:`,
+        error,
+      );
       return null;
     }
   }
