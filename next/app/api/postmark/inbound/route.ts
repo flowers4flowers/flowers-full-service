@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
     // Check if this is a forwarded email
     const isForwarded = isForwardedEmail(body.Subject);
-    
+
     const parsedMessages = parseForwardedEmail(
       body.Subject,
       body.HtmlBody,
@@ -398,9 +398,11 @@ export async function POST(req: Request) {
     );
     console.log("=== WEBHOOK PROCESSING COMPLETE ===\n");
 
-    // Process the thread before responding
-    console.log("Processing thread (blocking until complete)...");
-    await processThreadDirect(parsedMessages, threadId);
+    // Process the thread in background (don't await)
+    console.log("Processing thread in background...");
+    processThreadDirect(parsedMessages, threadId).catch((error) => {
+      console.error("Background processing failed:", error);
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
