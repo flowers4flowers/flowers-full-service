@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 const openRouterApiKey = process.env.OPEN_ROUTER_API_KEY;
 
@@ -8,7 +8,7 @@ const openRouterApiKey = process.env.OPEN_ROUTER_API_KEY;
  */
 export async function cleanEmailBody(emailBody: string): Promise<string> {
   if (!openRouterApiKey) {
-    throw new Error('OPEN_ROUTER_API_KEY not found in environment variables');
+    throw new Error("OPEN_ROUTER_API_KEY not found in environment variables");
   }
 
   const prompt = `You are an assistant for a production company called FLOWERS.
@@ -37,6 +37,7 @@ Email:
 ${emailBody}`;
 
   try {
+    console.log("Calling OpenRouter API for email cleaning...");
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
@@ -57,13 +58,25 @@ ${emailBody}`;
           "HTTP-Referer": "https://github.com",
           "X-Title": "FLOWERS Email Processor",
         },
-      }
+      },
     );
 
-    const cleanedContent = response.data.choices[0]?.message?.content || '';
+    console.log("OpenRouter response received:", {
+      status: response.status,
+      hasContent: !!response.data.choices?.[0]?.message?.content,
+    });
+
+    const cleanedContent = response.data.choices[0]?.message?.content || "";
     return cleanedContent.trim();
   } catch (error) {
-    console.error('Error cleaning email body:', error);
+    console.error("Error cleaning email body:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("API Error details:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+      });
+    }
     throw error;
   }
 }

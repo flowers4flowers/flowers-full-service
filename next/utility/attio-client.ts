@@ -250,46 +250,24 @@ class AttioClient {
     payload: AttioDealPayload,
   ): Promise<{ id: string; url: string }> {
     try {
-      console.log("Calling OpenRouter API for email cleaning...");
+      console.log("Creating deal in Attio...");
+      console.log("Payload:", JSON.stringify(payload, null, 2));
+
       const response = await axios.post(
-        "https://openrouter.ai/api/v1/chat/completions",
+        `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/records`,
+        { data: payload.values }, // Wrap in data key
         {
-          model: "anthropic/claude-3-haiku",
-          messages: [
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
-          max_tokens: 1000,
-          temperature: 0.5,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${openRouterApiKey}`,
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://github.com",
-            "X-Title": "FLOWERS Email Processor",
-          },
+          headers: this.getHeaders(),
         },
       );
 
-      console.log("OpenRouter response received:", {
-        status: response.status,
-        hasContent: !!response.data.choices?.[0]?.message?.content,
-      });
+      const dealId = response.data.data.id.record_id;
+      const dealUrl = `https://app.attio.com/objects/${DEALS_OBJECT_ID}/records/${dealId}`;
 
-      const cleanedContent = response.data.choices[0]?.message?.content || "";
-      return cleanedContent.trim();
+      console.log(`Deal created successfully: ${dealId}`);
+      return { id: dealId, url: dealUrl };
     } catch (error) {
-      console.error("Error cleaning email body:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("API Error details:", {
-          status: error.response?.status,
-          statusText: error.response?.statusText,
-          data: error.response?.data,
-        });
-      }
+      await this.handleError(error, "createDeal");
       throw error;
     }
   }
