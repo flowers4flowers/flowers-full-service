@@ -3,6 +3,7 @@ import { extractDealData } from "../../../utility/deal-extractor";
 import { getDb } from "../../../utility/db";
 import { processThread } from "../../../utility/thread-processor";
 import { NextResponse } from "next/server";
+import { syncDealToAttio } from '../../../utility/attio-sync';
 
 // Keep the existing POST handler for manual triggers
 export async function POST(req: Request) {
@@ -85,12 +86,6 @@ export async function processThreadDirect(
     const shootDate = extractedData.shootDate
       ? new Date(extractedData.shootDate)
       : null;
-    const contractSigned = extractedData.contractSigned
-      ? new Date(extractedData.contractSigned)
-      : null;
-    const picturesUsed = extractedData.picturesUsed
-      ? new Date(extractedData.picturesUsed)
-      : null;
 
     // Save to DB
     const db = await getDb();
@@ -101,25 +96,13 @@ export async function processThreadDirect(
       dealOwner: "cait@fullservice.art",
       associatedPeople,
       associatedCompanies: extractedData.associatedCompanies,
-      workflowType: extractedData.workflowType,
       dealValue: extractedData.dealValue,
-      clientTier: extractedData.clientTier,
       budgetRange: extractedData.budgetRange,
-      projectType: extractedData.projectType,
       inquirySource: extractedData.inquirySource,
       collaboratorsNeeded: extractedData.collaboratorsNeeded,
       location: extractedData.location,
       shootDate,
       usageTerms: extractedData.usageTerms,
-      paymentTerms: extractedData.paymentTerms,
-      depositInvoiceNumber: extractedData.depositInvoiceNumber,
-      finalInvoiceNumber: extractedData.finalInvoiceNumber,
-      contractSigned,
-      allowedToUseMedia: extractedData.allowedToUseMedia,
-      backupVerified: extractedData.backupVerified,
-      picturesUsed,
-      rejectionReason: extractedData.rejectionReason,
-      profit: extractedData.profit,
       extractedAt: new Date(),
     };
 
@@ -140,6 +123,47 @@ export async function processThreadDirect(
         },
       },
     );
+
+    // Sync to Attio
+    console.log("\n--- Syncing to Attio ---");
+    const attioResult = await syncDealToAttio(
+      extractedData,
+      associatedPeople,
+      threadId,
+    );
+
+    // Update thread with Attio sync results
+    if (attioResult.success) {
+      console.log("\n--- Updating thread with Attio deal ID ---");
+      await db.collection("email_threads").updateOne(
+        { threadId },
+        {
+          $set: {
+            attioDealId: attioResult.attioDealId,
+            attioUrl: attioResult.attioUrl,
+            processingStatus: "synced_to_attio",
+            attioSyncError: null,
+            lastAttioSyncAt: new Date(),
+          },
+        },
+      );
+      console.log(`Successfully synced to Attio: ${attioResult.attioDealId}`);
+    } else {
+      console.error("\n--- Attio sync failed ---");
+      console.error("Error:", attioResult.error);
+      await db.collection("email_threads").updateOne(
+        { threadId },
+        {
+          $set: {
+            attioDealId: null,
+            attioUrl: null,
+            processingStatus: "attio_sync_failed",
+            attioSyncError: attioResult.error,
+            lastAttioSyncAt: new Date(),
+          },
+        },
+      );
+    }
 
     console.log("\n========================================");
     console.log("PROCESSING COMPLETE");

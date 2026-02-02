@@ -111,8 +111,6 @@ export async function processThread(threadId: string): Promise<void> {
 
     // Convert date strings to Date objects
     const shootDate = extractedData.shootDate ? new Date(extractedData.shootDate) : null;
-    const contractSigned = extractedData.contractSigned ? new Date(extractedData.contractSigned) : null;
-    const picturesUsed = extractedData.picturesUsed ? new Date(extractedData.picturesUsed) : null;
 
     // Prepare document for extracted_deals collection
     const dealDocument = {
@@ -122,25 +120,13 @@ export async function processThread(threadId: string): Promise<void> {
       dealOwner: 'cait@fullservice.art',
       associatedPeople,
       associatedCompanies: extractedData.associatedCompanies,
-      workflowType: extractedData.workflowType,
       dealValue: extractedData.dealValue,
-      clientTier: extractedData.clientTier,
       budgetRange: extractedData.budgetRange,
-      projectType: extractedData.projectType,
       inquirySource: extractedData.inquirySource,
       collaboratorsNeeded: extractedData.collaboratorsNeeded,
       location: extractedData.location,
       shootDate,
       usageTerms: extractedData.usageTerms,
-      paymentTerms: extractedData.paymentTerms,
-      depositInvoiceNumber: extractedData.depositInvoiceNumber,
-      finalInvoiceNumber: extractedData.finalInvoiceNumber,
-      contractSigned,
-      allowedToUseMedia: extractedData.allowedToUseMedia,
-      backupVerified: extractedData.backupVerified,
-      picturesUsed,
-      rejectionReason: extractedData.rejectionReason,
-      profit: extractedData.profit,
       extractedAt: new Date()
     };
 
