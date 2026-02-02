@@ -78,7 +78,7 @@ class AttioClient {
   async findUserByName(name: string): Promise<string | null> {
     try {
       console.log(`Searching for user: ${name}`);
-      const response = await axios.get(`${this.baseUrl}/workspace/members`, {
+      const response = await axios.get(`${this.baseUrl}/workspace_members`, {
         headers: this.getHeaders(),
       });
 
@@ -114,7 +114,11 @@ class AttioClient {
         `${this.baseUrl}/objects/people/records/query`,
         {
           filter: {
-            primary_email_address: email,
+            email_addresses: {
+              email_address: {
+                $eq: email,
+              },
+            },
           },
           limit: 1,
         },
@@ -129,20 +133,26 @@ class AttioClient {
         return personId;
       }
 
+      // Replace the entire create section in findOrCreatePerson:
       console.log(`Person not found, creating: ${email}`);
-      const createResponse = await axios.post(
+      const createResponse = await axios.put(
         `${this.baseUrl}/objects/people/records`,
         {
-          values: {
-            primary_email_address: [
-              {
-                email_address: email,
-              },
-            ],
+          data: {
+            values: {
+              email_addresses: [
+                {
+                  email_address: email,
+                },
+              ],
+            },
           },
         },
         {
           headers: this.getHeaders(),
+          params: {
+            matching_attribute: "email_addresses",
+          },
         },
       );
 
@@ -202,6 +212,32 @@ class AttioClient {
       console.log(`Created option: "${optionTitle}" (${newOption.id})`);
       return newOption;
     } catch (error) {
+      // Handle 409 conflict - option was created by another request
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        console.log(`Option already exists: "${optionTitle}", fetching again`);
+        try {
+          const attributeResponse = await axios.get(
+            `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}`,
+            {
+              headers: this.getHeaders(),
+            },
+          );
+          const attribute: AttioAttribute = attributeResponse.data.data;
+          const existingOptions = attribute.config?.options || [];
+          const existingOption = existingOptions.find(
+            (opt) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
+          );
+          if (existingOption) {
+            console.log(
+              `Found after conflict: "${optionTitle}" (${existingOption.id})`,
+            );
+            return existingOption;
+          }
+        } catch (retryError) {
+          console.error(`Error fetching after conflict:`, retryError);
+        }
+      }
+
       console.error(
         `Error finding/creating option for ${attributeSlug}:`,
         error,
