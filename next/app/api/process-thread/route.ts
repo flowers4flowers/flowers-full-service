@@ -3,7 +3,7 @@ import { extractDealData } from "../../../utility/deal-extractor";
 import { getDb } from "../../../utility/db";
 import { processThread } from "../../../utility/thread-processor";
 import { NextResponse } from "next/server";
-import { syncDealToAttio } from '../../../utility/attio-sync';
+import { syncDealToAttio } from "../../../utility/attio-sync";
 
 // Keep the existing POST handler for manual triggers
 export async function POST(req: Request) {
@@ -107,10 +107,10 @@ export async function processThreadDirect(
     };
 
     console.log("\n--- Saving to extracted_deals collection ---");
-    const insertResult = await db
+    await db
       .collection("extracted_deals")
-      .insertOne(dealDocument);
-    console.log("Inserted deal with _id:", insertResult.insertedId);
+      .updateOne({ threadId }, { $set: dealDocument }, { upsert: true });
+    console.log("Saved/updated deal for thread:", threadId);
 
     // Mark thread as processed
     console.log("\n--- Marking thread as processed ---");
