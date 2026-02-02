@@ -9,9 +9,12 @@ import { syncDealToAttio } from "../../../utility/attio-sync";
 const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
   return Promise.race([
     promise,
-    new Promise<T>((_, reject) => 
-      setTimeout(() => reject(new Error(`Timeout after ${timeoutMs}ms`)), timeoutMs)
-    )
+    new Promise<T>((_, reject) =>
+      setTimeout(
+        () => reject(new Error(`Timeout after ${timeoutMs}ms`)),
+        timeoutMs,
+      ),
+    ),
   ]);
 };
 
@@ -43,25 +46,17 @@ export async function processThreadDirect(
   try {
     console.log(`Processing ${parsedMessages.length} messages`);
 
-    // Clean emails in parallel
-    console.log("\n--- Cleaning emails with AI (parallel) ---");
-    const cleaningPromises = parsedMessages.map(async (msg, i) => {
+    // TEMPORARILY SKIP AI CLEANING FOR TESTING
+    console.log("\n--- SKIPPING AI cleaning (using raw content) ---");
+    const cleanedEmails = parsedMessages.map((msg, index) => {
       console.log(
-        `\nCleaning email ${i + 1}/${parsedMessages.length} from ${msg.from}`,
+        `Using raw content for email ${index + 1}/${parsedMessages.length}`,
       );
-      console.log("Original body length:", msg.content.length);
-
-      try {
-        const cleaned = await withTimeout(cleanEmailBody(msg.content), 30000);
-        console.log("Cleaned body length:", cleaned.length);
-        return { from: msg.from, cleaned };
-      } catch (error) {
-        console.error(`Error cleaning email ${i + 1}:`, error);
-        return { from: msg.from, cleaned: msg.content };
-      }
+      return {
+        from: msg.from,
+        cleaned: msg.content,
+      };
     });
-
-    const cleanedEmails = await Promise.all(cleaningPromises);
 
     // Combine cleaned emails
     console.log("\n--- Combining cleaned emails ---");
