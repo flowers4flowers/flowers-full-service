@@ -1,3 +1,5 @@
+// next/app/api/process-thread/route.ts
+
 import { cleanEmailBody } from "../../../utility/email-cleaner";
 import { extractDealData } from "../../../utility/deal-extractor";
 import { getDb } from "../../../utility/db";

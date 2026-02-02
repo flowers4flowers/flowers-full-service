@@ -1,3 +1,5 @@
+// next/app/api/inngest/route.ts
+
 import { serve } from "inngest/next";
 import { inngest } from "../../../utility/inngest/client";
 import { processEmailThread } from "../../../utility/inngest/functions";
