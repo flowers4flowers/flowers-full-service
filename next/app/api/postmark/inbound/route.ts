@@ -14,6 +14,7 @@ import {
   processThreadBackground,
   processThreadDirect,
 } from "../../process-thread/route";
+import { inngest } from "../../../../utility/iingest/client";
 
 export const runtime = "nodejs";
 
@@ -95,7 +96,14 @@ export async function POST(req: Request) {
         originalIndex: 0,
       };
 
-      await processThreadDirect([singleMessage], threadId);
+      await inngest.send({
+        name: "email/thread.received",
+        data: {
+          parsedMessages: [singleMessage],
+          threadId,
+        },
+      });
+      console.log(`Triggered Inngest processing for thread: ${threadId}`);
 
       return NextResponse.json({ ok: true });
     }
@@ -409,13 +417,14 @@ export async function POST(req: Request) {
 
     // Process the thread in background (don't await)
     console.log("Processing thread in background...");
-    processThreadDirect(parsedMessages, threadId)
-      .then(() => {
-        console.log("✅ Background processing completed successfully");
-      })
-      .catch((error) => {
-        console.error("❌ Background processing failed:", error);
-      });
+    await inngest.send({
+      name: "email/thread.received",
+      data: {
+        parsedMessages,
+        threadId,
+      },
+    });
+    console.log(`Triggered Inngest processing for thread: ${threadId}`);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
