@@ -115,10 +115,10 @@ export async function syncDealToAttio(
     // Associated People (relationship field)
     if (personIds.length > 0) {
       payload.values.associated_people = personIds.map((id) => ({
+        target_object: "people",
         target_record_id: id,
       }));
     }
-
     // Currency field (value in cents)
     if (extractedData.dealValue && extractedData.dealValue > 0) {
       payload.values.value = Math.round(extractedData.dealValue * 100);
