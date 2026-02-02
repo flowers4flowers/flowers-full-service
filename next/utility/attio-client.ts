@@ -183,9 +183,6 @@ class AttioClient {
       );
 
       const existingOptions = optionsResponse.data.data || [];
-      console.log(
-        `Found ${existingOptions.length} existing options for ${attributeSlug}`,
-      );
 
       const existingOption = existingOptions.find(
         (opt: AttioSelectOption) =>
@@ -193,9 +190,7 @@ class AttioClient {
       );
 
       if (existingOption) {
-        console.log(
-          `Found existing option: "${optionTitle}" (${existingOption.id})`,
-        );
+
         return existingOption;
       }
 

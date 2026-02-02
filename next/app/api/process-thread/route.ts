@@ -70,23 +70,9 @@ export async function processThreadDirect(
     console.log("Combined thread length:", combinedThread.length);
 
     // Extract deal data
-    // TEMPORARILY SKIP AI EXTRACTION - USE MOCK DATA
-    console.log("\n--- SKIPPING AI extraction (using mock data) ---");
-    const extractedData = {
-      dealName: "HANNERI Billboard Shoot",
-      associatedCompanies: ["HANNERI"],
-      dealValue: 1000000,
-      budgetRange: "500k+",
-      inquirySource: "Email" as const,
-      collaboratorsNeeded: ["Photographer"],
-      location: null,
-      shootDate: null,
-      usageTerms: "Perpetuity",
-    };
-    console.log(
-      "Using mock deal data:",
-      JSON.stringify(extractedData, null, 2),
-    );
+    console.log("\n--- Extracting deal data with AI ---");
+    const extractedData = await extractDealData(combinedThread);
+    console.log("Extracted deal data:", JSON.stringify(extractedData, null, 2));
 
     // Get participants
     const allParticipants = new Set<string>();
