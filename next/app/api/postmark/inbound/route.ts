@@ -86,7 +86,16 @@ export async function POST(req: Request) {
 
       // Process the thread before responding
       console.log("Processing thread (blocking until complete)...");
-      await processThreadDirect(parsedMessages, threadId);
+      const singleMessage = {
+        from: body.From,
+        to: body.To,
+        date: receivedAt,
+        subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
+        content: body.TextBody || body.HtmlBody,
+        originalIndex: 0,
+      };
+
+      await processThreadDirect([singleMessage], threadId);
 
       return NextResponse.json({ ok: true });
     }

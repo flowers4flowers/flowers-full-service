@@ -78,7 +78,7 @@ class AttioClient {
   async findUserByName(name: string): Promise<string | null> {
     try {
       console.log(`Searching for user: ${name}`);
-      const response = await axios.get(`${this.baseUrl}/self/team`, {
+      const response = await axios.get(`${this.baseUrl}/workspace/members`, {
         headers: this.getHeaders(),
       });
 
@@ -189,7 +189,9 @@ class AttioClient {
       const createResponse = await axios.post(
         `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}/options`,
         {
-          title: optionTitle,
+          data: {
+            title: optionTitle,
+          },
         },
         {
           headers: this.getHeaders(),
@@ -217,7 +219,7 @@ class AttioClient {
 
       const response = await axios.post(
         `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/records`,
-        payload,
+        { data: payload.values }, // Wrap in data key
         {
           headers: this.getHeaders(),
         },
