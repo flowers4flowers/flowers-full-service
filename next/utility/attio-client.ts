@@ -106,6 +106,55 @@ class AttioClient {
     }
   }
 
+  async findOrCreatePerson(email: string): Promise<string | null> {
+    try {
+      console.log(`Searching for person: ${email}`);
+
+      const searchResponse = await axios.post(
+        `${this.baseUrl}/objects/people/records/query`,
+        {
+          filter: {
+            primary_email_address: email,
+          },
+          limit: 1,
+        },
+        {
+          headers: this.getHeaders(),
+        },
+      );
+
+      if (searchResponse.data.data && searchResponse.data.data.length > 0) {
+        const personId = searchResponse.data.data[0].id.record_id;
+        console.log(`Found existing person: ${email} (${personId})`);
+        return personId;
+      }
+
+      console.log(`Person not found, creating: ${email}`);
+      const createResponse = await axios.post(
+        `${this.baseUrl}/objects/people/records`,
+        {
+          values: {
+            primary_email_address: [
+              {
+                email_address: email,
+              },
+            ],
+          },
+        },
+        {
+          headers: this.getHeaders(),
+        },
+      );
+
+      const personId = createResponse.data.data.id.record_id;
+      console.log(`Created person: ${email} (${personId})`);
+      return personId;
+    } catch (error) {
+      console.error(`Error finding/creating person ${email}:`, error);
+      return null;
+    }
+  }
+
   async findOrCreateSelectOption(
     attributeSlug: string,
     optionTitle: string,
@@ -149,59 +198,6 @@ class AttioClient {
       const optionId = createResponse.data.data.id.option_id;
       console.log(`Created option: ${optionTitle} (${optionId})`);
       return optionId;
-    } catch (error) {
-      console.error(
-        `Error finding/creating option for ${attributeSlug}:`,
-        error,
-      );
-      return null;
-    }
-  }
-
-  async findOrCreateSelectOption(
-    attributeSlug: string,
-    optionTitle: string,
-  ): Promise<AttioSelectOption | null> {
-    try {
-      console.log(
-        `Checking select option: ${attributeSlug} = "${optionTitle}"`,
-      );
-
-      const attributeResponse = await axios.get(
-        `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}`,
-        {
-          headers: this.getHeaders(),
-        },
-      );
-
-      const attribute: AttioAttribute = attributeResponse.data.data;
-      const existingOptions = attribute.config?.options || [];
-
-      const existingOption = existingOptions.find(
-        (opt) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
-      );
-
-      if (existingOption) {
-        console.log(
-          `Found existing option: "${optionTitle}" (${existingOption.id})`,
-        );
-        return existingOption;
-      }
-
-      console.log(`Option not found, creating: "${optionTitle}"`);
-      const createResponse = await axios.post(
-        `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}/options`,
-        {
-          title: optionTitle,
-        },
-        {
-          headers: this.getHeaders(),
-        },
-      );
-
-      const newOption = createResponse.data.data;
-      console.log(`Created option: "${optionTitle}" (${newOption.id})`);
-      return newOption;
     } catch (error) {
       console.error(
         `Error finding/creating option for ${attributeSlug}:`,
