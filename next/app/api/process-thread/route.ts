@@ -5,6 +5,16 @@ import { processThread } from "../../../utility/thread-processor";
 import { NextResponse } from "next/server";
 import { syncDealToAttio } from "../../../utility/attio-sync";
 
+// Timeout helper to prevent hanging requests
+const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => 
+      setTimeout(() => reject(new Error(`Timeout after ${timeoutMs}ms`)), timeoutMs)
+    )
+  ]);
+};
+
 // Keep the existing POST handler for manual triggers
 export async function POST(req: Request) {
   const { threadId } = await req.json();
@@ -42,7 +52,7 @@ export async function processThreadDirect(
       console.log("Original body length:", msg.content.length);
 
       try {
-        const cleaned = await cleanEmailBody(msg.content);
+        const cleaned = await withTimeout(cleanEmailBody(msg.content), 30000);
         console.log("Cleaned body length:", cleaned.length);
         return { from: msg.from, cleaned };
       } catch (error) {
