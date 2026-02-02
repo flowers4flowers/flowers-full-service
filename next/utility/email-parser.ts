@@ -78,7 +78,7 @@ export function parseGmailThread(
       console.log("Part preview:", part.substring(0, 300));
 
       // Strip Gmail quote markers (>>) from the beginning of lines
-      const cleanedPart = part.replace(/^>>\s*/gm, "");
+      const cleanedPart = part.replace(/^>+\s*/gm, "");
 
       // Extract From - more flexible pattern that stops at next header
       const fromMatch = cleanedPart.match(
