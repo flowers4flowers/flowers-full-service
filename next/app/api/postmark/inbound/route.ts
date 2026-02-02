@@ -400,9 +400,13 @@ export async function POST(req: Request) {
 
     // Process the thread in background (don't await)
     console.log("Processing thread in background...");
-    processThreadDirect(parsedMessages, threadId).catch((error) => {
-      console.error("Background processing failed:", error);
-    });
+    processThreadDirect(parsedMessages, threadId)
+      .then(() => {
+        console.log("✅ Background processing completed successfully");
+      })
+      .catch((error) => {
+        console.error("❌ Background processing failed:", error);
+      });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
