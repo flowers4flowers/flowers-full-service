@@ -30,33 +30,33 @@ export async function processThreadDirect(
   try {
     console.log(`Processing ${parsedMessages.length} messages`);
 
-    // Clean emails with AI
-    console.log("\n--- Cleaning emails with AI ---");
-    const cleanedEmails: Array<{ from: string; cleaned: string }> = [];
-
-    for (let i = 0; i < parsedMessages.length; i++) {
-      const msg = parsedMessages[i];
+    // Clean emails with AI in parallel
+    console.log("\n--- Cleaning emails with AI (parallel) ---");
+    const cleaningPromises = parsedMessages.map(async (msg, index) => {
       console.log(
-        `Cleaning email ${i + 1}/${parsedMessages.length} from ${msg.from}`,
+        `Starting cleaning for email ${index + 1}/${parsedMessages.length} from ${msg.from}`,
       );
 
       try {
         const cleaned = await cleanEmailBody(msg.content);
-        console.log(`Successfully cleaned email ${i + 1}`);
+        console.log(`Successfully cleaned email ${index + 1}`);
 
-        cleanedEmails.push({
+        return {
           from: msg.from,
           cleaned: cleaned,
-        });
+        };
       } catch (error) {
-        console.error(`Error cleaning email ${i + 1}:`, error);
+        console.error(`Error cleaning email ${index + 1}:`, error);
         // Fallback to raw content on error
-        cleanedEmails.push({
+        return {
           from: msg.from,
           cleaned: msg.content,
-        });
+        };
       }
-    }
+    });
+
+    const cleanedEmails = await Promise.all(cleaningPromises);
+    console.log(`Finished cleaning all ${cleanedEmails.length} emails`);
 
     // Combine cleaned emails
     console.log("\n--- Combining cleaned emails ---");
