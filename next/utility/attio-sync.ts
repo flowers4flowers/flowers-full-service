@@ -126,19 +126,19 @@ export async function syncDealToAttio(
 
     // Select field (budget_range)
     if (budgetRangeOption) {
-      payload.values.budget_range = [budgetRangeOption.id];
+      payload.values.budget_range = [budgetRangeOption.id.option_id]; // Extract option_id string
     }
 
     // Multiselect field (inquiry_source)
     if (inquirySourceOption) {
-      payload.values.inquiry_source = [inquirySourceOption.id];
+      payload.values.inquiry_source = [inquirySourceOption.id.option_id]; // Extract option_id string
     }
 
     // Multiselect field (collaborators_needed)
     if (collaboratorsOptions.length > 0) {
       payload.values.collaborators_needed = collaboratorsOptions.map(
-        (opt) => opt.id,
-      );
+        (opt) => opt.id.option_id,
+      ); // Map to option_id strings
     }
 
     // Location field
@@ -153,7 +153,9 @@ export async function syncDealToAttio(
 
     // Multiselect field (usage_terms_1)
     if (usageTermsOptions.length > 0) {
-      payload.values.usage_terms_1 = usageTermsOptions.map((opt) => opt.id);
+      payload.values.usage_terms_1 = usageTermsOptions.map(
+        (opt) => opt.id.option_id,
+      ); // Map to option_id strings
     }
 
     // 5. Create deal in Attio
