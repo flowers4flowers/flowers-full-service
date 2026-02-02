@@ -78,7 +78,7 @@ class AttioClient {
   async findUserByName(name: string): Promise<string | null> {
     try {
       console.log(`Searching for user: ${name}`);
-      const response = await axios.get(`${this.baseUrl}/workspace/members`, {
+      const response = await axios.get(`${this.baseUrl}/self/team`, {
         headers: this.getHeaders(),
       });
 
@@ -114,9 +114,7 @@ class AttioClient {
         `${this.baseUrl}/objects/people/records/query`,
         {
           filter: {
-            email_addresses: {
-              any_of: [email],
-            },
+            primary_email_address: email,
           },
           limit: 1,
         },
@@ -136,7 +134,11 @@ class AttioClient {
         `${this.baseUrl}/objects/people/records`,
         {
           values: {
-            email_addresses: [{ email_address: email }],
+            primary_email_address: [
+              {
+                email_address: email,
+              },
+            ],
           },
         },
         {
