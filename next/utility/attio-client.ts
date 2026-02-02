@@ -174,30 +174,22 @@ class AttioClient {
         `Checking select option: ${attributeSlug} = "${optionTitle}"`,
       );
 
-      const attributeResponse = await axios.get(
-        `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}`,
+      // Fetch options using the correct endpoint
+      const optionsResponse = await axios.get(
+        `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}/options`,
         {
           headers: this.getHeaders(),
         },
       );
 
-      // Log the full response to see structure
+      const existingOptions = optionsResponse.data.data || [];
       console.log(
-        `Full attribute response for ${attributeSlug}:`,
-        JSON.stringify(attributeResponse.data, null, 2),
+        `Found ${existingOptions.length} existing options for ${attributeSlug}`,
       );
-
-      const attribute: AttioAttribute = attributeResponse.data.data;
-      console.log(
-        `Attribute config:`,
-        JSON.stringify(attribute.config, null, 2),
-      );
-
-      const existingOptions = attribute.config?.options || [];
-      console.log(`Extracted options array length: ${existingOptions.length}`);
 
       const existingOption = existingOptions.find(
-        (opt) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
+        (opt: AttioSelectOption) =>
+          opt.title.toLowerCase() === optionTitle.toLowerCase(),
       );
 
       if (existingOption) {
@@ -228,37 +220,16 @@ class AttioClient {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         console.log(`Option already exists: "${optionTitle}", fetching again`);
         try {
-          const attributeResponse = await axios.get(
-            `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}`,
+          const optionsResponse = await axios.get(
+            `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}/options`,
             {
               headers: this.getHeaders(),
             },
           );
-
-          // ADD THIS
-          console.log(
-            `Full 409-retry response for ${attributeSlug}:`,
-            JSON.stringify(attributeResponse.data, null, 2),
-          );
-
-          const attribute: AttioAttribute = attributeResponse.data.data;
-          const existingOptions = attribute.config?.options || [];
-
-          // Log all available options for debugging
-          console.log(
-            `Available options for ${attributeSlug}:`,
-            existingOptions.map((opt) => ({
-              id: opt.id,
-              title: opt.title,
-              titleLower: opt.title.toLowerCase(),
-            })),
-          );
-          console.log(
-            `Looking for: "${optionTitle}" (lowercase: "${optionTitle.toLowerCase()}")`,
-          );
-
+          const existingOptions = optionsResponse.data.data || [];
           const existingOption = existingOptions.find(
-            (opt) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
+            (opt: AttioSelectOption) =>
+              opt.title.toLowerCase() === optionTitle.toLowerCase(),
           );
           if (existingOption) {
             console.log(
@@ -266,11 +237,9 @@ class AttioClient {
             );
             return existingOption;
           }
-          // If still not found after refetch, log and return null
           console.error(
             `Option "${optionTitle}" still not found after conflict resolution`,
           );
-          console.error(`Searched in ${existingOptions.length} total options`);
           return null;
         } catch (retryError) {
           console.error(`Error fetching after conflict:`, retryError);
