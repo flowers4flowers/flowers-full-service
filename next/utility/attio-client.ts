@@ -233,8 +233,14 @@ class AttioClient {
             );
             return existingOption;
           }
+          // If still not found after refetch, log and return null
+          console.error(
+            `Option "${optionTitle}" still not found after conflict resolution`,
+          );
+          return null;
         } catch (retryError) {
           console.error(`Error fetching after conflict:`, retryError);
+          return null;
         }
       }
 
