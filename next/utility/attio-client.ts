@@ -181,8 +181,20 @@ class AttioClient {
         },
       );
 
+      // Log the full response to see structure
+      console.log(
+        `Full attribute response for ${attributeSlug}:`,
+        JSON.stringify(attributeResponse.data, null, 2),
+      );
+
       const attribute: AttioAttribute = attributeResponse.data.data;
+      console.log(
+        `Attribute config:`,
+        JSON.stringify(attribute.config, null, 2),
+      );
+
       const existingOptions = attribute.config?.options || [];
+      console.log(`Extracted options array length: ${existingOptions.length}`);
 
       const existingOption = existingOptions.find(
         (opt) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
@@ -222,6 +234,13 @@ class AttioClient {
               headers: this.getHeaders(),
             },
           );
+
+          // ADD THIS
+          console.log(
+            `Full 409-retry response for ${attributeSlug}:`,
+            JSON.stringify(attributeResponse.data, null, 2),
+          );
+
           const attribute: AttioAttribute = attributeResponse.data.data;
           const existingOptions = attribute.config?.options || [];
 
