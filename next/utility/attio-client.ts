@@ -78,7 +78,7 @@ class AttioClient {
   async findUserByName(name: string): Promise<string | null> {
     try {
       console.log(`Searching for user: ${name}`);
-      const response = await axios.get(`${this.baseUrl}/workspace_members`, {
+      const response = await axios.get(`${this.baseUrl}/self/team`, {
         headers: this.getHeaders(),
       });
 
@@ -158,46 +158,47 @@ class AttioClient {
   async findOrCreateSelectOption(
     attributeSlug: string,
     optionTitle: string,
-  ): Promise<string | null> {
+  ): Promise<AttioSelectOption | null> {
     try {
       console.log(
         `Checking select option: ${attributeSlug} = "${optionTitle}"`,
       );
 
-      const listResponse = await axios.get(
-        `${this.baseUrl}/objects/${this.dealsObjectId}/attributes/${attributeSlug}/options`,
+      const attributeResponse = await axios.get(
+        `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}`,
         {
           headers: this.getHeaders(),
         },
       );
 
-      const existingOption = listResponse.data.data.find(
-        (opt: any) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
+      const attribute: AttioAttribute = attributeResponse.data.data;
+      const existingOptions = attribute.config?.options || [];
+
+      const existingOption = existingOptions.find(
+        (opt) => opt.title.toLowerCase() === optionTitle.toLowerCase(),
       );
 
       if (existingOption) {
         console.log(
-          `Found existing option: ${optionTitle} (${existingOption.id.option_id})`,
+          `Found existing option: "${optionTitle}" (${existingOption.id})`,
         );
-        return existingOption.id.option_id;
+        return existingOption;
       }
 
       console.log(`Option not found, creating: "${optionTitle}"`);
       const createResponse = await axios.post(
-        `${this.baseUrl}/objects/${this.dealsObjectId}/attributes/${attributeSlug}/options`,
+        `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/attributes/${attributeSlug}/options`,
         {
-          option: {
-            title: optionTitle,
-          },
+          title: optionTitle,
         },
         {
           headers: this.getHeaders(),
         },
       );
 
-      const optionId = createResponse.data.data.id.option_id;
-      console.log(`Created option: ${optionTitle} (${optionId})`);
-      return optionId;
+      const newOption = createResponse.data.data;
+      console.log(`Created option: "${optionTitle}" (${newOption.id})`);
+      return newOption;
     } catch (error) {
       console.error(
         `Error finding/creating option for ${attributeSlug}:`,
