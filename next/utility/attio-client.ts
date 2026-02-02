@@ -276,7 +276,7 @@ class AttioClient {
 
       const response = await axios.post(
         `${this.baseUrl}/objects/${DEALS_OBJECT_ID}/records`,
-        { data: payload.values }, // Wrap in data key
+        { data: payload }, // Don't access .values, send entire payload wrapped in data
         {
           headers: this.getHeaders(),
         },
