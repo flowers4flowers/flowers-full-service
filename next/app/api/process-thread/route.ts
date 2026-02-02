@@ -1,8 +1,8 @@
-import { cleanEmailBody } from "../../../utility/email-cleaner";
-import { extractDealData } from "../../../utility/deal-extractor";
+import { cleanEmailBody } from "../../../utility/cc-attio/email-cleaner";
+import { extractDealData } from "../../../utility/cc-attio/deal-extractor";
 import { getDb } from "../../../utility/db";
-import { syncDealToAttio } from "../../../utility/attio-sync";
-import { extractValidParticipants } from "../../../utility/participant-utils";
+import { syncDealToAttio } from "../../../utility/cc-attio/attio-sync";
+import { extractValidParticipants } from "../../../utility/cc-attio/participant-utils";
 
 /**
  * Processes a thread of parsed email messages:
