@@ -14,7 +14,7 @@ import {
   processThreadBackground,
   processThreadDirect,
 } from "../../process-thread/route";
-import { inngest } from "../../../../utility/iingest/client";
+import { inngest } from "../../../../utility/inngest/client";
 
 export const runtime = "nodejs";
 
