@@ -9,11 +9,10 @@
 export const config = {
   excludedParticipants: {
     domains: [
-      '@fullservice.art'
+      '@flowersfullservice.art'
     ],
     emails: [
-      // Individual emails can be added here
-      // Example: 'noreply@example.com'
+      'd1951a2f382d550d96f0e0a294dafbee@inbound.postmarkapp.com'
     ]
   }
 };
