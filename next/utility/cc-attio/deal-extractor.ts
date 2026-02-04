@@ -25,7 +25,7 @@ export async function extractDealData(cleanedThread: string): Promise<ExtractedD
   const prompt = `Extract deal information from this email thread and return as JSON.
 
 Fields to extract (return null if not found or low confidence):
-- dealName: string (a descriptive name for this project/deal)
+- dealName: string (a descriptive name for this project/deal, if the company is mentioned use the company name in the deal name)
 - associatedCompanies: array of strings (company names mentioned)
 - dealValue: number (total value in currency)
 - budgetRange: string (budget range: "<25k", "25k-50k", "50k-100k", "100k-200k", "200k-500k", or "500k+")
