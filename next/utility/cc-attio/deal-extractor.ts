@@ -36,9 +36,14 @@ Deal name rules (STRICT):
 - dealName must be based ONLY on:
   - the client or brand name, OR
   - the campaign name, OR
-  - the shoot type (e.g. "Product Shoot", "Brand Campaign", "Portrait Shoot")
+  - the shoot type (e.g. "Brand Campaign")
+- dealName must NOT include shoot descriptors or production terms, including but not limited to:
+  "photo", "photos", "photography", "photo shoot", "shoot",
+  "video", "videography", "film", "filming",
+  "campaign", "project", "production"
+- dealName must consist ONLY of the client name or brand name.
 - If no client, brand, or campaign name is mentioned, use EXACTLY:
-  "Unnamed Client - Photo Shoot"
+  "Unnamed Client"
 - Do NOT invent creative or thematic names.
 
 Fields to extract (return null if not found or low confidence):
