@@ -28,14 +28,21 @@ export async function extractDealData(
 
 Context:
 - These emails relate to photography or video shoots handled by FLOWERS, a full-service production company.
-- FLOWERS is the production company and must NEVER be used in the deal name.
+- "FLOWERS" is the name of the production company and must NEVER be referenced directly or indirectly in the deal name.
+- Do NOT use synonyms, themes, or related words for FLOWERS (e.g. floral, flowers, bouquet, botanical, arrangement, bloom, etc.).
 - The name "Cait" (or any variation of it) must NEVER be used in the deal name.
 
+Deal name rules (STRICT):
+- dealName must be based ONLY on:
+  - the client or brand name, OR
+  - the campaign name, OR
+  - the shoot type (e.g. "Product Shoot", "Brand Campaign", "Portrait Shoot")
+- If no client, brand, or campaign name is mentioned, use EXACTLY:
+  "Unnamed Client - Photo Shoot"
+- Do NOT invent creative or thematic names.
+
 Fields to extract (return null if not found or low confidence):
-- dealName: string 
-  (A short, descriptive project name based on the client, brand, campaign, or shoot type.
-   If a client or brand is mentioned, use that.
-   Do NOT include "FLOWERS", "Cait" in the deal name.)
+- dealName: string
 - associatedCompanies: array of strings 
   (Client or brand names mentioned; exclude "FLOWERS")
 - dealValue: number 
@@ -55,8 +62,7 @@ Thread:
 ${cleanedThread}
 
 Return only valid JSON. No markdown formatting, no commentary.
-If a field has low confidence or is not found, set it to null.
-`;
+If a field has low confidence or is not found, set it to null.`;
 
   try {
     const response = await axios.post(
