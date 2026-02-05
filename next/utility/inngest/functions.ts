@@ -1,5 +1,4 @@
 import { inngest } from "./client";
-import { processThreadDirect } from "../../app/api/process-thread/route";
 import { getDb } from "../db";
 import { cleanEmailBody } from "../cc-attio/email-cleaner";
 import { ExtractedDealData, extractDealData } from "../cc-attio/deal-extractor";
@@ -62,6 +61,32 @@ export const processEmailThread = inngest.createFunction(
       },
     );
 
+    // Add this validation step
+    const isValidDealData =
+      extractedData.dealName && extractedData.dealName.trim() !== "";
+
+    if (!isValidDealData) {
+      console.log(
+        `Thread ${threadId} missing required deal data, skipping Attio sync`,
+      );
+      // Still save to DB but mark as needing manual review
+      await step.run("save-incomplete-to-db", async () => {
+        const db = await getDb();
+        await db.collection("email_threads").updateOne(
+          { threadId },
+          {
+            $set: {
+              processed: true,
+              processedAt: new Date(),
+              processingStatus: "incomplete_data",
+              attioSyncError: "Missing required deal data (dealName)",
+            },
+          },
+        );
+      });
+      return { success: false, error: "incomplete_data" };
+    }
+
     // Step 4: Save to DB
     await step.run("save-to-db", async () => {
       const db = await getDb();
@@ -75,7 +100,7 @@ export const processEmailThread = inngest.createFunction(
         {
           $set: {
             threadId,
-            dealName: extractedData.dealName,
+            dealName: extractedData.dealName!, // Add ! since we validated above
             dealStage: "Lead",
             dealOwner: "cait@fullservice.art",
             associatedPeople,
@@ -104,7 +129,19 @@ export const processEmailThread = inngest.createFunction(
     // Step 5: Sync to Attio
     const attioResult = await step.run("sync-to-attio", async () => {
       const associatedPeople = extractValidParticipants(parsedMessages);
-      return await syncDealToAttio(extractedData, associatedPeople, threadId);
+      // Create a properly typed object
+      const validDealData: ExtractedDealData = {
+        dealName: extractedData.dealName!,
+        associatedCompanies: extractedData.associatedCompanies,
+        dealValue: extractedData.dealValue,
+        budgetRange: extractedData.budgetRange,
+        inquirySource: extractedData.inquirySource,
+        collaboratorsNeeded: extractedData.collaboratorsNeeded,
+        location: extractedData.location,
+        shootDate: extractedData.shootDate,
+        usageTerms: extractedData.usageTerms,
+      };
+      return await syncDealToAttio(validDealData, associatedPeople, threadId);
     });
 
     // Step 6: Update with Attio results

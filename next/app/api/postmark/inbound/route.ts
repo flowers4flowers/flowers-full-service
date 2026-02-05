@@ -13,7 +13,6 @@ import {
 } from "../../../../utility/cc-attio/email-parser";
 import { generateContentHash } from "../../../../utility/cc-attio/content-hash";
 import { checkForDuplicates } from "../../../../utility/cc-attio/duplicate-checker";
-import { processThreadDirect } from "../../process-thread/route";
 import { inngest } from "../../../../utility/inngest/client";
 
 export const runtime = "nodejs";

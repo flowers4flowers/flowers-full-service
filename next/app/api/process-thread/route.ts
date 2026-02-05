@@ -5,6 +5,7 @@ import { extractDealData } from "../../../utility/cc-attio/deal-extractor";
 import { getDb } from "../../../utility/db";
 import { syncDealToAttio } from "../../../utility/cc-attio/attio-sync";
 import { extractValidParticipants } from "../../../utility/cc-attio/participant-utils";
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Processes a thread of parsed email messages:
@@ -21,7 +22,7 @@ import { extractValidParticipants } from "../../../utility/cc-attio/participant-
  * Note: This function operates on in-memory parsed messages, not DB records.
  * This avoids redundant DB queries since data is already in memory from webhook.
  */
-export async function processThreadDirect(
+async function processThreadDirect(
   parsedMessages: any[],
   threadId: string,
 ) {
@@ -181,5 +182,28 @@ export async function processThreadDirect(
   } catch (error) {
     console.error("Processing failed:", error);
     throw error;
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const { parsedMessages, threadId } = await request.json();
+    
+    if (!parsedMessages || !threadId) {
+      return NextResponse.json(
+        { error: 'Missing parsedMessages or threadId' },
+        { status: 400 }
+      );
+    }
+
+    await processThreadDirect(parsedMessages, threadId);
+    
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Process thread error:', error);
+    return NextResponse.json(
+      { error: 'Failed to process thread' },
+      { status: 500 }
+    );
   }
 }
