@@ -23,59 +23,82 @@ export function isForwardedEmail(subject: string): boolean {
 
 /**
  * Recursively parses nested Gmail-style replies from email content
- * Pattern: "On [Date], [Name] <email@domain.com> wrote:"
+ * Pattern: "On [Date] at [Time], [Name] <email@domain.com> wrote:"
+ *       or "On [Date], [Name] <email@domain.com> wrote:"
  */
-export function parseNestedReplies(content: string, currentIndex: number): ParsedMessage[] {
+export function parseNestedReplies(
+  content: string,
+  currentIndex: number,
+): ParsedMessage[] {
   const messages: ParsedMessage[] = [];
-  
-  // Pattern matches: "On [date] at [time], Name <email> wrote:" or "On [date], Name <email> wrote:"
-  const replyPattern = /On\s+(.+?),\s+(.+?)\s+<(.+?)>\s+wrote:/gi;
-  
+
+  // Updated pattern to handle: "On Day, Month Date, Year at Time, Name <email> wrote:"
+  // Example: "On Wed, Feb 4, 2026 at 6:54 PM Cait Oppermann <cait@flowersfullservice.art> wrote:"
+  const replyPattern = /On\s+([^<]+?)\s+([^<]+?)\s+<([^>]+?)>\s+wrote:/gi;
+
   const matches = Array.from(content.matchAll(replyPattern));
-  
+
+  console.log(`Found ${matches.length} nested reply patterns in content`);
+
   if (matches.length === 0) {
-    // No nested replies found, this is the final message content
+    // No nested replies found
     return messages;
   }
-  
+
   // Process each nested reply
   for (let i = 0; i < matches.length; i++) {
     const match = matches[i];
-    const dateStr = match[1].trim();
+    const dateAndName = match[1].trim(); // Everything between "On" and the name
     const name = match[2].trim();
     const email = match[3].trim();
     const matchIndex = match.index || 0;
-    
+
+    console.log(`Processing nested reply ${i + 1}:`, {
+      email,
+      name,
+      dateStr: dateAndName,
+    });
+
     // Extract content between this match and the next (or end of string)
-    const nextMatchIndex = i < matches.length - 1 
-      ? (matches[i + 1].index || content.length)
-      : content.length;
-    
+    const nextMatchIndex =
+      i < matches.length - 1
+        ? matches[i + 1].index || content.length
+        : content.length;
+
     const messageContent = content
       .substring(matchIndex + match[0].length, nextMatchIndex)
       .trim();
-    
-    // Parse the date
+
+    // Parse the date from the dateAndName string
     let parsedDate: Date | null = null;
     try {
+      // Try to extract date portion (everything before the name)
+      // Pattern like "Wed, Feb 4, 2026 at 6:54 PM"
+      const dateMatch = dateAndName.match(/(.+?)\s+(?=\S+\s+\S+\s*$)/);
+      const dateStr = dateMatch ? dateMatch[1] : dateAndName;
+
       parsedDate = new Date(dateStr);
       if (isNaN(parsedDate.getTime())) {
         parsedDate = null;
       }
     } catch (e) {
+      console.warn(`Failed to parse date from: ${dateAndName}`);
       parsedDate = null;
     }
-    
+
+    console.log(`Extracted message content length: ${messageContent.length}`);
+
     messages.push({
       from: email,
-      to: 'unknown',
+      to: "unknown",
       date: parsedDate,
       subject: null,
       content: messageContent,
-      originalIndex: currentIndex + i
+      originalIndex: currentIndex + i,
     });
   }
-  
+
+  console.log(`Extracted ${messages.length} nested messages`);
   return messages;
 }
 
@@ -456,7 +479,7 @@ export function parseAppleMailThread(
 export function parseForwardedEmail(
   subject: string,
   htmlBody: string,
-  textBody: string
+  textBody: string,
 ): ParsedMessage[] {
   const bodyToUse = textBody || htmlBody;
   const messages: ParsedMessage[] = [];
@@ -476,8 +499,12 @@ export function parseForwardedEmail(
 
     // Extract headers from forwarded message
     const fromMatch = section.match(/From:\s*(.+?)\s*<(.+?)>/i);
-    const dateMatch = section.match(/Date:\s*(.+?)(?=\n(?:Subject:|To:|From:|$))/is);
-    const subjectMatch = section.match(/Subject:\s*(.+?)(?=\n(?:To:|From:|Date:|$))/is);
+    const dateMatch = section.match(
+      /Date:\s*(.+?)(?=\n(?:Subject:|To:|From:|$))/is,
+    );
+    const subjectMatch = section.match(
+      /Subject:\s*(.+?)(?=\n(?:To:|From:|Date:|$))/is,
+    );
     const toMatch = section.match(/To:\s*<?(.+?)>?(?=\n|$)/i);
 
     if (!fromMatch || !dateMatch) {
@@ -505,7 +532,7 @@ export function parseForwardedEmail(
     const contentStartRegex = /(?:Subject:|To:|From:|Date:).+?\n\n/is;
     const contentMatch = section.match(contentStartRegex);
     let rawContent = section;
-    
+
     if (contentMatch) {
       const headerEndIndex = (contentMatch.index || 0) + contentMatch[0].length;
       rawContent = section.substring(headerEndIndex);
@@ -518,8 +545,11 @@ export function parseForwardedEmail(
       .trim();
 
     // Check if this section contains nested replies
-    const nestedMessages = parseNestedReplies(cleanedContent, messages.length + 1);
-    
+    const nestedMessages = parseNestedReplies(
+      cleanedContent,
+      messages.length + 1,
+    );
+
     if (nestedMessages.length > 0) {
       // Add all nested messages
       messages.push(...nestedMessages);
@@ -531,7 +561,7 @@ export function parseForwardedEmail(
         date: parsedDate,
         subject: subjectStr,
         content: cleanedContent,
-        originalIndex: messages.length
+        originalIndex: messages.length,
       });
     }
   }
