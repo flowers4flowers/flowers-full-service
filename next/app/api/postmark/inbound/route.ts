@@ -85,21 +85,20 @@ export async function POST(req: Request) {
 
       console.log("Single email saved:", body.MessageID, "Thread:", threadId);
 
-      // Process the thread before responding
-      console.log("Processing thread (blocking until complete)...");
-      const singleMessage = {
-        from: body.From,
-        to: body.To,
-        date: receivedAt,
-        subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
-        content: body.TextBody || body.HtmlBody,
-        originalIndex: 0,
-      };
-
+      // Trigger async processing via Inngest
       await inngest.send({
         name: "email/thread.received",
         data: {
-          parsedMessages: [singleMessage],
+          parsedMessages: [
+            {
+              from: body.From,
+              to: body.To,
+              date: receivedAt,
+              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
+              content: body.TextBody || body.HtmlBody,
+              originalIndex: 0,
+            },
+          ],
           threadId,
         },
       });
@@ -161,9 +160,24 @@ export async function POST(req: Request) {
 
       console.log("Fallback save completed:", body.MessageID);
 
-      // Process the thread before responding
-      console.log("Processing thread (blocking until complete)...");
-      await processThreadDirect(parsedMessages, threadId);
+      // Trigger async processing via Inngest
+      await inngest.send({
+        name: "email/thread.received",
+        data: {
+          parsedMessages: [
+            {
+              from: body.From,
+              to: body.To,
+              date: new Date(),
+              subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
+              content: body.TextBody || body.HtmlBody,
+              originalIndex: 0,
+            },
+          ],
+          threadId,
+        },
+      });
+      console.log(`Triggered Inngest processing for thread: ${threadId}`);
 
       return NextResponse.json({ ok: true });
     }
@@ -295,9 +309,15 @@ export async function POST(req: Request) {
         },
       );
 
-      // Process the thread before responding
-      console.log("Processing thread (blocking until complete)...");
-      await processThreadDirect(parsedMessages, threadId);
+      // Trigger async processing via Inngest (even for duplicates, to update thread)
+      await inngest.send({
+        name: "email/thread.received",
+        data: {
+          parsedMessages,
+          threadId,
+        },
+      });
+      console.log(`Triggered Inngest processing for thread: ${threadId}`);
 
       return NextResponse.json({ ok: true });
     }
