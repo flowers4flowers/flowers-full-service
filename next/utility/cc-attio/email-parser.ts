@@ -22,6 +22,64 @@ export function isForwardedEmail(subject: string): boolean {
 }
 
 /**
+ * Recursively parses nested Gmail-style replies from email content
+ * Pattern: "On [Date], [Name] <email@domain.com> wrote:"
+ */
+export function parseNestedReplies(content: string, currentIndex: number): ParsedMessage[] {
+  const messages: ParsedMessage[] = [];
+  
+  // Pattern matches: "On [date] at [time], Name <email> wrote:" or "On [date], Name <email> wrote:"
+  const replyPattern = /On\s+(.+?),\s+(.+?)\s+<(.+?)>\s+wrote:/gi;
+  
+  const matches = Array.from(content.matchAll(replyPattern));
+  
+  if (matches.length === 0) {
+    // No nested replies found, this is the final message content
+    return messages;
+  }
+  
+  // Process each nested reply
+  for (let i = 0; i < matches.length; i++) {
+    const match = matches[i];
+    const dateStr = match[1].trim();
+    const name = match[2].trim();
+    const email = match[3].trim();
+    const matchIndex = match.index || 0;
+    
+    // Extract content between this match and the next (or end of string)
+    const nextMatchIndex = i < matches.length - 1 
+      ? (matches[i + 1].index || content.length)
+      : content.length;
+    
+    const messageContent = content
+      .substring(matchIndex + match[0].length, nextMatchIndex)
+      .trim();
+    
+    // Parse the date
+    let parsedDate: Date | null = null;
+    try {
+      parsedDate = new Date(dateStr);
+      if (isNaN(parsedDate.getTime())) {
+        parsedDate = null;
+      }
+    } catch (e) {
+      parsedDate = null;
+    }
+    
+    messages.push({
+      from: email,
+      to: 'unknown',
+      date: parsedDate,
+      subject: null,
+      content: messageContent,
+      originalIndex: currentIndex + i
+    });
+  }
+  
+  return messages;
+}
+
+/**
  * Detects which email client was used based on content markers
  */
 export function detectEmailClient(
@@ -398,48 +456,87 @@ export function parseAppleMailThread(
 export function parseForwardedEmail(
   subject: string,
   htmlBody: string,
-  textBody: string,
+  textBody: string
 ): ParsedMessage[] {
-  console.log("\n========================================");
-  console.log("PARSING FORWARDED EMAIL");
-  console.log("========================================");
-  console.log("Subject:", subject);
-  console.log("HTML body length:", htmlBody?.length || 0);
-  console.log("Text body length:", textBody?.length || 0);
-
-  if (!isForwardedEmail(subject)) {
-    console.log("Not a forwarded email (no Fwd:/Fw: in subject)");
-    return [];
-  }
-
   const bodyToUse = textBody || htmlBody;
-  const client = detectEmailClient(bodyToUse);
+  const messages: ParsedMessage[] = [];
 
-  console.log("Detected email client:", client);
-  console.log("Using body type:", textBody ? "text" : "html");
+  // Split by forward delimiter
+  const parts = bodyToUse.split("---------- Forwarded message ---------");
 
-  let messages: ParsedMessage[] = [];
-
-  switch (client) {
-    case "gmail":
-      messages = parseGmailThread(htmlBody, textBody);
-      break;
-    case "outlook":
-      messages = parseOutlookThread(htmlBody, textBody);
-      break;
-    case "apple":
-      messages = parseAppleMailThread(htmlBody, textBody);
-      break;
-    default:
-      console.warn("Unknown email client format, attempting Gmail parser");
-      messages = parseGmailThread(htmlBody, textBody);
+  if (parts.length <= 1) {
+    console.log("No forward delimiter found");
+    return messages;
   }
 
-  console.log(
-    `\nFINAL RESULT: Parsed ${messages.length} messages from ${client} format`,
-  );
-  console.log("========================================\n");
+  // Skip the first part (it's the covering message, handled separately in route.ts)
+  // Process each forwarded section
+  for (let i = 1; i < parts.length; i++) {
+    const section = parts[i].trim();
 
+    // Extract headers from forwarded message
+    const fromMatch = section.match(/From:\s*(.+?)\s*<(.+?)>/i);
+    const dateMatch = section.match(/Date:\s*(.+?)(?=\n(?:Subject:|To:|From:|$))/is);
+    const subjectMatch = section.match(/Subject:\s*(.+?)(?=\n(?:To:|From:|Date:|$))/is);
+    const toMatch = section.match(/To:\s*<?(.+?)>?(?=\n|$)/i);
+
+    if (!fromMatch || !dateMatch) {
+      console.warn(`Skipping section ${i}: missing From or Date`);
+      continue;
+    }
+
+    const from = fromMatch[2].trim();
+    const to = toMatch ? toMatch[1].trim() : "unknown";
+    const dateStr = dateMatch[1].trim();
+    const subjectStr = subjectMatch ? subjectMatch[1].trim() : null;
+
+    // Parse date
+    let parsedDate: Date | null = null;
+    try {
+      parsedDate = new Date(dateStr);
+      if (isNaN(parsedDate.getTime())) {
+        parsedDate = null;
+      }
+    } catch (e) {
+      parsedDate = null;
+    }
+
+    // Extract content (everything after headers)
+    const contentStartRegex = /(?:Subject:|To:|From:|Date:).+?\n\n/is;
+    const contentMatch = section.match(contentStartRegex);
+    let rawContent = section;
+    
+    if (contentMatch) {
+      const headerEndIndex = (contentMatch.index || 0) + contentMatch[0].length;
+      rawContent = section.substring(headerEndIndex);
+    }
+
+    // Clean up the content
+    const cleanedContent = rawContent
+      .split(/Dev work\/play at/)[0]
+      .split(/--\s*$/m)[0]
+      .trim();
+
+    // Check if this section contains nested replies
+    const nestedMessages = parseNestedReplies(cleanedContent, messages.length + 1);
+    
+    if (nestedMessages.length > 0) {
+      // Add all nested messages
+      messages.push(...nestedMessages);
+    } else {
+      // No nested replies, add this as a single message
+      messages.push({
+        from,
+        to,
+        date: parsedDate,
+        subject: subjectStr,
+        content: cleanedContent,
+        originalIndex: messages.length
+      });
+    }
+  }
+
+  console.log(`Parsed ${messages.length} messages from forwarded email`);
   return messages;
 }
 

@@ -1,3 +1,5 @@
+// next/app/api/process-thread/route.ts
+
 import { cleanEmailBody } from "../../../utility/cc-attio/email-cleaner";
 import { extractDealData } from "../../../utility/cc-attio/deal-extractor";
 import { getDb } from "../../../utility/db";

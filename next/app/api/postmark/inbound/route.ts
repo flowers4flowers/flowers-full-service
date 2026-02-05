@@ -9,12 +9,11 @@ import {
 import {
   isForwardedEmail,
   parseForwardedEmail,
+  parseNestedReplies,
 } from "../../../../utility/cc-attio/email-parser";
 import { generateContentHash } from "../../../../utility/cc-attio/content-hash";
 import { checkForDuplicates } from "../../../../utility/cc-attio/duplicate-checker";
-import {
-  processThreadDirect,
-} from "../../process-thread/route";
+import { processThreadDirect } from "../../process-thread/route";
 import { inngest } from "../../../../utility/inngest/client";
 
 export const runtime = "nodejs";
@@ -190,10 +189,10 @@ export async function POST(req: Request) {
     );
 
     // If there's content before the first forward delimiter, it's the newest message
+    // If there's content before the first forward delimiter, it's the newest message
     if (coveringMessageRaw && coveringMessageRaw.length > 10) {
       console.log("Found covering message (most recent)");
 
-      // Extract the date from the covering message headers
       const dateMatch = coveringMessageRaw.match(
         /Date:\s*(.+?)(?=\r?\n(?:Subject:|To:|$))/is,
       );
@@ -203,7 +202,6 @@ export async function POST(req: Request) {
       console.log("Covering message date string:", dateStr);
       console.log("Covering message parsed date:", coveringDate);
 
-      // Clean the covering message content (remove headers)
       const cleanedCovering = coveringMessageRaw
         .replace(/From:\s*.+?(?=\r?\n)/is, "")
         .replace(/Date:\s*.+?(?=\r?\n)/is, "")
@@ -219,23 +217,31 @@ export async function POST(req: Request) {
       console.log("Cleaned covering message length:", cleanedCovering.length);
 
       if (cleanedCovering.length > 0) {
-        // Add the covering message as the newest message
-        const coveringMessage = {
-          from: body.From,
-          to: body.To,
-          date: coveringDate,
-          subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
-          content: cleanedCovering,
-          originalIndex: parsedMessages.length,
-        };
+        // Import the parseNestedReplies function or duplicate it here
+        // Check if covering message contains nested replies
+        const nestedInCovering = parseNestedReplies(
+          cleanedCovering,
+          parsedMessages.length,
+        );
 
-        parsedMessages.push(coveringMessage);
+        if (nestedInCovering.length > 0) {
+          console.log(
+            `Found ${nestedInCovering.length} nested replies in covering message`,
+          );
+          parsedMessages.push(...nestedInCovering);
+        } else {
+          // No nested replies, add as single message
+          const coveringMessage = {
+            from: body.From,
+            to: body.To,
+            date: coveringDate,
+            subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
+            content: cleanedCovering,
+            originalIndex: parsedMessages.length,
+          };
 
-        console.log("Added covering message:", {
-          from: coveringMessage.from,
-          contentPreview: coveringMessage.content.substring(0, 100),
-          originalIndex: coveringMessage.originalIndex,
-        });
+          parsedMessages.push(coveringMessage);
+        }
       } else {
         console.log("Covering message too short after cleaning, skipping");
       }
