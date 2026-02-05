@@ -10,6 +10,8 @@ import {
   isForwardedEmail,
   parseForwardedEmail,
   parseNestedReplies,
+  stripQuoteMarkers,
+  isBoilerplate,
 } from "../../../../utility/cc-attio/email-parser";
 import { generateContentHash } from "../../../../utility/cc-attio/content-hash";
 import { checkForDuplicates } from "../../../../utility/cc-attio/duplicate-checker";
@@ -202,7 +204,6 @@ export async function POST(req: Request) {
     );
 
     // If there's content before the first forward delimiter, it's the newest message
-    // If there's content before the first forward delimiter, it's the newest message
     if (coveringMessageRaw && coveringMessageRaw.length > 10) {
       console.log("Found covering message (most recent)");
 
@@ -229,12 +230,21 @@ export async function POST(req: Request) {
       console.log("Cleaned covering message:", cleanedCovering);
       console.log("Cleaned covering message length:", cleanedCovering.length);
 
-      if (cleanedCovering.length > 0) {
-        // Import the parseNestedReplies function or duplicate it here
-        // Check if covering message contains nested replies
+      // NEW: Strip quote markers
+      const strippedCovering = stripQuoteMarkers(cleanedCovering);
+
+      console.log("Stripped covering message:", strippedCovering);
+      console.log("Stripped covering message length:", strippedCovering.length);
+
+      // NEW: Skip if boilerplate
+      if (isBoilerplate(strippedCovering)) {
+        console.log("Covering message is boilerplate, skipping");
+      } else if (strippedCovering.length > 0) {
+        // Check for nested replies (now with depth tracking)
         const nestedInCovering = parseNestedReplies(
-          cleanedCovering,
+          strippedCovering,
           parsedMessages.length,
+          0, // Start at depth 0
         );
 
         if (nestedInCovering.length > 0) {
@@ -249,14 +259,14 @@ export async function POST(req: Request) {
             to: body.To,
             date: coveringDate,
             subject: body.Subject.replace(/^(re|fwd|fw):\s*/gi, "").trim(),
-            content: cleanedCovering,
+            content: strippedCovering, // Use stripped content
             originalIndex: parsedMessages.length,
           };
 
           parsedMessages.push(coveringMessage);
         }
       } else {
-        console.log("Covering message too short after cleaning, skipping");
+        console.log("Covering message empty after stripping, skipping");
       }
     } else {
       console.log("No covering message found or too short");
@@ -272,28 +282,65 @@ export async function POST(req: Request) {
 
     console.log("Generated threadId:", threadId);
 
-    // Generate content hashes for all messages
+    // STEP 1: Renumber all messages sequentially
+    parsedMessages.forEach((msg, index) => {
+      msg.originalIndex = index;
+    });
+
+    console.log(
+      `Total parsed messages before deduplication: ${parsedMessages.length}`,
+    );
+
+    // STEP 2: Generate content hashes
     const contentHashes = parsedMessages.map((msg) =>
       generateContentHash(msg.content, msg.from, msg.date),
     );
 
-    console.log("Generated content hashes:", contentHashes);
+    console.log(`Generated ${contentHashes.length} content hashes`);
 
-    // Check for duplicates
+    // STEP 3: Check for duplicates against DB
     const existingHashes = await checkForDuplicates(
       db,
       threadId,
       contentHashes,
     );
 
-    console.log("Existing hashes found:", existingHashes);
+    console.log(`Found ${existingHashes.length} existing messages in DB`);
 
-    // Filter out duplicate messages
+    // STEP 4: Filter out messages that already exist in DB
     const messagesToSave = parsedMessages.filter(
       (msg, index) => !existingHashes.includes(contentHashes[index]),
     );
 
-    if (messagesToSave.length === 0) {
+    console.log(
+      `Messages to save after DB deduplication: ${messagesToSave.length}`,
+    );
+
+    // STEP 5: Additional in-memory deduplication
+    const seenHashes = new Set<string>();
+    const uniqueMessagesToSave = messagesToSave.filter((msg, index) => {
+      const hashIndex = parsedMessages.indexOf(msg);
+      const hash = contentHashes[hashIndex];
+
+      if (seenHashes.has(hash)) {
+        console.log(`Skipping in-memory duplicate from ${msg.from}`);
+        return false;
+      }
+
+      seenHashes.add(hash);
+      return true;
+    });
+
+    console.log(
+      `Final unique messages to save: ${uniqueMessagesToSave.length}`,
+    );
+
+    // STEP 6: Renumber final messages sequentially
+    uniqueMessagesToSave.forEach((msg, index) => {
+      msg.originalIndex = index;
+    });
+
+    if (uniqueMessagesToSave.length === 0) {
       console.log(
         "All messages are duplicates, skipping inserts but updating thread metadata",
       );
@@ -322,11 +369,11 @@ export async function POST(req: Request) {
     }
 
     console.log(
-      `${messagesToSave.length} new messages to save (${existingHashes.length} duplicates skipped)`,
+      `${uniqueMessagesToSave.length} new messages to save (${existingHashes.length} duplicates skipped)`,
     );
 
     // Create email documents for all non-duplicate messages
-    const emailDocuments = messagesToSave.map((msg, index) => {
+    const emailDocuments = uniqueMessagesToSave.map((msg, index) => {
       const originalIndex = parsedMessages.indexOf(msg);
       const contentHash = contentHashes[originalIndex];
 
@@ -419,7 +466,7 @@ export async function POST(req: Request) {
         participants: { $each: Array.from(allParticipants) },
       },
       $inc: {
-        emailCount: messagesToSave.length,
+        emailCount: uniqueMessagesToSave.length,
       },
       $setOnInsert: {
         threadId,
@@ -437,7 +484,7 @@ export async function POST(req: Request) {
 
     console.log("Thread metadata updated successfully");
     console.log(
-      `Saved ${messagesToSave.length} messages to thread ${threadId}`,
+      `Saved ${uniqueMessagesToSave.length} messages to thread ${threadId}`,
     );
     console.log("=== WEBHOOK PROCESSING COMPLETE ===\n");
 

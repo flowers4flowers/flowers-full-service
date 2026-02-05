@@ -14,6 +14,89 @@ export interface ParsedMessage {
 }
 
 /**
+ * Strips Gmail-style quote markers (>) from the beginning of each line.
+ * Handles any number of quote markers.
+ *
+ * Examples:
+ *   "> Hello" -> "Hello"
+ *   ">>> Hello" -> "Hello"
+ *   "Normal line" -> "Normal line"
+ *
+ * @param content - Raw email content with quote markers
+ * @returns Content with quote markers removed
+ */
+export function stripQuoteMarkers(content: string): string {
+  return content
+    .split("\n")
+    .map((line) => line.replace(/^>+\s*/, ""))
+    .join("\n")
+    .trim();
+}
+
+/**
+ * Checks if content consists entirely of quoted lines (lines starting with >).
+ * Used to detect messages that are pure quote blocks with no new content.
+ *
+ * @param content - Raw email content
+ * @returns true if all non-empty lines start with >
+ */
+export function isOnlyQuotedContent(content: string): boolean {
+  const lines = content.split("\n").filter((line) => line.trim().length > 0);
+
+  if (lines.length === 0) {
+    return false;
+  }
+
+  const quotedLines = lines.filter((line) => /^>+\s*/.test(line));
+
+  // If 100% of non-empty lines are quoted, this is pure quoted content
+  return quotedLines.length === lines.length;
+}
+
+/**
+ * Checks if content is just boilerplate (signature, disclaimer, etc).
+ * Returns true for common patterns that aren't real message content.
+ *
+ * @param content - Message content to check
+ * @returns true if content is boilerplate
+ */
+export function isBoilerplate(content: string): boolean {
+  const trimmed = content.trim();
+
+  // Empty or very short
+  if (trimmed.length < 20) {
+    return true;
+  }
+
+  // Common signature patterns
+  const boilerplatePatterns = [
+    /^Dev\s+work\/play at/i,
+    /^Sent from (my )?iPhone/i,
+    /^Sent from (my )?iPad/i,
+    /^Get Outlook for/i,
+    /^Best regards?,?\s*$/i,
+    /^Thanks?,?\s*$/i,
+    /^Cheers?,?\s*$/i,
+    /^\s*--\s*$/, // Signature delimiter
+  ];
+
+  // Check if content only contains boilerplate
+  for (const pattern of boilerplatePatterns) {
+    if (pattern.test(trimmed)) {
+      return true;
+    }
+  }
+
+  // Check if content is only URLs and whitespace
+  const withoutUrls = trimmed.replace(/https?:\/\/[^\s]+/g, "");
+  if (withoutUrls.trim().length < 10) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Checks if an email is a forwarded message based on subject line
  */
 export function isForwardedEmail(subject: string): boolean {
@@ -26,79 +109,116 @@ export function isForwardedEmail(subject: string): boolean {
  * Pattern: "On [Date] at [Time], [Name] <email@domain.com> wrote:"
  *       or "On [Date], [Name] <email@domain.com> wrote:"
  */
+/**
+ * Recursively parses nested Gmail-style replies from email content.
+ * NOW HANDLES QUOTED CONTENT by stripping markers and recursing.
+ *
+ * Pattern: "On [Date] at [Time], [Name] <email@domain.com> wrote:"
+ *
+ * @param content - Raw email content (may contain quote markers)
+ * @param currentIndex - Current position in message array (for indexing)
+ * @param depth - Current recursion depth (for debugging)
+ * @param maxDepth - Maximum recursion depth (default 50)
+ * @returns Array of parsed messages
+ */
 export function parseNestedReplies(
   content: string,
   currentIndex: number,
+  depth: number = 0,
+  maxDepth: number = 50,
 ): ParsedMessage[] {
+  // Recursion safety check
+  if (depth >= maxDepth) {
+    console.warn(`Max recursion depth ${maxDepth} reached, stopping`);
+    return [];
+  }
+
   const messages: ParsedMessage[] = [];
 
-  // Updated pattern to handle: "On Day, Month Date, Year at Time, Name <email> wrote:"
-  // Example: "On Wed, Feb 4, 2026 at 6:54 PM Cait Oppermann <cait@flowersfullservice.art> wrote:"
+  // STEP 1: Strip quote markers from content
+  const strippedContent = stripQuoteMarkers(content);
+
+  // STEP 2: Find all "On X wrote:" patterns
   const replyPattern = /On\s+([^<]+?)\s+([^<]+?)\s+<([^>]+?)>\s+wrote:/gi;
+  const matches = Array.from(strippedContent.matchAll(replyPattern));
 
-  const matches = Array.from(content.matchAll(replyPattern));
-
-  console.log(`Found ${matches.length} nested reply patterns in content`);
+  console.log(`[Depth ${depth}] Found ${matches.length} nested reply patterns`);
 
   if (matches.length === 0) {
-    // No nested replies found
+    // No patterns found, we're done
     return messages;
   }
 
-  // Process each nested reply
+  // STEP 3: Process each pattern match
   for (let i = 0; i < matches.length; i++) {
     const match = matches[i];
-    const dateAndName = match[1].trim(); // Everything between "On" and the name
+    const dateAndName = match[1].trim();
     const name = match[2].trim();
     const email = match[3].trim();
     const matchIndex = match.index || 0;
 
-    console.log(`Processing nested reply ${i + 1}:`, {
-      email,
-      name,
-      dateStr: dateAndName,
-    });
-
-    // Extract content between this match and the next (or end of string)
+    // Extract content between this match and the next
     const nextMatchIndex =
       i < matches.length - 1
-        ? matches[i + 1].index || content.length
-        : content.length;
+        ? matches[i + 1].index || strippedContent.length
+        : strippedContent.length;
 
-    const messageContent = content
+    const rawMessageContent = strippedContent
       .substring(matchIndex + match[0].length, nextMatchIndex)
       .trim();
 
-    // Parse the date from the dateAndName string
+    // Skip if boilerplate
+    if (isBoilerplate(rawMessageContent)) {
+      console.log(`[Depth ${depth}] Skipping boilerplate from ${email}`);
+      continue;
+    }
+
+    // Parse date
     let parsedDate: Date | null = null;
     try {
-      // Try to extract date portion (everything before the name)
-      // Pattern like "Wed, Feb 4, 2026 at 6:54 PM"
       const dateMatch = dateAndName.match(/(.+?)\s+(?=\S+\s+\S+\s*$)/);
       const dateStr = dateMatch ? dateMatch[1] : dateAndName;
-
       parsedDate = new Date(dateStr);
       if (isNaN(parsedDate.getTime())) {
         parsedDate = null;
       }
     } catch (e) {
-      console.warn(`Failed to parse date from: ${dateAndName}`);
+      console.warn(`[Depth ${depth}] Failed to parse date: ${dateAndName}`);
       parsedDate = null;
     }
 
-    console.log(`Extracted message content length: ${messageContent.length}`);
-
+    // STEP 4: Add this message
     messages.push({
       from: email,
       to: "unknown",
       date: parsedDate,
-      subject: null,
-      content: messageContent,
-      originalIndex: currentIndex + i,
+      subject: "",
+      content: rawMessageContent,
+      originalIndex: currentIndex + messages.length,
     });
+
+    console.log(
+      `[Depth ${depth}] Extracted message from ${email}, length: ${rawMessageContent.length}`,
+    );
+
+    // STEP 5: RECURSIVELY parse this message's content
+    // This is the key fix - we dig deeper into the content
+    const nestedMessages = parseNestedReplies(
+      rawMessageContent,
+      currentIndex + messages.length,
+      depth + 1,
+      maxDepth,
+    );
+
+    if (nestedMessages.length > 0) {
+      console.log(
+        `[Depth ${depth}] Found ${nestedMessages.length} nested messages within message from ${email}`,
+      );
+      messages.push(...nestedMessages);
+    }
   }
 
-  console.log(`Extracted ${messages.length} nested messages`);
+  console.log(`[Depth ${depth}] Extracted ${messages.length} total messages`);
   return messages;
 }
 
@@ -544,23 +664,41 @@ export function parseForwardedEmail(
       .split(/--\s*$/m)[0]
       .trim();
 
-    // Check if this section contains nested replies
+    // NEW: Strip quote markers before processing
+    const strippedContent = stripQuoteMarkers(cleanedContent);
+
+    // NEW: Skip if only quoted content (entire message is a quote)
+    if (isOnlyQuotedContent(cleanedContent)) {
+      console.log(`Skipping section ${i}: entirely quoted content`);
+      continue;
+    }
+
+    // NEW: Skip if boilerplate
+    if (isBoilerplate(strippedContent)) {
+      console.log(`Skipping section ${i}: boilerplate content`);
+      continue;
+    }
+
+    // Check for nested replies (now recursive)
     const nestedMessages = parseNestedReplies(
-      cleanedContent,
-      messages.length + 1,
+      strippedContent, // Use stripped content instead of cleanedContent
+      messages.length, // Changed from messages.length + 1 to messages.length
+      0, // Start at depth 0
     );
 
     if (nestedMessages.length > 0) {
-      // Add all nested messages
+      console.log(
+        `Section ${i}: Found ${nestedMessages.length} nested messages`,
+      );
       messages.push(...nestedMessages);
     } else {
-      // No nested replies, add this as a single message
+      // No nested replies, add this as single message
       messages.push({
         from,
         to,
         date: parsedDate,
         subject: subjectStr,
-        content: cleanedContent,
+        content: strippedContent, // Use stripped content instead of cleanedContent
         originalIndex: messages.length,
       });
     }
