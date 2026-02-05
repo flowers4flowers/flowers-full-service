@@ -28,6 +28,17 @@ export async function processThreadDirect(
   console.log(`========================================\n`);
 
   try {
+    const db = await getDb();
+    
+    // CHECK IF ALREADY PROCESSED
+    const existingThread = await db.collection("email_threads").findOne({ threadId });
+    
+    if (existingThread?.processed && existingThread?.attioDealId) {
+      console.log(`Thread ${threadId} already processed with Attio deal ${existingThread.attioDealId}`);
+      console.log("Skipping to avoid duplicate deals");
+      return;
+    }
+
     console.log(`Processing ${parsedMessages.length} messages`);
 
     // Clean emails with AI in parallel
@@ -86,7 +97,6 @@ export async function processThreadDirect(
       : null;
 
     // Save to DB
-    const db = await getDb();
     const dealDocument = {
       threadId,
       dealName: extractedData.dealName,
