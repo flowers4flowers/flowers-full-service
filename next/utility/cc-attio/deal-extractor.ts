@@ -101,7 +101,20 @@ If a field has low confidence or is not found, set it to null.`;
       .replace(/```\n?/g, "")
       .trim();
 
-    const extractedData: ExtractedDealData = JSON.parse(cleanedContent);
+    const parsedData = JSON.parse(cleanedContent);
+
+    // Ensure all fields match ExtractedDealData interface
+    const extractedData: ExtractedDealData = {
+      dealName: parsedData.dealName ?? null,
+      associatedCompanies: parsedData.associatedCompanies ?? null,
+      dealValue: parsedData.dealValue ?? null,
+      budgetRange: parsedData.budgetRange ?? null,
+      inquirySource: "Email",
+      collaboratorsNeeded: parsedData.collaboratorsNeeded ?? null,
+      location: parsedData.location ?? null,
+      shootDate: parsedData.shootDate ?? null,
+      usageTerms: parsedData.usageTerms ?? null,
+    };
 
     console.log("Successfully extracted deal data");
     return extractedData;
