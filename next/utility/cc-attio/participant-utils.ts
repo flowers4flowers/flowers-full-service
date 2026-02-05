@@ -21,6 +21,22 @@ function isExcluded(email: string): boolean {
 }
 
 /**
+ * Cleans an email address by removing any non-email content
+ * (newlines, message content, etc.)
+ */
+function cleanEmail(email: string): string {
+  if (!email) return '';
+  
+  // Take only the first line (in case there are newlines)
+  const firstLine = email.split('\n')[0].trim();
+  
+  // Extract just the email address using regex
+  const emailMatch = firstLine.match(/<?([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})>?/);
+  
+  return emailMatch ? emailMatch[1] : firstLine;
+}
+
+/**
  * Extracts valid participants from parsed email messages, excluding configured
  * internal domains and email addresses.
  * 
@@ -43,17 +59,26 @@ export function extractValidParticipants(
   // Extract from parsed messages
   parsedMessages.forEach((msg) => {
     if (msg.from) {
-      allParticipants.add(msg.from);
+      const cleanedFrom = cleanEmail(msg.from);
+      if (cleanedFrom) {
+        allParticipants.add(cleanedFrom);
+      }
     }
     if (msg.to) {
-      allParticipants.add(msg.to);
+      const cleanedTo = cleanEmail(msg.to);
+      if (cleanedTo && cleanedTo !== 'unknown') {
+        allParticipants.add(cleanedTo);
+      }
     }
   });
   
   // Add any additional participants
   if (additionalParticipants) {
     additionalParticipants.forEach((email) => {
-      allParticipants.add(email);
+      const cleaned = cleanEmail(email);
+      if (cleaned) {
+        allParticipants.add(cleaned);
+      }
     });
   }
   
