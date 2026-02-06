@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 const ATTIO_API_KEY = process.env.ATTIO_API_KEY;
 const ATTIO_BASE_URL = "https://api.attio.com/v2";
 const DEALS_OBJECT_ID = "f0bbe06d-66d9-4fab-a960-e3cc828a2873";
+const COMPANIES_OBJECT_ID = "835c96b9-48c9-454e-b3cc-c4938e420bc9";
 
 interface AttioUser {
   id: { workspace_member_id: string };
@@ -17,6 +18,14 @@ interface AttioPerson {
     email_addresses?: Array<{
       email_address: string;
     }>;
+  };
+}
+
+interface AttioCompany {
+  id: { record_id: string };
+  values: {
+    name?: Array<{ value: string }>;
+    domains?: Array<{ domain: string }>;
   };
 }
 
@@ -165,6 +174,74 @@ class AttioClient {
     }
   }
 
+  async findCompanyByName(companyName: string): Promise<string | null> {
+    try {
+      console.log(`Searching for company by name: ${companyName}`);
+
+      const searchResponse = await axios.post(
+        `${this.baseUrl}/objects/companies/records/query`,
+        {
+          filter: {
+            name: {
+              $eq: companyName,
+            },
+          },
+          limit: 1,
+        },
+        {
+          headers: this.getHeaders(),
+        },
+      );
+
+      if (searchResponse.data.data && searchResponse.data.data.length > 0) {
+        const companyId = searchResponse.data.data[0].id.record_id;
+        console.log(`Found existing company: ${companyName} (${companyId})`);
+        return companyId;
+      }
+
+      console.log(`Company not found by name: ${companyName}`);
+      return null;
+    } catch (error) {
+      console.error(`Error finding company by name ${companyName}:`, error);
+      return null;
+    }
+  }
+
+  async findCompanyByDomain(domain: string): Promise<string | null> {
+    try {
+      console.log(`Searching for company by domain: ${domain}`);
+
+      const searchResponse = await axios.post(
+        `${this.baseUrl}/objects/companies/records/query`,
+        {
+          filter: {
+            domains: {
+              domain: {
+                $eq: domain,
+              },
+            },
+          },
+          limit: 1,
+        },
+        {
+          headers: this.getHeaders(),
+        },
+      );
+
+      if (searchResponse.data.data && searchResponse.data.data.length > 0) {
+        const companyId = searchResponse.data.data[0].id.record_id;
+        console.log(`Found existing company by domain: ${domain} (${companyId})`);
+        return companyId;
+      }
+
+      console.log(`Company not found by domain: ${domain}`);
+      return null;
+    } catch (error) {
+      console.error(`Error finding company by domain ${domain}:`, error);
+      return null;
+    }
+  }
+
   async findOrCreateSelectOption(
     attributeSlug: string,
     optionTitle: string,
@@ -275,7 +352,11 @@ class AttioClient {
       throw error;
     }
   }
+  
 }
+
+
+
 
 let attioClientInstance: AttioClient | null = null;
 
@@ -301,5 +382,13 @@ export const attioClient = {
 
   async createDeal(payload: AttioDealPayload) {
     return this.instance.createDeal(payload);
+  },
+
+  async findCompanyByName(companyName: string) {
+    return this.instance.findCompanyByName(companyName);
+  },
+
+  async findCompanyByDomain(domain: string) {
+    return this.instance.findCompanyByDomain(domain);
   },
 };

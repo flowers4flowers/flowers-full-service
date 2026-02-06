@@ -1,5 +1,6 @@
 import { ExtractedDealData } from "./deal-extractor";
 import { attioClient, AttioDealPayload } from "./attio-client";
+import { matchCompaniesToAttio } from "./company-matcher";
 
 export interface AttioSyncResult {
   success: boolean;
@@ -44,8 +45,59 @@ export async function syncDealToAttio(
     ) as string[];
     console.log(`Successfully processed ${personIds.length} people`);
 
-    // 3. Prepare select/multiselect fields
-    console.log("\n3. Preparing select/multiselect options...");
+    // 3. Match companies to Attio
+    console.log("\n3. Matching companies to Attio...");
+
+    let companyRecordIds: string[] = [];
+
+    if (
+      extractedData.associatedCompanies &&
+      extractedData.associatedCompanies.length > 0
+    ) {
+      console.log(
+        `Found ${extractedData.associatedCompanies.length} company names in extracted data`,
+      );
+
+      const matchResults = await matchCompaniesToAttio(
+        extractedData.associatedCompanies,
+        threadParticipants,
+      );
+
+      // Filter to only successfully matched companies
+      const matchedCompanies = matchResults.filter(
+        (result) => result.recordId !== null,
+      );
+      companyRecordIds = matchedCompanies.map(
+        (result) => result.recordId as string,
+      );
+
+      console.log(
+        `Successfully matched ${companyRecordIds.length} companies to Attio`,
+      );
+
+      // Log details of matches for debugging
+      matchedCompanies.forEach((match) => {
+        console.log(
+          `  - ${match.companyName}: ${match.recordId} (via ${match.matchedVia})`,
+        );
+      });
+
+      // Log unmatched companies
+      const unmatchedCompanies = matchResults.filter(
+        (result) => result.recordId === null,
+      );
+      if (unmatchedCompanies.length > 0) {
+        console.log(`Companies not found in Attio (skipped):`);
+        unmatchedCompanies.forEach((match) => {
+          console.log(`  - ${match.companyName}`);
+        });
+      }
+    } else {
+      console.log("No companies in extracted data, skipping company matching");
+    }
+
+    // 4. Prepare select/multiselect fields
+    console.log("\n4. Preparing select/multiselect options...");
 
     // Budget Range (select - single value, but Attio expects array)
     let budgetRangeOption = null;
@@ -91,8 +143,8 @@ export async function syncDealToAttio(
       }
     }
 
-    // 4. Build Attio payload
-    console.log("\n4. Building Attio deal payload...");
+    // 5. Build Attio payload
+    console.log("\n5. Building Attio deal payload...");
     const payload: AttioDealPayload = {
       values: {},
     };
@@ -116,6 +168,13 @@ export async function syncDealToAttio(
     if (personIds.length > 0) {
       payload.values.associated_people = personIds.map((id) => ({
         target_object: "people",
+        target_record_id: id,
+      }));
+    }
+    // Associated Companies (relationship field)
+    if (companyRecordIds.length > 0) {
+      payload.values.associated_company = companyRecordIds.map((id) => ({
+        target_object: "companies",
         target_record_id: id,
       }));
     }
@@ -158,8 +217,8 @@ export async function syncDealToAttio(
       ); // Map to option_id strings
     }
 
-    // 5. Create deal in Attio
-    console.log("\n5. Creating deal in Attio...");
+    // 6. Create deal in Attio
+    console.log("\n6. Creating deal in Attio...");
     const { id, url } = await attioClient.createDeal(payload);
 
     console.log(`\nSuccessfully synced deal to Attio!`);
