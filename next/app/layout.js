@@ -40,6 +40,9 @@ export const metadata = {
       "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies.",
     images: ["https://flowersfullservice.art/og-image.jpg"],
   },
+  alternates: {
+    canonical: "https://flowersfullservice.art",
+  },
 };
 
 export default async function RootLayout({ children }) {
