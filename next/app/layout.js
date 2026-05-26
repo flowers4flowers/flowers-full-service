@@ -12,11 +12,35 @@ import Screensaver from "../components/Screensaver";
 import { getGlobalData } from "../queries/layoutQuery";
 import AnalyticsPageTracker from "../components/AnalyticsPageTracker";
 
-/*
-----------
-COMPONENT LOGIC
-----------
-*/
+export const metadata = {
+  title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
+  description:
+    "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies. Based in New York, working globally.",
+  openGraph: {
+    title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
+    description:
+      "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies.",
+    url: "https://flowersfullservice.art",
+    siteName: "FLOWERS",
+    images: [
+      {
+        url: "https://flowersfullservice.art/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "FLOWERS — Commercial Photography Studio, NYC",
+      },
+    ],
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
+    description:
+      "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies.",
+    images: ["https://flowersfullservice.art/og-image.jpg"],
+  },
+};
 
 export default async function RootLayout({ children }) {
   const data = await getGlobalData();
@@ -58,6 +82,123 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     })(window, document, "clarity", "script", "vioyjktsk2");`,
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "FLOWERS Everywhere LLC",
+              alternateName: "FLOWERS",
+              url: "https://flowersfullservice.art",
+              logo: "https://flowersfullservice.art/og-image.jpg",
+              description:
+                "Full-service commercial photography studio and creative direction, led by Cait Oppermann. Based in New York.",
+              foundingDate: "2020",
+              sameAs: [
+                "https://www.instagram.com/flowersfullservice/",
+                "https://www.linkedin.com/company/flowersfullservice/",
+              ],
+              contactPoint: {
+                "@type": "ContactPoint",
+                email: "studio@flowersfullservice.art",
+                contactType: "Business Inquiries",
+              },
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Brooklyn",
+                addressRegion: "NY",
+                addressCountry: "US",
+              },
+              hasOfferCatalog: {
+                "@type": "OfferCatalog",
+                name: "FLOWERS Studio Services",
+                itemListElement: [
+                  {
+                    "@type": "Offer",
+                    itemOffered: {
+                      "@type": "Service",
+                      name: "Commercial Photography",
+                    },
+                  },
+                  {
+                    "@type": "Offer",
+                    itemOffered: {
+                      "@type": "Service",
+                      name: "Video & Film Production",
+                    },
+                  },
+                  {
+                    "@type": "Offer",
+                    itemOffered: {
+                      "@type": "Service",
+                      name: "Creative Direction",
+                    },
+                  },
+                  {
+                    "@type": "Offer",
+                    itemOffered: { "@type": "Service", name: "Art Direction" },
+                  },
+                  {
+                    "@type": "Offer",
+                    itemOffered: {
+                      "@type": "Service",
+                      name: "Strategy & Concept Development",
+                    },
+                  },
+                  {
+                    "@type": "Offer",
+                    itemOffered: {
+                      "@type": "Service",
+                      name: "Full-Service Production",
+                    },
+                  },
+                  {
+                    "@type": "Offer",
+                    itemOffered: {
+                      "@type": "Service",
+                      name: "Location Scouting",
+                    },
+                  },
+                  {
+                    "@type": "Offer",
+                    itemOffered: { "@type": "Service", name: "Casting" },
+                  },
+                ],
+              },
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Cait Oppermann",
+              jobTitle: "Commercial Photographer & Creative Director",
+              url: "https://flowersfullservice.art",
+              sameAs: [
+                "https://www.instagram.com/flowersfullservice/",
+                "https://www.linkedin.com/company/flowersfullservice/",
+              ],
+              worksFor: {
+                "@type": "Organization",
+                name: "FLOWERS Everywhere LLC",
+              },
+              knowsAbout: [
+                "Commercial Photography",
+                "Creative Direction",
+                "Art Direction",
+                "Advertising Photography",
+                "Video Production",
+                "Location Scouting",
+                "Casting",
+                "Full-Service Production",
+              ],
+            }),
+          }}
+        />
       </head>
       <AppWrapper>
         <body>
@@ -90,39 +231,4 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       </AppWrapper>
     </html>
   );
-}
-
-/*
-----------
-GET METADATA
-----------
-*/
-
-export async function generateMetadata() {
-  const res = await fetch(process.env.API_HOST, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${process.env.AUTH}`,
-    },
-    body: JSON.stringify({
-      query: "site",
-      select: {
-        title: "site.title",
-        description: "site.site_description",
-        ogImage: "site.og_image",
-      },
-    }),
-  }).then((res) => res.json());
-
-  const data = res.result;
-
-  // const ogImages = data.ogImage ? [data.ogImage] : []
-
-  return {
-    title: "FLOWERS, a creative studio",
-    description: data.description ? data.description : data.title,
-    // openGraph: {
-    //   images: ogImages
-    // }
-  };
 }
