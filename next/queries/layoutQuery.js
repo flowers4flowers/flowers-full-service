@@ -1,6 +1,10 @@
 // next/queries/layoutQuery.js
 
 export async function getGlobalData() {
+  console.log("API_HOST:", process.env.API_HOST);
+  if (!process.env.API_HOST) {
+    throw new Error("API_HOST environment variable is not set");
+  }
   const res = await fetch(process.env.API_HOST, {
     cache: "no-store",
     method: "POST",
