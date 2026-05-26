@@ -94,7 +94,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               logo: "https://flowersfullservice.art/og-image.jpg",
               description:
                 "Full-service commercial photography studio and creative direction, led by Cait Oppermann. Based in New York.",
-              foundingDate: "2020",
+              foundingDate: "2012",
               sameAs: [
                 "https://www.instagram.com/flowersfullservice/",
                 "https://www.linkedin.com/company/flowersfullservice/",
