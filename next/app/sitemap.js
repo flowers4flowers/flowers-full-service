@@ -1,0 +1,29 @@
+import { getAllProjectSlugs } from "../queries/projectQuery";
+
+export default async function sitemap() {
+  const staticRoutes = [
+    {
+      url: "https://flowersfullservice.art",
+      lastModified: new Date(),
+    },
+    {
+      url: "https://flowersfullservice.art/work",
+      lastModified: new Date(),
+    },
+  ];
+
+  try {
+    const data = await getAllProjectSlugs();
+    const projects = data.result;
+
+    const projectRoutes = projects.map((project) => ({
+      url: `https://flowersfullservice.art/projects/${project.slug}`,
+      lastModified: new Date(),
+    }));
+
+    return [...staticRoutes, ...projectRoutes];
+  } catch (error) {
+    console.error("Sitemap: failed to fetch project slugs", error);
+    return staticRoutes;
+  }
+}
