@@ -22,17 +22,21 @@ const Screensaver = ({ images }) => {
   };
 
   const addImage = useCallback(() => {
+  setImageItems((prevState) => {
+    if (prevState.length >= 15) return prevState;
+
     const randomImage = images[Math.floor(Math.random() * images.length)];
-
-    const randomImageObj = {
-      image: randomImage,
-      top: getRandomInt(-3, 103),
-      left: getRandomInt(-3, 103),
-      rotation: getRandomInt(0, 360),
-    };
-
-    setImageItems((prevState) => [...prevState, randomImageObj]);
-  }, [images]);
+    return [
+      ...prevState,
+      {
+        image: randomImage,
+        top: getRandomInt(-3, 103),
+        left: getRandomInt(-3, 103),
+        rotation: getRandomInt(0, 360),
+      },
+    ];
+  });
+}, [images]);
 
   // function to reset screensaver timer
   const reset = useCallback(() => {
