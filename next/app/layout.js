@@ -24,7 +24,7 @@ export const metadata = {
     siteName: "FLOWERS",
     images: [
       {
-        url: "https://flowersfullservice.art/og-image.jpg",
+        url: "https://flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg",
         width: 1200,
         height: 630,
         alt: "FLOWERS — Commercial Photography Studio, NYC",
@@ -38,7 +38,7 @@ export const metadata = {
     title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
     description:
       "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies.",
-    images: ["https://flowersfullservice.art/og-image.jpg"],
+    images: ["https://flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg"],
   },
   alternates: {
     canonical: "https://flowersfullservice.art",
@@ -94,7 +94,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               name: "FLOWERS Everywhere LLC",
               alternateName: "FLOWERS",
               url: "https://flowersfullservice.art",
-              logo: "https://flowersfullservice.art/og-image.jpg",
+              logo: "https://flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg",
               description:
                 "Full-service commercial photography studio and creative direction, led by Cait Oppermann. Based in New York.",
               foundingDate: "2012",
