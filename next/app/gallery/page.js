@@ -3,6 +3,12 @@
 import { getGalleryData } from "../../queries/galleryQuery";
 import GalleryContent from "../../components/GalleryContent";
 
+export const metadata = {
+  alternates: {
+    canonical: "https://www.flowersfullservice.art/gallery",
+  },
+};
+
 export default async function Gallery() {
   const data = await getGalleryData();
 

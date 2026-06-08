@@ -3,6 +3,12 @@
 import { getAboutData } from "../../queries/aboutQuery";
 import ProjectLink from "../../components/ProjectLink";
 
+export const metadata = {
+  alternates: {
+    canonical: "https://www.flowersfullservice.art/work",
+  },
+};
+
 export default async function Work() {
   const data = await getAboutData();
 
