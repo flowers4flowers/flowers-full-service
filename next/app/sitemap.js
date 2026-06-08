@@ -3,11 +3,11 @@ import { getAllProjectSlugs } from "../queries/projectQuery";
 export default async function sitemap() {
   const staticRoutes = [
     {
-      url: "https://flowersfullservice.art",
+      url: "https://www.flowersfullservice.art",
       lastModified: new Date(),
     },
     {
-      url: "https://flowersfullservice.art/work",
+      url: "https://www.flowersfullservice.art/work",
       lastModified: new Date(),
     },
   ];
@@ -17,7 +17,7 @@ export default async function sitemap() {
     const projects = data.result;
 
     const projectRoutes = projects.map((project) => ({
-      url: `https://flowersfullservice.art/projects/${project.slug}`,
+      url: `https://www.flowersfullservice.art/projects/${project.slug}`,
       lastModified: new Date(),
     }));
 

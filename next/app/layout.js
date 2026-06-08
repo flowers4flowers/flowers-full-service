@@ -20,11 +20,11 @@ export const metadata = {
     title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
     description:
       "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies.",
-    url: "https://flowersfullservice.art",
+    url: "https://www.flowersfullservice.art",
     siteName: "FLOWERS",
     images: [
       {
-        url: "https://flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg",
+        url: "https://www.flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg",
         width: 1200,
         height: 630,
         alt: "FLOWERS — Commercial Photography Studio, NYC",
@@ -38,10 +38,10 @@ export const metadata = {
     title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
     description:
       "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies.",
-    images: ["https://flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg"],
+    images: ["https://www.flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg"],
   },
   alternates: {
-    canonical: "https://flowersfullservice.art",
+    canonical: "https://www.flowersfullservice.art",
   },
 };
 
@@ -93,8 +93,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               "@type": "Organization",
               name: "FLOWERS Everywhere LLC",
               alternateName: "FLOWERS",
-              url: "https://flowersfullservice.art",
-              logo: "https://flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg",
+              url: "https://www.flowersfullservice.art",
+              logo: "https://www.flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg",
               description:
                 "Full-service commercial photography studio and creative direction, led by Cait Oppermann. Based in New York.",
               foundingDate: "2012",
@@ -180,7 +180,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               "@type": "Person",
               name: "Cait Oppermann",
               jobTitle: "Commercial Photographer & Creative Director",
-              url: "https://flowersfullservice.art",
+              url: "https://www.flowersfullservice.art",
               sameAs: [
                 "https://www.instagram.com/flowersfullservice/",
                 "https://www.linkedin.com/company/flowersfullservice/",

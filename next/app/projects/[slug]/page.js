@@ -12,7 +12,7 @@ export async function generateMetadata({ params }) {
     title: `${title} · ${client} · FLOWERS`,
     description: `${title}${location ? ` in ${location}` : ""}. Commercial photography and creative direction by FLOWERS studio, NYC.`,
     alternates: {
-      canonical: `https://flowersfullservice.art/projects/${slug}`,
+      canonical: `https://www.flowersfullservice.art/projects/${slug}`,
     },
     openGraph: {
       title: `${title} · ${client} · FLOWERS`,
