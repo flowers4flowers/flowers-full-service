@@ -2,6 +2,12 @@
 
 import { getShopData } from "../../queries/shopQuery";
 
+export const metadata = {
+  alternates: {
+    canonical: "https://www.flowersfullservice.art/shop",
+  },
+};
+
 export default async function Shop() {
   const data = await getShopData();
 
