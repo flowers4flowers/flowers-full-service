@@ -80,10 +80,10 @@ const MainNavLinks = () => {
 
         <li className="col-span-2">
           <Link
-            href="https://shop.flowersfullservice.art"
+            href="https://shop.flowersfullservice.art/"
             target="_blank"
             onClick={() =>
-              trackLink("Main Nav: Shop", "https://shop.flowersfullservice.art")
+              trackLink("Main Nav: Shop", "https://shop.flowersfullservice.art/")
             }
           >
             <span>Shop</span>

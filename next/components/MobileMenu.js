@@ -98,9 +98,12 @@ const MobileMenu = ({ socialLinks }) => {
               <div className="circle w-6 h-6 bg-black rounded-full"></div>
             </div>
             <Link
-              href="/shop"
+              href="https://shop.flowersfullservice.art/"
+              target="_blank"
               className="col-span-5"
-              onClick={() => trackLink("Mobile Menu: Shop", "/shop")}
+              onClick={() =>
+                trackLink("Mobile Menu: Shop", "https://shop.flowersfullservice.art/")
+              }
             >
               Shop
             </Link>

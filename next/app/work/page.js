@@ -62,12 +62,12 @@ export default async function Work() {
           dangerouslySetInnerHTML={{ __html: description }}
         ></div>
       )}
-      <div className="flex">
-        <p className="text-[4rem]  font-primary text-base lg:text-xxl leading-[1.2] rich-text rt-lg  uppercase">
-          Sub: 
+      <div className="flex flex-wrap items-baseline">
+        <p className="font-primary text-base lg:text-xxl leading-[1.2] rich-text rt-lg uppercase">
+          Sub:
         </p>
         <a
-          className="text-[4rem] font-primary ml-4"
+          className="font-primary text-base lg:text-xxl ml-4"
           href="https://fl0wers.substack.com/subscribe/"
           target="_blank"
           rel="noopener noreferrer"
