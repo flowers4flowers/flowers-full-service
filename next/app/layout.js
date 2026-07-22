@@ -13,7 +13,12 @@ import { getGlobalData } from "../queries/layoutQuery";
 import AnalyticsPageTracker from "../components/AnalyticsPageTracker";
 
 export const metadata = {
+  metadataBase: new URL("https://www.flowersfullservice.art"),
   title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
   description:
     "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies. Based in New York, working globally.",
   openGraph: {
