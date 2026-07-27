@@ -56,30 +56,15 @@ export default async function Home() {
 
   return (
     <div className="pb-[30rem]">
-      {/*
       {description && (
         <div
           className="font-primary text-base lg:text-xxl leading-[1.2] rich-text rt-lg"
           dangerouslySetInnerHTML={{ __html: description }}
         ></div>
       )}
-      <div className="flex flex-wrap items-baseline">
-        <p className="font-primary text-base lg:text-xxl leading-[1.2] rich-text rt-lg uppercase">
-          Sub:
-        </p>
-        <a
-          className="font-primary text-base lg:text-xxl ml-4"
-          href="https://fl0wers.substack.com/subscribe/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          fl0wers.substack.com
-        </a>
-      </div>
-      */}
 
       {orderedProjectsByClient.length > 0 && (
-        <div className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14 w-full max-w-7xl mx-auto">
+        <div className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14 w-full mx-auto">
           {orderedProjectsByClient.map((item, index) => {
             return (
               <div
