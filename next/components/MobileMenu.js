@@ -74,23 +74,6 @@ const MobileMenu = ({ socialLinks }) => {
 
           <li
             className={`${
-              checkLinkActive("/work") ? "active" : ""
-            } grid grid-cols-6 gap-4`}
-          >
-            <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black rounded-full"></div>
-            </div>
-            <Link
-              href="/work"
-              className="col-span-5"
-              onClick={() => trackLink("Mobile Menu: Work", "/work")}
-            >
-              Work
-            </Link>
-          </li>
-
-          <li
-            className={`${
               checkLinkActive("/shop") ? "active" : ""
             } grid grid-cols-6 gap-4`}
           >

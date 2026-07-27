@@ -6,10 +6,6 @@ export default async function sitemap() {
       url: "https://www.flowersfullservice.art",
       lastModified: new Date(),
     },
-    {
-      url: "https://www.flowersfullservice.art/work",
-      lastModified: new Date(),
-    },
   ];
 
   try {

@@ -8,40 +8,15 @@ import { createContext, useContext, useReducer } from "react";
 const AppStateContext = createContext();
 
 const initialState = {
-  homeCarouselOpen: false,
-  homeCarouselData: null,
-  homeCarouselClose: false,
-  homeCarouselSide: null,
   hideHomeLink: false,
   hideNav: false,
   currentProjectTitle: null,
   currentProjectCaptions: [],
   mobileMenuOpen: false,
-  showViewImages: false,
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case "SET_HOME_CAROUSEL_OPEN":
-      return {
-        ...state,
-        homeCarouselOpen: action.payload,
-      };
-    case "SET_HOME_CAROUSEL_DATA":
-      return {
-        ...state,
-        homeCarouselData: action.payload,
-      };
-    case "SET_HOME_CAROUSEL_CLOSE":
-      return {
-        ...state,
-        homeCarouselClose: action.payload,
-      };
-    case "SET_HOME_CAROUSEL_SIDE":
-      return {
-        ...state,
-        homeCarouselSide: action.payload,
-      };
     case "SET_HIDE_HOME_LINK":
       return {
         ...state,
@@ -66,11 +41,6 @@ function reducer(state, action) {
       return {
         ...state,
         mobileMenuOpen: action.payload,
-      };
-    case "SET_SHOW_VIEW_IMAGES":
-      return {
-        ...state,
-        showViewImages: action.payload,
       };
     default:
       return state;

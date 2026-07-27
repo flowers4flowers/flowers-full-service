@@ -6,45 +6,6 @@ import { usePathname } from "next/navigation";
 import { useAppState } from "../context";
 import Link from "next/link";
 import { useAnalytics } from "../utility/useAnalytics";
-// import classNames from "classnames"
-
-// const CarouselInfo = ({ state, dispatch }) => {
-//   const counterClasses = classNames(
-//     'col-span-3',
-//     {
-//       'left': state.homeCarouselSide === 'left',
-//       'right': state.homeCarouselSide === 'right'
-//     }
-//   )
-
-//   if (state.homeCarouselOpen) {
-//     return (
-//       <li
-//         id="home-carousel-counter"
-//         className={counterClasses}
-//       >
-//         <span className="relative inline-flex items-center">{ state.homeCarouselClose ? '[close images]' : `${state.homeCarouselData?.currentIndex}/${state.homeCarouselData?.total}` }</span>
-//       </li>
-//     )
-//   }
-
-//   return (
-//     <li
-//       id="home-carousel-counter"
-//       className="col-span-3"
-//     >
-//       <button
-//         className="lg:hover:opacity-50 transition-opacity duration-300"
-//         onClick={() => {
-//           dispatch({
-//             type: 'SET_HOME_CAROUSEL_OPEN',
-//             payload: true
-//           })
-//         }}
-//       >[view images]</button>
-//     </li>
-//   )
-// }
 
 const MainNavLinks = () => {
   const { state, dispatch } = useAppState();
@@ -70,16 +31,6 @@ const MainNavLinks = () => {
 
         <li className="col-span-2">
           <Link
-            href="/work"
-            className={checkLinkActive("/work") ? "active" : ""}
-            onClick={() => trackLink("Main Nav: Work", "/work")}
-          >
-            <span>Work</span>
-          </Link>
-        </li>
-
-        <li className="col-span-2">
-          <Link
             href="https://shop.flowersfullservice.art/"
             target="_blank"
             onClick={() =>
@@ -89,13 +40,6 @@ const MainNavLinks = () => {
             <span>Shop</span>
           </Link>
         </li>
-
-        {/* {pathname === '/' && (
-          <CarouselInfo
-            state={state}
-            dispatch={dispatch}
-          />
-        )} */}
       </ul>
     </nav>
   );

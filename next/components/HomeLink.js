@@ -74,36 +74,6 @@ const HomeLink = () => {
     });
   }, [pathname, handleResize]);
 
-  const handleHomeLinkClick = () => {
-    // if on home page, set homeCarouselOpen to true
-    if (pathname === "/") {
-      dispatch({
-        type: "SET_HOME_CAROUSEL_OPEN",
-        payload: true,
-      });
-    }
-  };
-
-  const handleHomeLinkMouseEnter = () => {
-    // if on home page, set showViewImages to true
-    if (pathname === "/") {
-      dispatch({
-        type: "SET_SHOW_VIEW_IMAGES",
-        payload: true,
-      });
-    }
-  };
-
-  const handleHomeLinkMouseLeave = () => {
-    // if on home page, set showViewImages to true
-    if (pathname === "/") {
-      dispatch({
-        type: "SET_SHOW_VIEW_IMAGES",
-        payload: false,
-      });
-    }
-  };
-
   useMotionValueEvent(scrollY, "change", (latestScrollY) => {
     // only do animation if not on gallery page
     if (!pathname.includes("/gallery")) {
@@ -171,9 +141,6 @@ const HomeLink = () => {
           <Link
             href="/"
             className="flex justify-center"
-            onMouseEnter={handleHomeLinkMouseEnter}
-            onMouseLeave={handleHomeLinkMouseLeave}
-            onClick={handleHomeLinkClick}
             style={{
               width: `${titleSize}px`,
             }}
