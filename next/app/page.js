@@ -56,6 +56,7 @@ export default async function Home() {
 
   return (
     <div className="pb-[30rem]">
+      {/*
       {description && (
         <div
           className="font-primary text-base lg:text-xxl leading-[1.2] rich-text rt-lg"
@@ -75,6 +76,7 @@ export default async function Home() {
           fl0wers.substack.com
         </a>
       </div>
+      */}
 
       {orderedProjectsByClient.length > 0 && (
         <div className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14">
