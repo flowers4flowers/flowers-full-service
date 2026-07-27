@@ -79,18 +79,18 @@ export default async function Home() {
       */}
 
       {orderedProjectsByClient.length > 0 && (
-        <div className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14">
+        <div className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14 w-full max-w-7xl mx-auto">
           {orderedProjectsByClient.map((item, index) => {
             return (
               <div
-                className="client-group grid grid-cols-6 lg:grid-cols-12 gap-4 lg:gap-6"
+                className="client-group grid grid-cols-[10rem_1fr] lg:grid-cols-[16rem_1fr] gap-4 lg:gap-6"
                 key={index}
               >
-                <h3 className="col-span-2 text-md lg:text-lg font-primary uppercase pr-4">
+                <h3 className="text-md lg:text-lg font-primary uppercase pr-4">
                   {item.client}
                 </h3>
 
-                <div className="col-span-4 lg:col-span-8">
+                <div>
                   {item.projects.sort(sortByDate).map((project) => {
                     return <ProjectLink project={project} key={project.slug} />;
                   })}

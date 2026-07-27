@@ -49,7 +49,7 @@ const ProjectLink = ({ project }) => {
   };
 
   const classes = classNames(
-    "project-link grid grid-cols-4 lg:grid-cols-8 gap-4 lg:gap-6 relative",
+    "project-link grid grid-cols-[6rem_1fr] lg:grid-cols-[9rem_1fr] gap-4 lg:gap-6 relative",
     {
       active: active,
     }
@@ -65,7 +65,7 @@ const ProjectLink = ({ project }) => {
       onClick={handleProjectClick} // NEW: Add the click tracking
       className={classes}
     >
-      <p className="text-content col-span-1 lg:col-span-2 text-md lg:text-lg font-primary uppercase">{`${
+      <p className="text-content text-md lg:text-lg font-primary uppercase">{`${
         project.startDate
       }${
         project.endDate && project.endDate !== project.startDate
@@ -73,7 +73,7 @@ const ProjectLink = ({ project }) => {
           : ""
       }`}</p>
 
-      <div className="text-content col-span-3 lg:col-span-6 mb-2 lg:mb-0">
+      <div className="text-content mb-2 lg:mb-0">
         <p className="text-md lg:text-lg font-primary uppercase block lg:inline leading-[1.5]">
           {project.title}
         </p>
