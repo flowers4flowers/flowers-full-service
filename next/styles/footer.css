@@ -1,0 +1,17 @@
+/*
+Site Footer
+*/
+
+#site-footer {
+  border-top: 1px solid black;
+}
+
+#site-footer .wordmark {
+  width: 100%;
+}
+
+#site-footer .wordmark svg,
+#site-footer .wordmark img {
+  width: 100%;
+  height: auto;
+}
