@@ -29,7 +29,7 @@ const ProjectContent = ({ data }) => {
 
   return (
     <div className="pb-60 grid grid-cols-12 lg:gap-6">
-      <div className="col-span-12 lg:col-span-8">
+      <div className="col-span-12 lg:col-span-8 lg:sticky lg:top-32 lg:self-start">
         <Link href="/" className="uppercase font-primary text-md lg:text-lg block mb-8">
           &larr; Back
         </Link>
@@ -56,7 +56,7 @@ const ProjectContent = ({ data }) => {
 
         {description && (
           <button
-            className="uppercase font-primary text-md lg:text-lg mt-8"
+            className="uppercase font-primary font-bold text-md lg:text-lg mt-8"
             onClick={() => setIsFullDescriptionOpen(!isFullDescriptionOpen)}
           >
             {isFullDescriptionOpen ? "Read Less" : "Read More"}
