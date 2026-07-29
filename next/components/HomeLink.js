@@ -3,13 +3,16 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { WordMark, SecondaryMark } from "./Icons";
+import { SecondaryMark } from "./Icons";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useAppState } from "../context";
 import classNames from "classnames";
 import { UpArrow } from "./Icons";
+
+const WORDMARK_ASPECT_RATIO = 1312 / 217;
 
 const HomeLink = () => {
   let targetSize = 170;
@@ -145,7 +148,12 @@ const HomeLink = () => {
               width: `${titleSize}px`,
             }}
           >
-            <WordMark />
+            <Image
+              src="/FLOWERS-Full.svg"
+              alt="FLOWERS"
+              width={titleSize}
+              height={Math.round(titleSize / WORDMARK_ASPECT_RATIO)}
+            />
           </Link>
         )}
 
