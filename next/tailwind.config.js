@@ -7,8 +7,8 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'primary': ['CounterBlast', 'Helvetica', 'sans-serif'],
-      'secondary': ['LetterGothic', 'monospace'],
+      'primary': ['Archivo', 'Helvetica', 'sans-serif'],
+      'secondary': ['Archivo', 'sans-serif'],
     },
     fontSize: {
       'sm': ['1rem'],
