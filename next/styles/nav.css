@@ -60,7 +60,7 @@ Main Nav
 }
 
 #main-nav.hide {
-  transform: translateY(100%);
+  transform: translateY(-100%);
 }
 
 #main-nav .main-nav-links a {
@@ -158,8 +158,12 @@ Main Nav (LG)
 */
 
 @media (min-width: theme('screens.lg')) {
+  #home-link {
+    top: 104px;
+  }
+
   #home-link+main {
-    padding-top: 20.3vw;
+    padding-top: calc(20.3vw + 104px);
   }
 
   #secondary-home-link+main {
