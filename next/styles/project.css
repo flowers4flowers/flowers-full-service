@@ -2,6 +2,18 @@
 Project
 */
 
+.listing-heading {
+  @apply text-md lg:text-lg font-primary font-bold uppercase;
+}
+
+.listing-date {
+  @apply text-md lg:text-lg font-primary uppercase font-extralight;
+}
+
+.listing-location {
+  @apply text-md font-secondary font-extralight;
+}
+
 .media-section {
   opacity: 0;
   transition: opacity 0.4s;

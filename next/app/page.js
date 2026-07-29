@@ -68,14 +68,14 @@ export default async function Home() {
           {orderedProjectsByClient.map((item, index) => {
             return (
               <div
-                className="client-group grid grid-cols-[10rem_1fr] lg:grid-cols-[16rem_1fr] gap-4 lg:gap-6"
+                className="client-group grid grid-cols-[10rem_1fr] lg:grid-cols-[35rem_1fr] gap-4 lg:gap-6 mb-8 lg:mb-14"
                 key={index}
               >
-                <h3 className="text-md lg:text-lg font-primary uppercase pr-4">
+                <h3 className="text-md lg:text-lg font-primary font-bold uppercase pr-4">
                   {item.client}
                 </h3>
 
-                <div>
+                <div className="space-y-4 lg:space-y-6">
                   {item.projects.sort(sortByDate).map((project) => {
                     return <ProjectLink project={project} key={project.slug} />;
                   })}
