@@ -14,36 +14,24 @@ Project
   @apply text-md font-secondary font-extralight;
 }
 
-.media-section {
-  opacity: 0;
-  transition: opacity 0.4s;
+.media-item {
+  width: 100%;
+  margin-bottom: 2vw;
 }
 
-.media-section.show {
-  opacity: 1;
-}
-
-.media-section .video-container button {
+.video-container button {
   transition: opacity 0.3s;
   pointer-events: auto;
 }
 
-.media-section .video-container.video-started button {
+.video-container.video-started button {
   opacity: 0;
   pointer-events: none;
 }
 
-.media-section .video-container button svg {
+.video-container button svg {
   width: 5rem;
   position: relative;
-}
-
-.media-section .media-section-item {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 /*
@@ -51,27 +39,8 @@ Project (LG)
 */
 
 @media (min-width: theme('screens.lg')) {
-  .media-section {
-    height: 100vh;
-  }
-
-  .media-section .media-section-item {
-    margin: 0 2vw;
-    height: auto;
-    display: block;
-  }
-
-  .media-section .video-container button:hover svg path {
+  .video-container button:hover svg path {
     fill: theme('colors.cream');
     stroke: theme('colors.cream');
-  }
-
-  .media-section .media-section-item .media-caption {
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .media-section .media-section-item:hover .media-caption {
-    opacity: 1;
   }
 }

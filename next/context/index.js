@@ -10,7 +10,6 @@ const AppStateContext = createContext();
 const initialState = {
   hideHomeLink: false,
   hideNav: false,
-  currentProjectTitle: null,
   currentProjectCaptions: [],
   mobileMenuOpen: false,
 };
@@ -26,11 +25,6 @@ function reducer(state, action) {
       return {
         ...state,
         hideNav: action.payload,
-      };
-    case "SET_CURRENT_PROJECT_TITLE":
-      return {
-        ...state,
-        currentProjectTitle: action.payload,
       };
     case "SET_CURRENT_PROJECT_CAPTIONS":
       return {

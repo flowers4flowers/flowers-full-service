@@ -124,7 +124,7 @@ const HomeLink = () => {
   });
 
   const classes = classNames(
-    "fixed top-0 left-0 w-full px-5 lg:px-14 py-5 lg:py-10",
+    "fixed top-0 left-0 w-full px-5 lg:px-14 py-5 lg:py-10 hidden lg:block",
     {
       hide: state.hideHomeLink,
       "show-captions": showCaptions,
@@ -134,12 +134,6 @@ const HomeLink = () => {
   return (
     <nav id="home-link" className={classes}>
       <div ref={container} className="flex justify-center">
-        {pathname.includes("/projects") && (
-          <div className="caption hidden lg:block absolute left-14 text-lg font-secondary">
-            {state.currentProjectTitle && <p>{state.currentProjectTitle}</p>}
-          </div>
-        )}
-
         {titleSize && (
           <Link
             href="/"

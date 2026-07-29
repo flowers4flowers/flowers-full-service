@@ -2,14 +2,14 @@
 
 "use client";
 
-import MediaSection from "../components/MediaSection";
-import { useAppState } from "../context";
-import { useEffect } from "react";
+import Link from "next/link";
+import MediaItem from "../components/MediaItem";
+import { useState } from "react";
 
 const ProjectContent = ({ data }) => {
-  const { state, dispatch } = useAppState();
   const {
     title,
+    shortDescription,
     description,
     location,
     client,
@@ -18,46 +18,64 @@ const ProjectContent = ({ data }) => {
     mediaContent,
   } = data.result;
 
-  console.log(data.result);
-  console.log(mediaContent);
-  console.log(title);
+  const [isFullDescriptionOpen, setIsFullDescriptionOpen] = useState(false);
 
-  useEffect(() => {
-    dispatch({
-      type: "SET_CURRENT_PROJECT_TITLE",
-      payload: title,
-    });
-  }, [dispatch, title]); // Added missing dependencies
+  const mediaItems = (mediaContent || []).flatMap((block, blockIndex) =>
+    block.media.map((item, itemIndex) => ({
+      ...item,
+      key: `${blockIndex}-${itemIndex}`,
+    }))
+  );
 
   return (
-    <div className="pb-60">
-      <section>
-        <div className="grid grid-cols-12 lg:gap-6 text-md lg:text-lg font-primary">
-          <p className="col-span-12 lg:col-span-2 uppercase">{client}</p>
+    <div className="pb-60 grid grid-cols-12 lg:gap-6">
+      <div className="col-span-12 lg:col-span-8">
+        <Link href="/" className="uppercase font-primary text-md lg:text-lg block mb-8">
+          &larr; Back
+        </Link>
 
-          <p className="col-span-12 lg:col-span-2 uppercase">{`${startDate}${
+        <div className="text-md lg:text-lg font-primary">
+          <p className="uppercase">{client}</p>
+
+          <p className="uppercase">{`${startDate}${
             endDate && endDate !== startDate ? `- ${endDate}` : ""
           }`}</p>
 
-          <div className="col-span-12 lg:col-span-6 leading-[1.2] mt-8 lg:mt-0">
-            <h1 className="uppercase">{title}</h1>
+          <div className="leading-[1.2] mt-8">
+            <h1 className="uppercase font-bold">{title}</h1>
             <p>{location}</p>
           </div>
         </div>
 
-        {description && (
-          <div className="grid grid-cols-12 gap-6 mt-8">
-            <div
-              className="col-span-12 lg:col-span-5 lg:col-start-5 font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2]"
-              dangerouslySetInnerHTML={{ __html: description }}
-            ></div>
-          </div>
+        {shortDescription && (
+          <div
+            className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8"
+            dangerouslySetInnerHTML={{ __html: shortDescription }}
+          ></div>
         )}
-      </section>
 
-      {mediaContent.map((block, index) => {
-        return <MediaSection key={index} block={block} title={title} />;
-      })}
+        {description && (
+          <button
+            className="uppercase font-primary text-md lg:text-lg mt-8"
+            onClick={() => setIsFullDescriptionOpen(!isFullDescriptionOpen)}
+          >
+            {isFullDescriptionOpen ? "Read Less" : "Read More"}
+          </button>
+        )}
+
+        {isFullDescriptionOpen && description && (
+          <div
+            className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8"
+            dangerouslySetInnerHTML={{ __html: description }}
+          ></div>
+        )}
+      </div>
+
+      <div className="col-span-12 lg:col-span-4 mt-16 lg:mt-0">
+        {mediaItems.map((item) => (
+          <MediaItem key={item.key} media={item} />
+        ))}
+      </div>
     </div>
   );
 };

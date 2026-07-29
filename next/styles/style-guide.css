@@ -59,19 +59,6 @@ main {
 }
 
 /*
-Def Image
-*/
-
-.def-image {
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.def-image.loaded {
-  opacity: 1;
-}
-
-/*
 Screensaver
 */
 

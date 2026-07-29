@@ -45,7 +45,7 @@ Main Nav
 }
 
 #home-link + main {
-  padding-top: 25.4vw;
+  padding-top: 6rem;
 }
 
 #secondary-home-link + main {
@@ -129,17 +129,26 @@ Main Nav
 #mobile-menu {
   transition: transform .3s;
   pointer-events: none;
-  transform: translateY(100%);
+  transform: translateX(100%);
   z-index: 3500;
 }
 
 #mobile-menu.active {
-  transform: translateY(0%);
+  transform: translateX(0%);
   pointer-events: auto;
 }
 
 #mobile-nav {
   z-index: 3000;
+  transition: transform .3s;
+}
+
+#mobile-nav.hide {
+  transform: translateY(-100%);
+}
+
+#mobile-nav .up svg {
+  width: 1.4rem;
 }
 
 #mobile-menu .main-links li .circle {

@@ -20,9 +20,16 @@ const MobileMenu = ({ socialLinks }) => {
   };
 
   const classes = classNames(
-    "fixed top-0 left-0 w-full h-full bg-white px-5 pt-12 flex flex-col",
+    "fixed top-16 right-4 bottom-16 w-[80vw] max-w-xs bg-white px-5 pt-12 pb-4 flex flex-col rounded-lg shadow-xl",
     {
       active: state.mobileMenuOpen,
+    }
+  );
+
+  const backdropClasses = classNames(
+    "fixed inset-0 z-[3400] bg-black bg-opacity-50 opacity-0 pointer-events-none transition-opacity duration-300",
+    {
+      "opacity-100 pointer-events-auto": state.mobileMenuOpen,
     }
   );
 
@@ -35,8 +42,32 @@ const MobileMenu = ({ socialLinks }) => {
   }, [pathname, dispatch]);
 
   return (
-    <div id="mobile-menu" className={classes}>
-      <nav className="main-links flex-1">
+    <>
+      <div
+        id="mobile-menu-backdrop"
+        className={backdropClasses}
+        onClick={() =>
+          dispatch({
+            type: "SET_MOBILE_MENU_OPEN",
+            payload: false,
+          })
+        }
+      />
+
+      <div id="mobile-menu" className={classes}>
+        <button
+          onClick={() => {
+            dispatch({
+              type: "SET_MOBILE_MENU_OPEN",
+              payload: false,
+            });
+          }}
+          className="absolute top-4 right-4 text-2xl font-secondary leading-none"
+        >
+          ×
+        </button>
+
+        <nav className="main-links flex-1">
         <ul className="w-full font-secondary text-xl leading-[1.4]">
           <li
             className={`${
@@ -94,7 +125,9 @@ const MobileMenu = ({ socialLinks }) => {
         </ul>
 
         <ul className="w-full mt-12 font-secondary text-xl leading-[1.4]">
-          {socialLinks.map((link, index) => {
+          {socialLinks
+            .filter((link) => !link.link.toLowerCase().includes("instagram"))
+            .map((link, index) => {
             if (link.link.includes("mailto")) {
               return (
                 <li key={index} className="grid grid-cols-6 gap-4">
@@ -122,21 +155,8 @@ const MobileMenu = ({ socialLinks }) => {
           })}
         </ul>
       </nav>
-
-      <div className="flex-none w-full flex justify-center items-center py-6 px-5">
-        <button
-          onClick={() => {
-            dispatch({
-              type: "SET_MOBILE_MENU_OPEN",
-              payload: false,
-            });
-          }}
-          className="text-md font-secondary text-center"
-        >
-          Close Menu
-        </button>
       </div>
-    </div>
+    </>
   );
 };
 
