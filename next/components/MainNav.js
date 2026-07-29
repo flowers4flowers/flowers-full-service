@@ -38,7 +38,9 @@ const MainNav = ({ socialLinks }) => {
 
   return (
     <header id="main-nav" className={classes}>
-      <Image src="/FLOWERS.png" alt="FLOWERS" width={50} height={40} />
+      <Link href="/">
+        <Image src="/FLOWERS.png" alt="FLOWERS" width={50} height={40} />
+      </Link>
 
       <nav className="main-nav-links">
         <ul className="font-secondary text-base flex justify-end items-center gap-6">
