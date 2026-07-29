@@ -43,7 +43,7 @@ const MainNav = ({ socialLinks }) => {
       </Link>
 
       <nav className="main-nav-links">
-        <ul className="font-secondary text-base flex justify-end items-center gap-6">
+        <ul className="font-secondary text-base text-black flex justify-end items-center gap-6">
           <MainNavLinks />
 
           {socialLinks &&
