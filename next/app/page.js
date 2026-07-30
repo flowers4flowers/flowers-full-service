@@ -1,7 +1,7 @@
 // next/app/page.js
 
 import { getAboutData } from "../queries/aboutQuery";
-import ProjectLink from "../components/ProjectLink";
+import ProjectsList from "../components/ProjectsList";
 
 export const metadata = {
   alternates: {
@@ -47,13 +47,6 @@ export default async function Home() {
     return acc;
   }, []);
 
-  const sortByDate = (a, b) => {
-    const aDate = new Date(a.endDate ? a.endDate : a.startDate);
-    const bDate = new Date(b.endDate ? b.endDate : b.startDate);
-
-    return bDate - aDate;
-  };
-
   return (
     <div className="pb-[30rem]">
       {description && (
@@ -64,26 +57,7 @@ export default async function Home() {
       )}
 
       {orderedProjectsByClient.length > 0 && (
-        <div className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14 w-full mx-auto">
-          {orderedProjectsByClient.map((item, index) => {
-            return (
-              <div
-                className="client-group grid grid-cols-[10rem_1fr] lg:grid-cols-[35rem_1fr] gap-4 lg:gap-6 mb-8 lg:mb-14"
-                key={index}
-              >
-                <h3 className="text-md lg:text-lg font-primary font-bold uppercase pr-4">
-                  {item.client}
-                </h3>
-
-                <div className="space-y-4 lg:space-y-6">
-                  {item.projects.sort(sortByDate).map((project) => {
-                    return <ProjectLink project={project} key={project.slug} />;
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <ProjectsList projectsByClient={orderedProjectsByClient} />
       )}
     </div>
   );

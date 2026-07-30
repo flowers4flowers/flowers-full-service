@@ -8,8 +8,8 @@ import { useState, useRef } from "react";
 import classNames from "classnames";
 import { useAnalytics } from "../utility/useAnalytics";
 
-const ProjectLink = ({ project }) => {
-  const [active, setActive] = useState(false);
+const ProjectLink = ({ project, activeSlug, onHover }) => {
+  const active = activeSlug === project.slug;
   const [xValue, setXValue] = useState(0);
   const linkRef = useRef(null);
   const { trackLink } = useAnalytics();
@@ -21,13 +21,7 @@ const ProjectLink = ({ project }) => {
 
   const handleMouseEnter = () => {
     if (isLargeQuery) {
-      setActive(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (isLargeQuery) {
-      setActive(false);
+      onHover(project.slug);
     }
   };
 
@@ -60,7 +54,6 @@ const ProjectLink = ({ project }) => {
       href={`/projects/${project.slug}`}
       ref={linkRef}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
       onClick={handleProjectClick} // NEW: Add the click tracking
       className={classes}
