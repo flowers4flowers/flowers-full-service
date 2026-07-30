@@ -8,7 +8,6 @@ import { createContext, useContext, useReducer } from "react";
 const AppStateContext = createContext();
 
 const initialState = {
-  hideHomeLink: false,
   hideNav: false,
   currentProjectCaptions: [],
   mobileMenuOpen: false,
@@ -16,11 +15,6 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    case "SET_HIDE_HOME_LINK":
-      return {
-        ...state,
-        hideHomeLink: action.payload,
-      };
     case "SET_HIDE_NAV":
       return {
         ...state,

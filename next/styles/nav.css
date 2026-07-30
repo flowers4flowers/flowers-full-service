@@ -44,10 +44,6 @@ Main Nav
   width: 100%;
 }
 
-#home-link + main {
-  padding-top: 6rem;
-}
-
 #secondary-home-link + main {
   padding-top: 29.4vw;
   z-index: 10;
@@ -167,14 +163,9 @@ Main Nav (LG)
 */
 
 @media (min-width: theme('screens.lg')) {
-  #home-link {
-    top: 104px;
-  }
-
   #home-link+main {
-    padding-top: calc(20.3vw + 104px);
+    padding-top: calc(2.3vw + 10px);
   }
-
   #secondary-home-link+main {
     padding-top: 25.4vw;
   }

@@ -13,9 +13,11 @@ import { UpArrow } from "./Icons";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useAnalytics } from "../utility/useAnalytics";
+import { useScrollDirection } from "../utility/useScrollDirection";
 
 const MainNav = ({ socialLinks }) => {
   const { state } = useAppState();
+  useScrollDirection();
   const { scrollY } = useScroll();
   const [showUp, setShowUp] = useState(false);
   const pathname = usePathname();

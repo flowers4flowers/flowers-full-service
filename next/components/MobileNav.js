@@ -10,9 +10,11 @@ import { useAppState } from "../context";
 import { UpArrow } from "./Icons";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { useScrollDirection } from "../utility/useScrollDirection";
 
 const MobileNav = () => {
   const { state, dispatch } = useAppState();
+  useScrollDirection();
   const { scrollY } = useScroll();
   const [showUp, setShowUp] = useState(false);
   const pathname = usePathname();
