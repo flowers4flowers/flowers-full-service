@@ -69,15 +69,11 @@ Project
   );
 }
 
-.full-viewport-scroll {
-  height: 100vh;
-}
-
 @media (min-width: theme('screens.lg')) {
   .project-title {
     font-weight: 600;
-    font-size: 160px;
-    line-height: 130px;
+    font-size: 180px;
+    line-height: 160px;
     letter-spacing: -4%;
   }
 }

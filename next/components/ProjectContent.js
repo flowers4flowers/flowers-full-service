@@ -19,12 +19,10 @@ const ProjectContent = ({ data }) => {
   } = data.result;
 
   const [isFullDescriptionOpen, setIsFullDescriptionOpen] = useState(false);
-  const [mediaColumnHeight, setMediaColumnHeight] = useState(null);
   const [isScrolledFromTop, setIsScrolledFromTop] = useState(false);
   const [isScrolledFromBottom, setIsScrolledFromBottom] = useState(false);
 
   const textColumnRef = useRef(null);
-  const mediaColumnRef = useRef(null);
 
   const mediaItems = (mediaContent || []).flatMap((block, blockIndex) =>
     block.media.map((item, itemIndex) => ({
@@ -32,20 +30,6 @@ const ProjectContent = ({ data }) => {
       key: `${blockIndex}-${itemIndex}`,
     }))
   );
-
-  useEffect(() => {
-    const mediaColumnEl = mediaColumnRef.current;
-
-    if (!mediaColumnEl) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      setMediaColumnHeight(entries[0].contentRect.height);
-    });
-
-    resizeObserver.observe(mediaColumnEl);
-
-    return () => resizeObserver.disconnect();
-  }, []);
 
   useEffect(() => {
     const textColumnEl = textColumnRef.current;
@@ -64,32 +48,20 @@ const ProjectContent = ({ data }) => {
     textColumnEl.addEventListener("scroll", updateScrollFade);
 
     return () => textColumnEl.removeEventListener("scroll", updateScrollFade);
-  }, [mediaColumnHeight]);
-
-  const scrollAreaHeight =
-    mediaItems.length === 0 || mediaColumnHeight === 0
-      ? undefined
-      : mediaColumnHeight
-      ? `${mediaColumnHeight}px`
-      : undefined;
-
-  const useFullViewportFallback = mediaItems.length === 0 || mediaColumnHeight === 0;
+  }, []);
 
   return (
     <div className="pb-60 grid grid-cols-12 lg:gap-6">
-      <div className="col-span-12 lg:col-span-8 lg:sticky lg:top-32 lg:self-start">
-        <h1 className="text-xl font-primary uppercase project-title">
+      <div className="col-span-12 lg:col-span-8 lg:sticky lg:top-32 lg:self-start lg:flex lg:flex-col lg:h-[calc(100vh-10rem)]">
+        <h1 className="text-xl font-primary project-title lg:flex-shrink-0">
           {title}
         </h1>
 
         <div
           ref={textColumnRef}
-          style={{ maxHeight: scrollAreaHeight }}
-          className={`text-column-scroll overflow-y-auto ${
-            useFullViewportFallback ? "full-viewport-scroll" : ""
-          } ${isScrolledFromTop ? "fade-top" : ""} ${
-            isScrolledFromBottom ? "fade-bottom" : ""
-          }`}
+          className={`text-column-scroll overflow-y-auto pb-20 lg:flex-1 lg:min-h-0 ${
+            isScrolledFromTop ? "fade-top" : ""
+          } ${isScrolledFromBottom ? "fade-bottom" : ""}`}
         >
           <Link href="/" className="uppercase font-primary text-md lg:text-lg block mt-8">
             &larr; Back
@@ -120,7 +92,7 @@ const ProjectContent = ({ data }) => {
         </div>
       </div>
 
-      <div ref={mediaColumnRef} className="col-span-12 lg:col-span-4 mt-16 lg:mt-0">
+      <div className="col-span-12 lg:col-span-4 mt-16 lg:mt-0 mr-10">
         {mediaItems.map((item) => (
           <MediaItem key={item.key} media={item} />
         ))}
