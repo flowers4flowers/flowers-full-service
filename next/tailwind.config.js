@@ -7,8 +7,8 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'primary': ['Archivo', 'Helvetica', 'sans-serif'],
-      'secondary': ['Archivo', 'sans-serif'],
+      'primary': ['ABC Monument Grotesk', 'Helvetica', 'sans-serif'],
+      'secondary': ['ABC Monument Grotesk', 'sans-serif'],
     },
     fontSize: {
       'sm': ['1rem'],

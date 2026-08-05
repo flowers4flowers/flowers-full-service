@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'ABC Monument Grotesk';
+  src: url('/ABCMonumentGrotesk-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   -webkit-font-smoothing: antialiased;
 }
