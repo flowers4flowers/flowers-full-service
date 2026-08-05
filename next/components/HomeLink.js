@@ -13,14 +13,16 @@ const HomeLink = () => {
   return (
     <nav id="home-link" className="w-full px-5 lg:px-14 lg:mt-[120px] hidden lg:block">
       <div className="flex justify-center">
-        <Link href="/" className="relative flex justify-center w-full h-[250px]">
-          <Image
-            src="/FLOWERS-Full.svg"
-            alt="FLOWERS"
-            fill
-            style={{ objectFit: "contain" }}
-          />
-        </Link>
+        {!pathname.includes("/projects") && (
+          <Link href="/" className="relative flex justify-center w-full h-[250px]">
+            <Image
+              src="/FLOWERS-Full.svg"
+              alt="FLOWERS"
+              fill
+              style={{ objectFit: "contain" }}
+            />
+          </Link>
+        )}
 
         {pathname.includes("/projects") && (
           <button

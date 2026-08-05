@@ -34,6 +34,54 @@ Project
   position: relative;
 }
 
+.text-column-scroll {
+  scrollbar-width: none;
+}
+
+.text-column-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.text-column-scroll.fade-top {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 48px);
+  mask-image: linear-gradient(to bottom, transparent, black 48px);
+}
+
+.text-column-scroll.fade-bottom {
+  -webkit-mask-image: linear-gradient(to top, transparent, black 48px);
+  mask-image: linear-gradient(to top, transparent, black 48px);
+}
+
+.text-column-scroll.fade-top.fade-bottom {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 48px,
+    black calc(100% - 48px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 48px,
+    black calc(100% - 48px),
+    transparent
+  );
+}
+
+.full-viewport-scroll {
+  height: 100vh;
+}
+
+@media (min-width: theme('screens.lg')) {
+  .project-title {
+    font-weight: 600;
+    font-size: 160px;
+    line-height: 130px;
+    letter-spacing: -4%;
+  }
+}
+
 /*
 Project (LG)
 */

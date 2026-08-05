@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import MediaItem from "../components/MediaItem";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const ProjectContent = ({ data }) => {
   const {
@@ -19,6 +19,12 @@ const ProjectContent = ({ data }) => {
   } = data.result;
 
   const [isFullDescriptionOpen, setIsFullDescriptionOpen] = useState(false);
+  const [mediaColumnHeight, setMediaColumnHeight] = useState(null);
+  const [isScrolledFromTop, setIsScrolledFromTop] = useState(false);
+  const [isScrolledFromBottom, setIsScrolledFromBottom] = useState(false);
+
+  const textColumnRef = useRef(null);
+  const mediaColumnRef = useRef(null);
 
   const mediaItems = (mediaContent || []).flatMap((block, blockIndex) =>
     block.media.map((item, itemIndex) => ({
@@ -27,51 +33,94 @@ const ProjectContent = ({ data }) => {
     }))
   );
 
+  useEffect(() => {
+    const mediaColumnEl = mediaColumnRef.current;
+
+    if (!mediaColumnEl) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      setMediaColumnHeight(entries[0].contentRect.height);
+    });
+
+    resizeObserver.observe(mediaColumnEl);
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const textColumnEl = textColumnRef.current;
+
+    if (!textColumnEl) return;
+
+    const updateScrollFade = () => {
+      const { scrollTop, scrollHeight, clientHeight } = textColumnEl;
+
+      setIsScrolledFromTop(scrollTop > 1);
+      setIsScrolledFromBottom(scrollTop + clientHeight < scrollHeight - 1);
+    };
+
+    updateScrollFade();
+
+    textColumnEl.addEventListener("scroll", updateScrollFade);
+
+    return () => textColumnEl.removeEventListener("scroll", updateScrollFade);
+  }, [mediaColumnHeight]);
+
+  const scrollAreaHeight =
+    mediaItems.length === 0 || mediaColumnHeight === 0
+      ? undefined
+      : mediaColumnHeight
+      ? `${mediaColumnHeight}px`
+      : undefined;
+
+  const useFullViewportFallback = mediaItems.length === 0 || mediaColumnHeight === 0;
+
   return (
     <div className="pb-60 grid grid-cols-12 lg:gap-6">
       <div className="col-span-12 lg:col-span-8 lg:sticky lg:top-32 lg:self-start">
-        <Link href="/" className="uppercase font-primary text-md lg:text-lg block mb-8">
-          &larr; Back
-        </Link>
+        <h1 className="text-xl font-primary uppercase project-title">
+          {title}
+        </h1>
 
-        <div className="text-md lg:text-lg font-primary">
-          <p className="uppercase">{client}</p>
+        <div
+          ref={textColumnRef}
+          style={{ maxHeight: scrollAreaHeight }}
+          className={`text-column-scroll overflow-y-auto ${
+            useFullViewportFallback ? "full-viewport-scroll" : ""
+          } ${isScrolledFromTop ? "fade-top" : ""} ${
+            isScrolledFromBottom ? "fade-bottom" : ""
+          }`}
+        >
+          <Link href="/" className="uppercase font-primary text-md lg:text-lg block mt-8">
+            &larr; Back
+          </Link>
 
-          <p className="uppercase">{`${startDate}${
-            endDate && endDate !== startDate ? `- ${endDate}` : ""
-          }`}</p>
+          {shortDescription && (
+            <div
+              className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8"
+              dangerouslySetInnerHTML={{ __html: shortDescription }}
+            ></div>
+          )}
 
-          <div className="leading-[1.2] mt-8">
-            <h1 className="uppercase font-bold">{title}</h1>
-            <p>{location}</p>
-          </div>
+          {description && (
+            <button
+              className="uppercase font-primary font-bold text-md lg:text-lg mt-8"
+              onClick={() => setIsFullDescriptionOpen(!isFullDescriptionOpen)}
+            >
+              {isFullDescriptionOpen ? "Read Less" : "Read More"}
+            </button>
+          )}
+
+          {isFullDescriptionOpen && description && (
+            <div
+              className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8"
+              dangerouslySetInnerHTML={{ __html: description }}
+            ></div>
+          )}
         </div>
-
-        {shortDescription && (
-          <div
-            className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8"
-            dangerouslySetInnerHTML={{ __html: shortDescription }}
-          ></div>
-        )}
-
-        {description && (
-          <button
-            className="uppercase font-primary font-bold text-md lg:text-lg mt-8"
-            onClick={() => setIsFullDescriptionOpen(!isFullDescriptionOpen)}
-          >
-            {isFullDescriptionOpen ? "Read Less" : "Read More"}
-          </button>
-        )}
-
-        {isFullDescriptionOpen && description && (
-          <div
-            className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8"
-            dangerouslySetInnerHTML={{ __html: description }}
-          ></div>
-        )}
       </div>
 
-      <div className="col-span-12 lg:col-span-4 mt-16 lg:mt-0">
+      <div ref={mediaColumnRef} className="col-span-12 lg:col-span-4 mt-16 lg:mt-0">
         {mediaItems.map((item) => (
           <MediaItem key={item.key} media={item} />
         ))}
