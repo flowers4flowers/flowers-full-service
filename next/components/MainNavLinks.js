@@ -21,7 +21,6 @@ const MainNavLinks = () => {
     <Fragment>
       <Link
         href="/gallery"
-        className={checkLinkActive("/gallery") ? "active" : ""}
         onClick={() => trackLink("Main Nav: Gallery", "/gallery")}
       >
         <span>Gallery</span>
@@ -38,7 +37,6 @@ const MainNavLinks = () => {
       </Link>
       <Link
         href="/about"
-        className={checkLinkActive("/about") ? "active" : ""}
         onClick={() => trackLink("Main Nav: About", "/about")}
       >
         <span>About</span>

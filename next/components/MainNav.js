@@ -68,24 +68,25 @@ const MainNav = ({ socialLinks }) => {
                 </li>
               ))}
 
-          {(pathname.includes("/projects") ||
-            pathname.includes("/gallery")) && (
-            <li>
-              <button
-                onClick={() => {
-                  window.scrollTo({
-                    top: 0,
-                    behavior: "smooth",
-                  });
-                }}
-                className={`up lg:hover:opacity-50 transition-opacity duration-300 ${
-                  showUp ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <UpArrow />
-              </button>
-            </li>
-          )}
+          <li>
+            <button
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }}
+              className={`up lg:hover:opacity-50 transition-opacity duration-300 ${
+                showUp &&
+                (pathname.includes("/projects") ||
+                  pathname.includes("/gallery"))
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <UpArrow />
+            </button>
+          </li>
         </ul>
       </nav>
     </header>
