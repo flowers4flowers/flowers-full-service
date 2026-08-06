@@ -19,27 +19,30 @@ const MainNavLinks = () => {
 
   return (
     <Fragment>
-      <li>
-        <Link
-          href="/gallery"
-          className={checkLinkActive("/gallery") ? "active" : ""}
-          onClick={() => trackLink("Main Nav: Gallery", "/gallery")}
-        >
-          <span>Gallery</span>
-        </Link>
-      </li>
+      <Link
+        href="/gallery"
+        className={checkLinkActive("/gallery") ? "active" : ""}
+        onClick={() => trackLink("Main Nav: Gallery", "/gallery")}
+      >
+        <span>Gallery</span>
+      </Link>
 
-      <li>
-        <Link
-          href="https://shop.flowersfullservice.art/"
-          target="_blank"
-          onClick={() =>
-            trackLink("Main Nav: Shop", "https://shop.flowersfullservice.art/")
-          }
-        >
-          <span>Shop</span>
-        </Link>
-      </li>
+      <Link
+        href="https://shop.flowersfullservice.art/"
+        target="_blank"
+        onClick={() =>
+          trackLink("Main Nav: Shop", "https://shop.flowersfullservice.art/")
+        }
+      >
+        <span>Shop</span>
+      </Link>
+      <Link
+        href="/about"
+        className={checkLinkActive("/about") ? "active" : ""}
+        onClick={() => trackLink("Main Nav: About", "/about")}
+      >
+        <span>About</span>
+      </Link>
     </Fragment>
   );
 };
