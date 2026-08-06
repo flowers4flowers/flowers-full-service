@@ -20,14 +20,14 @@ const MobileMenu = ({ socialLinks }) => {
   };
 
   const classes = classNames(
-    "fixed top-16 right-4 bottom-16 w-[80vw] max-w-xs bg-white px-5 pt-12 pb-4 flex flex-col rounded-lg shadow-xl",
+    "fixed top-16 right-4 bottom-16 w-[80vw] max-w-xs bg-white px-5 pt-12 pb-4 lg:hidden flex flex-col rounded-lg shadow-xl",
     {
       active: state.mobileMenuOpen,
     }
   );
 
   const backdropClasses = classNames(
-    "fixed inset-0 z-[3400] bg-black bg-opacity-50 opacity-0 pointer-events-none transition-opacity duration-300",
+    "fixed inset-0 z-[3400] lg:hidden bg-black bg-opacity-50 opacity-0 pointer-events-none transition-opacity duration-300",
     {
       "opacity-100 pointer-events-auto": state.mobileMenuOpen,
     }
