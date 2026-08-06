@@ -1,14 +1,15 @@
 // next/components/Footer.js
 
-import Link from "next/link";
-import Image from "next/image";
-import CopyLink from "./CopyLink";
+"use client";
 
-const WORDMARK_ASPECT_RATIO = 1312 / 217;
-const WORDMARK_WIDTH = 1310;
+import Link from "next/link";
+import CopyLink from "./CopyLink";
+import { FlowersFullLogo } from "./Icons";
+import { useTheme } from "../context/ThemeContext";
 
 const Footer = () => {
   const year = new Date().getFullYear();
+  const { theme } = useTheme();
 
   return (
     <footer id="site-footer" className="px-5 lg:px-14 py-5 lg:py-10">
@@ -49,12 +50,7 @@ const Footer = () => {
       </div>
 
       <div className="wordmark">
-        <Image
-          src="/FLOWERS-Full.svg"
-          alt="FLOWERS"
-          width={WORDMARK_WIDTH}
-          height={Math.round(WORDMARK_WIDTH / WORDMARK_ASPECT_RATIO)}
-        />
+        <FlowersFullLogo color={theme === "dark" ? "cream" : "black"} className="w-full h-auto" />
       </div>
 
       <div className="flex justify-between items-center font-secondary font-bold text-sm lg:text-base">

@@ -7,6 +7,7 @@ import Image from "next/image";
 import classNames from "classnames";
 import { useState } from "react";
 import { useAppState } from "../context";
+import { useTheme } from "../context/ThemeContext";
 import { UpArrow } from "./Icons";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { usePathname } from "next/navigation";
@@ -14,6 +15,7 @@ import { useScrollDirection } from "../utility/useScrollDirection";
 
 const MobileNav = () => {
   const { state, dispatch } = useAppState();
+  const { theme } = useTheme();
   useScrollDirection();
   const { scrollY } = useScroll();
   const [showUp, setShowUp] = useState(false);
@@ -28,7 +30,7 @@ const MobileNav = () => {
   });
 
   const classes = classNames(
-    "fixed top-0 left-0 w-full bg-cream px-5 py-5 flex lg:hidden justify-between items-center",
+    "fixed top-0 left-0 w-full bg-cream dark:bg-black px-5 py-5 flex lg:hidden justify-between items-center",
     {
       hide: state.hideNav,
     }
@@ -66,7 +68,7 @@ const MobileNav = () => {
               showUp ? "opacity-100" : "opacity-0"
             }`}
           >
-            <UpArrow />
+            <UpArrow color={theme === "dark" ? "cream" : "black"} />
           </button>
         )}
       </div>

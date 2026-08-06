@@ -8,6 +8,13 @@ Tailwind/Variables
 
 :root {
   --nav-height: 8rem;
+  --color-bg: #EEEBE6;
+  --color-text: #000000;
+}
+
+html.dark {
+  --color-bg: #000000;
+  --color-text: #EEEBE6;
 }
 
 @layer utilities {
@@ -41,9 +48,10 @@ Global
 html {
   font-family: theme('fontFamily.primary');
   font-size: 10px;
-  color: black;
-  background-color: theme('colors.cream');
+  color: var(--color-text);
+  background-color: var(--color-bg);
   height: 100%;
+  transition: background-color .3s, color .3s;
 }
 
 body {

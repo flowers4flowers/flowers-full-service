@@ -9,6 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useAnalytics } from "../utility/useAnalytics";
+import ThemeToggle from "./ThemeToggle";
 
 const MobileMenu = ({ socialLinks }) => {
   const { state, dispatch } = useAppState();
@@ -20,7 +21,7 @@ const MobileMenu = ({ socialLinks }) => {
   };
 
   const classes = classNames(
-    "fixed top-16 right-4 bottom-16 w-[80vw] max-w-xs bg-white px-5 pt-12 pb-4 lg:hidden flex flex-col rounded-lg shadow-xl",
+    "fixed top-16 right-4 bottom-16 w-[80vw] max-w-xs bg-white dark:bg-black text-black dark:text-cream px-5 pt-12 pb-4 lg:hidden flex flex-col rounded-lg shadow-xl",
     {
       active: state.mobileMenuOpen,
     }
@@ -75,7 +76,7 @@ const MobileMenu = ({ socialLinks }) => {
             } grid grid-cols-6 gap-4`}
           >
             <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black rounded-full"></div>
+              <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
             </div>
             <Link
               href="/"
@@ -92,7 +93,7 @@ const MobileMenu = ({ socialLinks }) => {
             } grid grid-cols-6 gap-4`}
           >
             <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black rounded-full"></div>
+              <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
             </div>
             <Link
               href="/gallery"
@@ -108,7 +109,7 @@ const MobileMenu = ({ socialLinks }) => {
             } grid grid-cols-6 gap-4`}
           >
             <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black rounded-full"></div>
+              <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
             </div>
             <Link
               href="/about"
@@ -125,7 +126,7 @@ const MobileMenu = ({ socialLinks }) => {
             } grid grid-cols-6 gap-4`}
           >
             <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black rounded-full"></div>
+              <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
             </div>
             <Link
               href="https://shop.flowersfullservice.art/"
@@ -139,6 +140,8 @@ const MobileMenu = ({ socialLinks }) => {
             </Link>
           </li>
         </ul>
+
+        <ThemeToggle className="mt-8" />
 
         <ul className="w-full mt-12 font-secondary text-xl leading-[1.4]">
           {socialLinks

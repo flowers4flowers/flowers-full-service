@@ -9,14 +9,17 @@ import MainNavLinks from "./MainNavLinks";
 import CopyLink from "./CopyLink";
 import classNames from "classnames";
 import { useAppState } from "../context";
+import { useTheme } from "../context/ThemeContext";
 import { UpArrow } from "./Icons";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useAnalytics } from "../utility/useAnalytics";
 import { useScrollDirection } from "../utility/useScrollDirection";
+import ThemeToggle from "./ThemeToggle";
 
 const MainNav = ({ socialLinks }) => {
   const { state } = useAppState();
+  const { theme } = useTheme();
   useScrollDirection();
   const { scrollY } = useScroll();
   const [showUp, setShowUp] = useState(false);
@@ -24,10 +27,10 @@ const MainNav = ({ socialLinks }) => {
   const { trackSocial } = useAnalytics();
 
   const classes = classNames(
-    "fixed top-0 left-0 w-full bg-cream px-14 py-10 hidden lg:flex justify-between items-center",
+    "fixed top-0 left-0 w-full bg-cream dark:bg-black px-14 py-10 hidden lg:flex justify-between items-center",
     {
       hide: state.hideNav,
-    }
+    },
   );
 
   useMotionValueEvent(scrollY, "change", (latestScrollY) => {
@@ -45,7 +48,7 @@ const MainNav = ({ socialLinks }) => {
       </Link>
 
       <nav className="main-nav-links">
-        <ul className="font-secondary font-bold text-base text-black flex justify-end items-center gap-6">
+        <ul className="font-secondary font-bold text-base text-black dark:text-cream flex justify-end items-center gap-6">
           <MainNavLinks />
 
           {socialLinks &&
@@ -68,6 +71,8 @@ const MainNav = ({ socialLinks }) => {
                 </li>
               ))}
 
+          <ThemeToggle />
+
           <li>
             <button
               onClick={() => {
@@ -84,7 +89,7 @@ const MainNav = ({ socialLinks }) => {
                   : "opacity-0 pointer-events-none"
               }`}
             >
-              <UpArrow />
+              <UpArrow color={theme === "dark" ? "cream" : "black"} />
             </button>
           </li>
         </ul>

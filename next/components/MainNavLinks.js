@@ -8,6 +8,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { useAnalytics } from "../utility/useAnalytics";
 
+
 const MainNavLinks = () => {
   const { state, dispatch } = useAppState();
   const pathname = usePathname();
@@ -41,6 +42,8 @@ const MainNavLinks = () => {
       >
         <span>About</span>
       </Link>
+
+      
     </Fragment>
   );
 };

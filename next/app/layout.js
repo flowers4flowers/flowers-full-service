@@ -4,6 +4,7 @@ import "../styles/global.css";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { AppWrapper } from "../context";
+import { ThemeProvider } from "../context/ThemeContext";
 import MainNav from "../components/MainNav";
 import MobileNav from "../components/MobileNav";
 import HomeLink from "../components/HomeLink";
@@ -61,6 +62,15 @@ export default async function RootLayout({ children }) {
         <link
           href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
           rel="stylesheet"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try {
+      var stored = localStorage.getItem('theme');
+      var isDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', isDark);
+    } catch (e) {}`,
+          }}
         />
         <script
           async
@@ -212,6 +222,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
+      <ThemeProvider>
       <AppWrapper>
         <body>
           <GoogleAnalytics gaId="G-YSM33VGFQP" />
@@ -243,6 +254,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           )}
         </body>
       </AppWrapper>
+      </ThemeProvider>
     </html>
   );
 }

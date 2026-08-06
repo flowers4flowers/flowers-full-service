@@ -3,24 +3,21 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { UpArrow } from "./Icons";
+import { useTheme } from "../context/ThemeContext";
+import { UpArrow, FlowersFullLogo } from "./Icons";
 
 const HomeLink = () => {
   const pathname = usePathname();
+  const { theme } = useTheme();
+  const iconColor = theme === "dark" ? "cream" : "black";
 
   return (
     <nav id="home-link" className="w-full px-5 lg:px-14 lg:mt-[120px] hidden lg:block">
       <div className="flex justify-center">
         {!pathname.includes("/projects") && !pathname.includes("/about") && (
           <Link href="/" className="relative flex justify-center w-full h-[250px]">
-            <Image
-              src="/FLOWERS-Full.svg"
-              alt="FLOWERS"
-              fill
-              style={{ objectFit: "contain" }}
-            />
+            <FlowersFullLogo color={iconColor} className="w-full h-full" />
           </Link>
         )}
 
@@ -34,7 +31,7 @@ const HomeLink = () => {
               });
             }}
           >
-            <UpArrow />
+            <UpArrow color={iconColor} />
           </button>
         )}
       </div>
