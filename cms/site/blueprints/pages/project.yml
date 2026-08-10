@@ -23,6 +23,10 @@ columns:
             type: text
             label: Location
             required: true
+          short_description:
+            type: textarea
+            label: Short Description
+            size: small
           description:
             type: textarea
             label: Description
