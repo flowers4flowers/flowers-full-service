@@ -51,10 +51,12 @@ export default async function Home() {
     <div className="pb-[30rem]">
       {description && (
         <div
-          className="font-primary text-2xl font-bold lg:text-xxl leading-[1.2] rich-text rt-lg"
+          className="font-primary text-[4.8rem] font-bold leading-[1.05] tracking-[-0.01em] rich-text rt-lg"
           dangerouslySetInnerHTML={{ __html: description }}
         ></div>
       )}
+
+      <div className="h-[50px]"></div>
 
       {orderedProjectsByClient.length > 0 && (
         <ProjectsList projectsByClient={orderedProjectsByClient} />

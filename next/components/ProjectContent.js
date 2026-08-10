@@ -5,6 +5,7 @@
 import Link from "next/link";
 import MediaItem from "../components/MediaItem";
 import { useState, useEffect, useRef } from "react";
+import { useAnalytics } from "../utility/useAnalytics";
 
 const ProjectContent = ({ data }) => {
   const {
@@ -17,6 +18,8 @@ const ProjectContent = ({ data }) => {
     endDate,
     mediaContent,
   } = data.result;
+
+  const { trackButton } = useAnalytics();
 
   const [isFullDescriptionOpen, setIsFullDescriptionOpen] = useState(false);
   const [isScrolledFromTop, setIsScrolledFromTop] = useState(false);
@@ -77,7 +80,13 @@ const ProjectContent = ({ data }) => {
           {description && (
             <button
               className="uppercase font-primary font-bold text-md lg:text-lg mt-8"
-              onClick={() => setIsFullDescriptionOpen(!isFullDescriptionOpen)}
+              onClick={() => {
+                const nextState = !isFullDescriptionOpen;
+                setIsFullDescriptionOpen(nextState);
+                trackButton(nextState ? "Read More" : "Read Less", {
+                  project: title,
+                });
+              }}
             >
               {isFullDescriptionOpen ? "Read Less" : "Read More"}
             </button>
