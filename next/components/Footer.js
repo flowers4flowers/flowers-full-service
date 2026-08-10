@@ -13,7 +13,9 @@ const Footer = () => {
 
   return (
     <footer id="site-footer" className="px-5 lg:px-14 py-5 lg:py-10">
-      <div className="flex justify-between items-start font-secondary font-bold text-sm lg:text-base">
+      <hr className="border-t border-black" />
+
+      <div className="flex justify-between items-start font-secondary font-bold text-sm lg:text-base mt-5 lg:mt-10">
         <ul className="flex flex-col">
           <li>
             <Link

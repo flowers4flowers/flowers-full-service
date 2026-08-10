@@ -11,7 +11,7 @@ export default function About() {
       </h1>
 
       <div className="grid grid-cols-12 gap-8 items-center">
-        <div className="col-span-12 lg:col-span-4 space-y-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+        <div className="col-span-12 lg:col-span-5 lg:w-[467px] space-y-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
           <p>
             At the root of FLOWERS is storytelling. We create projects that give
             brands the power to communicate exactly who they are. We make art
@@ -32,9 +32,7 @@ export default function About() {
           </p>
         </div>
 
-        <div className="hidden lg:block lg:col-span-1"></div>
-
-        <div className="col-span-12 lg:col-span-5">
+        <div className="col-span-12 lg:col-span-6">
           <div className="relative w-full lg:ml-auto">
             <Image
               src="/about/1.png"
@@ -47,7 +45,7 @@ export default function About() {
         </div>
       </div>
 
-      <hr className="border-t border-black my-16" />
+      <hr className="border-t border-black my-32" />
 
       <div className="grid grid-cols-12 gap-8 items-center">
         <div className="col-span-12 lg:col-span-5">
@@ -57,14 +55,12 @@ export default function About() {
               alt="Cait Oppermann"
               width={467}
               height={600}
-              style={{ width: "60%", height: "auto" }}
+              style={{ width: "467px", height: "599.5805053710938px" }}
             />
           </div>
         </div>
 
-        <div className="hidden lg:block lg:col-span-1"></div>
-
-        <div className="col-span-12 lg:col-span-4 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+        <div className="col-span-12 lg:col-span-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
           <h2 className="font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px] mb-1">
             Cait Oppermann
           </h2>
@@ -92,9 +88,9 @@ export default function About() {
         </div>
       </div>
 
-      <div className="my-16"></div>
+      <div className="mt-40 pb-20"></div>
 
-      <div>
+      <div >
         <h2 className="font-primary font-bold text-[32px] leading-[100%] tracking-[-0.03em] lg:text-[48px] mb-10 lg:mb-16">
           What we do
         </h2>
@@ -136,7 +132,7 @@ export default function About() {
               key={item.title}
               className="grid grid-cols-12 gap-8 py-10 border-b border-black"
             >
-              <h3 className="col-span-12 lg:col-span-4 font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px]">
+              <h3 className="col-span-12 lg:col-span-5 font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px]">
                 {item.title}
               </h3>
 
