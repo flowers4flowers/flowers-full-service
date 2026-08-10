@@ -39,7 +39,7 @@ const MobileNav = () => {
   return (
     <header id="mobile-nav" className={classes}>
       <Link href="/">
-        <Image src="/FLOWERS.png" alt="FLOWERS" width={40} height={32} />
+        <Image src="/FLOWERS.png" alt="FLOWERS" width={40} height={32} className="dark:invert" />
       </Link>
 
       <div className="flex justify-end items-center gap-6">
@@ -68,7 +68,7 @@ const MobileNav = () => {
               showUp ? "opacity-100" : "opacity-0"
             }`}
           >
-            <UpArrow color={theme === "dark" ? "cream" : "black"} />
+            <UpArrow color={theme === "dark" ? "#EEEBE6" : "black"} />
           </button>
         )}
       </div>

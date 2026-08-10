@@ -21,6 +21,13 @@ const MainNavLinks = () => {
   return (
     <Fragment>
       <Link
+        href="/"
+        onClick={() => trackLink("Main Nav: Home", "/")}
+      >
+        <span>Home</span>
+      </Link>
+
+      <Link
         href="/gallery"
         onClick={() => trackLink("Main Nav: Gallery", "/gallery")}
       >

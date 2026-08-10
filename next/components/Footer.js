@@ -50,7 +50,7 @@ const Footer = () => {
       </div>
 
       <div className="wordmark">
-        <FlowersFullLogo color={theme === "dark" ? "cream" : "black"} className="w-full h-auto" />
+        <FlowersFullLogo color={theme === "dark" ? "#EEEBE6" : "black"} className="w-full h-auto" />
       </div>
 
       <div className="flex justify-between items-center font-secondary font-bold text-sm lg:text-base">

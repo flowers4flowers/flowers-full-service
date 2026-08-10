@@ -44,7 +44,7 @@ const MainNav = ({ socialLinks }) => {
   return (
     <header id="main-nav" className={classes}>
       <Link href="/">
-        <Image src="/FLOWERS.png" alt="FLOWERS" width={50} height={40} />
+        <Image src="/FLOWERS.png" alt="FLOWERS" width={50} height={40} className="dark:invert" />
       </Link>
 
       <nav className="main-nav-links">
@@ -89,7 +89,7 @@ const MainNav = ({ socialLinks }) => {
                   : "opacity-0 pointer-events-none"
               }`}
             >
-              <UpArrow color={theme === "dark" ? "cream" : "black"} />
+              <UpArrow color={theme === "dark" ? "#EEEBE6" : "black"} />
             </button>
           </li>
         </ul>

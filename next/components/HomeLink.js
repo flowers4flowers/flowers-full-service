@@ -10,7 +10,7 @@ import { UpArrow, FlowersFullLogo } from "./Icons";
 const HomeLink = () => {
   const pathname = usePathname();
   const { theme } = useTheme();
-  const iconColor = theme === "dark" ? "cream" : "black";
+  const iconColor = theme === "dark" ? "#EEEBE6" : "black";
 
   return (
     <nav id="home-link" className="w-full px-5 lg:px-14 lg:mt-[120px] hidden lg:block">
