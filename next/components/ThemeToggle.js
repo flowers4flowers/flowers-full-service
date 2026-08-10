@@ -3,10 +3,17 @@
 "use client";
 
 import { useTheme } from "../context/ThemeContext";
+import { useAnalytics } from "../utility/useAnalytics";
 
 const ThemeToggle = ({ className = "" }) => {
   const { theme, toggleTheme } = useTheme();
+  const { trackButton } = useAnalytics();
   const isDark = theme === "dark";
+
+  const handleClick = () => {
+    trackButton("Theme Toggle", { theme: isDark ? "light" : "dark" });
+    toggleTheme();
+  };
 
   return (
     <button
@@ -14,7 +21,7 @@ const ThemeToggle = ({ className = "" }) => {
       role="switch"
       aria-checked={isDark}
       aria-label="Toggle dark mode"
-      onClick={toggleTheme}
+      onClick={handleClick}
       className={`relative inline-flex items-center w-12 h-6 rounded-full border border-black dark:border-cream transition-colors duration-300 ${className}`}
     >
       <span
