@@ -17,8 +17,8 @@ const HomeLink = () => {
     <Container as="nav" id="home-link" className="lg:mt-[120px]">
       <div className="flex justify-center">
         {!pathname.includes("/projects") && !pathname.includes("/about") && (
-          <Link href="/" className="relative flex justify-center w-full h-[80px] lg:h-[250px] mt-24 lg:mt-0">
-            <FlowersFullLogo color={iconColor} className="w-full h-full" />
+          <Link href="/" className="relative flex justify-center w-full mt-24 lg:mt-0">
+            <FlowersFullLogo color={iconColor} className="w-full h-auto" />
           </Link>
         )}
 
