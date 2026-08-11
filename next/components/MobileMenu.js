@@ -24,14 +24,14 @@ const MobileMenu = ({ socialLinks }) => {
     "fixed top-16 right-4 bottom-16 w-[80vw] max-w-xs bg-white dark:bg-black text-black dark:text-cream px-5 pt-12 pb-4 lg:hidden flex flex-col shadow-xl",
     {
       active: state.mobileMenuOpen,
-    }
+    },
   );
 
   const backdropClasses = classNames(
     "fixed inset-0 z-[3400] lg:hidden bg-black bg-opacity-50 opacity-0 pointer-events-none transition-opacity duration-300",
     {
       "opacity-100 pointer-events-auto": state.mobileMenuOpen,
-    }
+    },
   );
 
   // on pathname change, close mobile menu
@@ -69,112 +69,90 @@ const MobileMenu = ({ socialLinks }) => {
         </button>
 
         <nav className="main-links flex-1">
-        <ul className="w-full font-secondary text-xl leading-[1.4]">
-          <ThemeToggle className="mt-8" />
-          <li
-            className={`${
-              checkLinkActive("/") ? "active" : ""
-            } grid grid-cols-6 gap-4`}
-          >
-            <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
-            </div>
-            <Link
-              href="/"
-              className="col-span-5"
-              onClick={() => trackLink("Mobile Menu: Home", "/")}
+          <ul className="w-full font-secondary text-xl leading-[1.4]">
+            <ThemeToggle className="mt-8" />
+            <li
+              className={`${
+                checkLinkActive("/") ? "active" : ""
+              } grid grid-cols-6 gap-4`}
             >
-              Home
-            </Link>
-          </li>
+              <div className="col-span-1 flex items-center justify-start">
+                <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
+              </div>
+              <Link
+                href="/"
+                className="col-span-5"
+                onClick={() => trackLink("Mobile Menu: Home", "/")}
+              >
+                Home
+              </Link>
+            </li>
 
-          <li
-            className={`${
-              checkLinkActive("/gallery") ? "active" : ""
-            } grid grid-cols-6 gap-4`}
-          >
-            <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
-            </div>
-            <Link
-              href="/gallery"
-              className="col-span-5"
-              onClick={() => trackLink("Mobile Menu: Gallery", "/gallery")}
+            <li
+              className={`${
+                checkLinkActive("/gallery") ? "active" : ""
+              } grid grid-cols-6 gap-4`}
             >
-              Gallery
-            </Link>
-          </li>
-          <li
-            className={`${
-              checkLinkActive("/about") ? "active" : ""
-            } grid grid-cols-6 gap-4`}
-          >
-            <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
-            </div>
-            <Link
-              href="/about"
-              className="col-span-5"
-              onClick={() => trackLink("Mobile Menu: About", "/about")}
+              <div className="col-span-1 flex items-center justify-start">
+                <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
+              </div>
+              <Link
+                href="/gallery"
+                className="col-span-5"
+                onClick={() => trackLink("Mobile Menu: Gallery", "/gallery")}
+              >
+                Gallery
+              </Link>
+            </li>
+            <li
+              className={`${
+                checkLinkActive("/about") ? "active" : ""
+              } grid grid-cols-6 gap-4`}
             >
-              About
-            </Link>
-          </li>
+              <div className="col-span-1 flex items-center justify-start">
+                <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
+              </div>
+              <Link
+                href="/about"
+                className="col-span-5"
+                onClick={() => trackLink("Mobile Menu: About", "/about")}
+              >
+                About
+              </Link>
+            </li>
+          </ul>
 
-          <li
-            className={`${
-              checkLinkActive("/shop") ? "active" : ""
-            } grid grid-cols-6 gap-4`}
-          >
-            <div className="col-span-1 flex items-center justify-start">
-              <div className="circle w-6 h-6 bg-black dark:bg-cream rounded-full"></div>
-            </div>
-            <Link
-              href="https://shop.flowersfullservice.art/"
-              target="_blank"
-              className="col-span-5"
-              onClick={() =>
-                trackLink("Mobile Menu: Shop", "https://shop.flowersfullservice.art/")
-              }
-            >
-              Shop
-            </Link>
-          </li>
-        </ul>
-
-        
-
-        <ul className="w-full mt-12 font-secondary text-xl leading-[1.4]">
-          {socialLinks
-            .filter((link) => !link.link.toLowerCase().includes("instagram"))
-            .map((link, index) => {
-            if (link.link.includes("mailto")) {
-              return (
-                <li key={index} className="grid grid-cols-6 gap-4">
-                  <CopyLink
-                    title={link.title}
-                    url={link.link}
-                    className="col-span-5 col-start-2 text-left"
-                  />
-                </li>
-              );
-            } else {
-              return (
-                <li key={index} className="grid grid-cols-6 gap-4">
-                  <Link
-                    href={link.link}
-                    target="_blank"
-                    className="col-span-5 col-start-2"
-                    onClick={() => trackSocial(link.title)}
-                  >
-                    {link.title}
-                  </Link>
-                </li>
-              );
-            }
-          })}
-        </ul>
-      </nav>
+          <ul className="w-full mt-12 font-secondary text-xl leading-[1.4]">
+            {socialLinks
+              .filter((link) => !link.link.toLowerCase().includes("instagram"))
+              .map((link, index) => {
+                if (link.link.includes("mailto")) {
+                  return (
+                    <li key={index} className="grid grid-cols-6 gap-4">
+                      <CopyLink
+                        title={link.title}
+                        url={link.link}
+                        className="col-span-5 col-start-2 text-left"
+                      />
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li key={index} className="grid grid-cols-6 gap-4">
+                      <Link
+                        href={link.link}
+                        target="_blank"
+                        className="col-span-5 col-start-2"
+                        onClick={() => trackSocial(link.title)}
+                      >
+                        {link.title}
+                      </Link>
+                    </li>
+                  );
+                }
+              })}
+          </ul>
+        </nav>
       </div>
     </>
   );

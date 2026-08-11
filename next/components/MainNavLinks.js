@@ -8,7 +8,6 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { useAnalytics } from "../utility/useAnalytics";
 
-
 const MainNavLinks = () => {
   const { state, dispatch } = useAppState();
   const pathname = usePathname();
@@ -20,10 +19,7 @@ const MainNavLinks = () => {
 
   return (
     <Fragment>
-      <Link
-        href="/"
-        onClick={() => trackLink("Main Nav: Home", "/")}
-      >
+      <Link href="/" onClick={() => trackLink("Main Nav: Home", "/")}>
         <span>Home</span>
       </Link>
 
@@ -33,24 +29,12 @@ const MainNavLinks = () => {
       >
         <span>Gallery</span>
       </Link>
-
-      <Link
-        href="https://shop.flowersfullservice.art/"
-        target="_blank"
-        onClick={() =>
-          trackLink("Main Nav: Shop", "https://shop.flowersfullservice.art/")
-        }
-      >
-        <span>Shop</span>
-      </Link>
       <Link
         href="/about"
         onClick={() => trackLink("Main Nav: About", "/about")}
       >
         <span>About</span>
       </Link>
-
-      
     </Fragment>
   );
 };
