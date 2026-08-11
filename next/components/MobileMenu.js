@@ -70,7 +70,6 @@ const MobileMenu = ({ socialLinks }) => {
 
         <nav className="main-links flex-1">
           <ul className="w-full font-secondary text-xl leading-[1.4]">
-            <ThemeToggle className="mt-8" />
             <li
               className={`${
                 checkLinkActive("/") ? "active" : ""
@@ -152,6 +151,7 @@ const MobileMenu = ({ socialLinks }) => {
                 }
               })}
           </ul>
+          <ThemeToggle className="mt-8" />
         </nav>
       </div>
     </>
