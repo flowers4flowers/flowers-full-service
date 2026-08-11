@@ -121,7 +121,7 @@ const MobileMenu = ({ socialLinks }) => {
             </li>
           </ul>
 
-          <ul className="w-full mt-12 font-secondary text-xl leading-[1.4]">
+          <ul className="w-full font-secondary text-xl leading-[1.4]">
             {socialLinks
               .filter((link) => !link.link.toLowerCase().includes("instagram"))
               .map((link, index) => {
