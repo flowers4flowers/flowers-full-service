@@ -55,7 +55,7 @@ export default function About() {
               alt="Cait Oppermann"
               width={467}
               height={600}
-              style={{ width: "467px", height: "599.5805053710938px" }}
+              style={{ width: "100%", height: "auto" }}
             />
           </div>
         </div>
