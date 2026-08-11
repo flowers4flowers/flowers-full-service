@@ -48,7 +48,7 @@ export default async function Home() {
   }, []);
 
   return (
-    <div className="pb-[30rem]">
+    <div className="">
       {description && (
         <div
           className="font-primary text-[4.8rem] font-bold leading-[1.05] tracking-[-0.01em] rich-text rt-lg"
