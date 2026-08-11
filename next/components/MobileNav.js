@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { useState } from "react";
 import { useAppState } from "../context";
 import { useTheme } from "../context/ThemeContext";
-import { UpArrow } from "./Icons";
+import { UpArrow, HamburgerIcon } from "./Icons";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useScrollDirection } from "../utility/useScrollDirection";
@@ -53,8 +53,9 @@ const MobileNav = () => {
             });
           }}
           className="text-md font-secondary text-center"
+          aria-label="Open menu"
         >
-          Menu
+          <HamburgerIcon color={theme === "dark" ? "#EEEBE6" : "black"} />
         </button>
 
         {(pathname.includes("/projects") ||

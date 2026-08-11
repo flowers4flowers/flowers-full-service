@@ -126,6 +126,15 @@ export const RightArrow = ({ color = "black" }) => {
   );
 };
 
+export const HamburgerIcon = ({ color = "black" }) => {
+  return (
+    <svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="0" y1="1" x2="24" y2="1" stroke={color} strokeWidth="2" />
+      <line x1="0" y1="8" x2="24" y2="8" stroke={color} strokeWidth="2" />
+    </svg>
+  );
+};
+
 export const CloseX = ({ color = "black" }) => {
   return (
     <svg width="59" height="59" viewBox="0 0 59 59" fill="none" xmlns="http://www.w3.org/2000/svg">
