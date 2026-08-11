@@ -125,7 +125,7 @@ Main Nav
 #mobile-menu {
   transition: transform .3s;
   pointer-events: none;
-  transform: translateX(100%);
+  transform: translateX(calc(100% + 2rem));
   z-index: 3500;
 }
 

@@ -17,6 +17,11 @@ html.dark {
   --color-text: #EEEBE6;
 }
 
+html,
+body {
+  overflow-x: hidden;
+}
+
 @layer utilities {
   .fill-parent {
     position: absolute;

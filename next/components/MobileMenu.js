@@ -21,7 +21,7 @@ const MobileMenu = ({ socialLinks }) => {
   };
 
   const classes = classNames(
-    "fixed top-16 right-4 bottom-16 w-[80vw] max-w-xs bg-white dark:bg-black text-black dark:text-cream px-5 pt-12 pb-4 lg:hidden flex flex-col rounded-lg shadow-xl",
+    "fixed top-16 right-4 bottom-16 w-[80vw] max-w-xs bg-white dark:bg-black text-black dark:text-cream px-5 pt-12 pb-4 lg:hidden flex flex-col shadow-xl",
     {
       active: state.mobileMenuOpen,
     }
@@ -70,6 +70,7 @@ const MobileMenu = ({ socialLinks }) => {
 
         <nav className="main-links flex-1">
         <ul className="w-full font-secondary text-xl leading-[1.4]">
+          <ThemeToggle className="mt-8" />
           <li
             className={`${
               checkLinkActive("/") ? "active" : ""
@@ -141,7 +142,7 @@ const MobileMenu = ({ socialLinks }) => {
           </li>
         </ul>
 
-        <ThemeToggle className="mt-8" />
+        
 
         <ul className="w-full mt-12 font-secondary text-xl leading-[1.4]">
           {socialLinks
