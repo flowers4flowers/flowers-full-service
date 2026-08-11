@@ -21,7 +21,7 @@ const ProjectsList = ({ projectsByClient }) => {
 
   return (
     <div
-      className="projects border-t border-black mt-28 lg:mt-40 pt-10 lg:pt-14 w-full mx-auto"
+      className="projects border-t border-black dark:border-cream mt-28 lg:mt-40 pt-10 lg:pt-14 w-full mx-auto"
       onMouseLeave={() => handleHover(null)}
     >
       {projectsByClient.map((item, index) => {

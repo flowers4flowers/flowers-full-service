@@ -45,7 +45,7 @@ export default function About() {
         </div>
       </div>
 
-      <hr className="border-t border-black my-32" />
+      <hr className="border-t border-black dark:border-cream my-32" />
 
       <div className="grid grid-cols-12 gap-8 items-center">
         <div className="col-span-12 lg:col-span-5">
@@ -95,7 +95,7 @@ export default function About() {
           What we do
         </h2>
 
-        <div className="border-t border-black">
+        <div className="border-t border-black dark:border-cream">
           {[
             {
               title: "Art Direction",
@@ -130,7 +130,7 @@ export default function About() {
           ].map((item) => (
             <div
               key={item.title}
-              className="grid grid-cols-12 gap-8 py-10 border-b border-black"
+              className="grid grid-cols-12 gap-8 py-10 border-b border-black dark:border-cream"
             >
               <h3 className="col-span-12 lg:col-span-5 font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px]">
                 {item.title}
