@@ -44,8 +44,9 @@ Main Nav
   width: 100%;
 }
 
+/* #secondary-home-link currently matches no element in the live JSX tree */
 #secondary-home-link + main {
-  padding-top: 29.4vw;
+  padding-top: min(29.4vw, 553px);
   z-index: 10;
   position: relative;
 }
@@ -164,10 +165,11 @@ Main Nav (LG)
 
 @media (min-width: theme('screens.lg')) {
   #home-link+main {
-    padding-top: calc(2.3vw + 10px);
+    padding-top: min(calc(2.3vw + 10px), 53px);
   }
+  /* #secondary-home-link currently matches no element in the live JSX tree */
   #secondary-home-link+main {
-    padding-top: 25.4vw;
+    padding-top: min(25.4vw, 478px);
   }
 
   #main-nav .main-nav-links a:hover span {

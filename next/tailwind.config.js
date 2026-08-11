@@ -28,7 +28,7 @@ module.exports = {
     },
     extend: {
       width: {
-        container: '90%',
+        container: 'clamp(0px, 90%, 1692px)',
       },
     },
   },
