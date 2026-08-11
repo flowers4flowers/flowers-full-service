@@ -35,6 +35,10 @@ const ProjectContent = ({ data }) => {
   );
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const textColumnEl = textColumnRef.current;
 
     if (!textColumnEl) return;
@@ -54,9 +58,9 @@ const ProjectContent = ({ data }) => {
   }, []);
 
   return (
-    <div className="pb-60 pt-28 lg:pt-0 grid grid-cols-12 lg:gap-6">
+    <div className="pb-60 pt-32 lg:pt-0 grid grid-cols-12 lg:gap-6">
       <div className="col-span-12 lg:col-span-8 lg:sticky lg:top-32 lg:self-start lg:flex lg:flex-col lg:h-[calc(100vh-10rem)]">
-        <h1 className="text-xl font-primary project-title lg:flex-shrink-0">
+        <h1 className="text-3xl font-primary project-title lg:flex-shrink-0">
           {title}
         </h1>
 
