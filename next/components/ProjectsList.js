@@ -30,7 +30,15 @@ const ProjectsList = ({ projectsByClient }) => {
             className="client-group grid grid-cols-[10rem_1fr] lg:grid-cols-[35rem_1fr] gap-4 lg:gap-6 mb-8 lg:mb-14"
             key={index}
           >
-            <h3 className="text-md lg:text-lg font-primary font-bold uppercase pr-4">
+            <h3
+              className="font-primary uppercase pr-4"
+              style={{
+                fontWeight: 400,
+                fontSize: "20px",
+                lineHeight: "120%",
+                letterSpacing: "0%",
+              }}
+            >
               {item.client}
             </h3>
 

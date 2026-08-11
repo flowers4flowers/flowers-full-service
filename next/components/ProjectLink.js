@@ -67,7 +67,7 @@ const ProjectLink = ({ project, activeSlug, onHover }) => {
       }`}</p>
 
       <div className="text-content mb-2 lg:mb-0">
-        <p className="listing-heading block lg:inline leading-[1.5]">
+        <p className="listing-heading block lg:inline">
           {project.title}
         </p>
         {project.location && (

@@ -3,15 +3,42 @@ Project
 */
 
 .listing-heading {
-  @apply text-md lg:text-lg font-primary font-bold uppercase;
+  @apply font-primary uppercase;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: 0%;
 }
 
 .listing-date {
-  @apply text-md lg:text-lg font-primary uppercase font-extralight;
+  @apply font-primary uppercase;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: 0%;
+}
+
+.project-description {
+  font-family: 'ABC Monument Grotesk Unlicensed Trial', 'ABC Monument Grotesk', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 23.4px;
+  letter-spacing: 0%;
+}
+
+@media (min-width: 1444px) {
+  .project-description {
+    width: 632px;
+    max-width: 632px;
+  }
 }
 
 .listing-location {
-  @apply text-md font-secondary font-extralight;
+  @apply font-secondary;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 120%;
+  letter-spacing: 0%;
 }
 
 .media-item {
@@ -67,6 +94,10 @@ Project
     black calc(100% - 48px),
     transparent
   );
+}
+
+.project-title {
+  font-family: 'ABC Monument Grotesk Unlicensed Trial', 'ABC Monument Grotesk', Helvetica, sans-serif;
 }
 
 @media (min-width: theme('screens.lg')) {

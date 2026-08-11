@@ -72,7 +72,7 @@ const ProjectContent = ({ data }) => {
 
           {shortDescription && (
             <div
-              className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8 max-w-[80%]"
+              className="project-description rich-text rt-underline mt-8"
               dangerouslySetInnerHTML={{ __html: shortDescription }}
             ></div>
           )}
@@ -94,7 +94,7 @@ const ProjectContent = ({ data }) => {
 
           {isFullDescriptionOpen && description && (
             <div
-              className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8"
+              className="project-description rich-text rt-underline mt-8"
               dangerouslySetInnerHTML={{ __html: description }}
             ></div>
           )}
