@@ -31,10 +31,9 @@ const ProjectsList = ({ projectsByClient }) => {
             key={index}
           >
             <h3
-              className="font-primary uppercase pr-4"
+              className="font-primary uppercase pr-4 text-[12px] lg:text-[20px]"
               style={{
                 fontWeight: 400,
-                fontSize: "20px",
                 lineHeight: "120%",
                 letterSpacing: "0%",
               }}

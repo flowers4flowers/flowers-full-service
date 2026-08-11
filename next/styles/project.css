@@ -5,7 +5,7 @@ Project
 .listing-heading {
   @apply font-primary uppercase;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 12px;
   line-height: 120%;
   letter-spacing: 0%;
 }
@@ -13,7 +13,7 @@ Project
 .listing-date {
   @apply font-primary uppercase;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 12px;
   line-height: 120%;
   letter-spacing: 0%;
 }
@@ -36,7 +36,7 @@ Project
 .listing-location {
   @apply font-secondary;
   font-weight: 400;
-  font-size: 20px;
+  font-size: 12px;
   line-height: 120%;
   letter-spacing: 0%;
 }
@@ -117,5 +117,11 @@ Project (LG)
   .video-container button:hover svg path {
     fill: theme('colors.cream');
     stroke: theme('colors.cream');
+  }
+
+  .listing-heading,
+  .listing-date,
+  .listing-location {
+    font-size: 20px;
   }
 }

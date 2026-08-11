@@ -1,6 +1,6 @@
 // next/app/page.js
 
-import { getAboutData } from "../queries/aboutQuery";
+import { getAboutData } from "../styles/queries/aboutQuery";
 import ProjectsList from "../components/ProjectsList";
 
 export const metadata = {
@@ -51,7 +51,7 @@ export default async function Home() {
     <div className="">
       {description && (
         <div
-          className="font-primary text-[44px] font-bold leading-[100%] tracking-[-3%] rich-text rt-lg"
+          className="font-primary text-[26px] lg:text-[44px] font-normal md:font-bold leading-[100%] tracking-[-3%] rich-text rt-lg"
           dangerouslySetInnerHTML={{ __html: description }}
         ></div>
       )}
