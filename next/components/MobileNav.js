@@ -31,7 +31,7 @@ const MobileNav = () => {
   });
 
   const classes = classNames(
-    "fixed top-0 left-0 w-full bg-cream dark:bg-black py-5 flex lg:hidden",
+    "fixed top-0 left-0 right-0 bg-cream dark:bg-black py-5 flex lg:hidden",
     {
       hide: state.hideNav,
     }

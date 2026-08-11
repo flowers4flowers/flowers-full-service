@@ -28,7 +28,7 @@ const MainNav = ({ socialLinks }) => {
   const { trackSocial } = useAnalytics();
 
   const classes = classNames(
-    "fixed top-0 left-0 w-full bg-cream dark:bg-black py-10 hidden lg:flex",
+    "fixed top-0 left-0 right-0 bg-cream dark:bg-black py-10 hidden lg:flex",
     {
       hide: state.hideNav,
     },
