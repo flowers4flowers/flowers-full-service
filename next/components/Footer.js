@@ -6,13 +6,14 @@ import Link from "next/link";
 import CopyLink from "./CopyLink";
 import { FlowersFullLogo } from "./Icons";
 import { useTheme } from "../context/ThemeContext";
+import Container from "./Container";
 
 const Footer = () => {
   const year = new Date().getFullYear();
   const { theme } = useTheme();
 
   return (
-    <footer id="site-footer" className="px-5 lg:px-14 py-5 lg:py-10">
+    <Container as="footer" id="site-footer" className="py-5 lg:py-10">
       <hr className="border-t border-black dark:border-cream" />
 
       <div className="flex justify-between items-start font-secondary font-bold text-sm lg:text-base mt-5 lg:mt-10">
@@ -59,7 +60,7 @@ const Footer = () => {
         <span>&copy;{year}</span>
         <span>NYC</span>
       </div>
-    </footer>
+    </Container>
   );
 };
 

@@ -11,6 +11,7 @@ import HomeLink from "../components/HomeLink";
 import MobileMenu from "../components/MobileMenu";
 import Screensaver from "../components/Screensaver";
 import Footer from "../components/Footer";
+import Container from "../components/Container";
 import { getGlobalData } from "../queries/layoutQuery";
 import AnalyticsPageTracker from "../components/AnalyticsPageTracker";
 
@@ -243,7 +244,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
           <HomeLink />
 
-          <main className="px-5 lg:px-14">{children}</main>
+          <main><Container>{children}</Container></main>
 
           <Footer />
 

@@ -16,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { useAnalytics } from "../utility/useAnalytics";
 import { useScrollDirection } from "../utility/useScrollDirection";
 import ThemeToggle from "./ThemeToggle";
+import Container from "./Container";
 
 const MainNav = ({ socialLinks }) => {
   const { state } = useAppState();
@@ -27,7 +28,7 @@ const MainNav = ({ socialLinks }) => {
   const { trackSocial } = useAnalytics();
 
   const classes = classNames(
-    "fixed top-0 left-0 w-full bg-cream dark:bg-black px-14 py-10 hidden lg:flex justify-between items-center",
+    "fixed top-0 left-0 w-full bg-cream dark:bg-black py-10 hidden lg:flex",
     {
       hide: state.hideNav,
     },
@@ -43,6 +44,7 @@ const MainNav = ({ socialLinks }) => {
 
   return (
     <header id="main-nav" className={classes}>
+      <Container className="flex justify-between items-center">
       <Link href="/">
         <Image src="/FLOWERS.png" alt="FLOWERS" width={50} height={40} className="dark:invert" />
       </Link>
@@ -94,6 +96,7 @@ const MainNav = ({ socialLinks }) => {
           </li>
         </ul>
       </nav>
+      </Container>
     </header>
   );
 };

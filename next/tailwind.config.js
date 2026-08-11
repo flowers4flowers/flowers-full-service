@@ -26,6 +26,11 @@ module.exports = {
       cream: '#EEEBE6',
       'light-cream': '#D9D9D9'
     },
+    extend: {
+      width: {
+        container: '90%',
+      },
+    },
   },
   plugins: [],
 }

@@ -12,6 +12,7 @@ import { UpArrow } from "./Icons";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useScrollDirection } from "../utility/useScrollDirection";
+import Container from "./Container";
 
 const MobileNav = () => {
   const { state, dispatch } = useAppState();
@@ -30,7 +31,7 @@ const MobileNav = () => {
   });
 
   const classes = classNames(
-    "fixed top-0 left-0 w-full bg-cream dark:bg-black px-5 py-5 flex lg:hidden justify-between items-center",
+    "fixed top-0 left-0 w-full bg-cream dark:bg-black py-5 flex lg:hidden",
     {
       hide: state.hideNav,
     }
@@ -38,6 +39,7 @@ const MobileNav = () => {
 
   return (
     <header id="mobile-nav" className={classes}>
+      <Container className="flex justify-between items-center">
       <Link href="/">
         <Image src="/FLOWERS.png" alt="FLOWERS" width={40} height={32} className="dark:invert" />
       </Link>
@@ -72,6 +74,7 @@ const MobileNav = () => {
           </button>
         )}
       </div>
+      </Container>
     </header>
   );
 };

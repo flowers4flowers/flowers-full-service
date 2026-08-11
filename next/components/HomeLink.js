@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "../context/ThemeContext";
 import { UpArrow, FlowersFullLogo } from "./Icons";
+import Container from "./Container";
 
 const HomeLink = () => {
   const pathname = usePathname();
@@ -13,7 +14,7 @@ const HomeLink = () => {
   const iconColor = theme === "dark" ? "#EEEBE6" : "black";
 
   return (
-    <nav id="home-link" className="w-full px-5 lg:px-14 lg:mt-[120px]">
+    <Container as="nav" id="home-link" className="lg:mt-[120px]">
       <div className="flex justify-center">
         {!pathname.includes("/projects") && !pathname.includes("/about") && (
           <Link href="/" className="relative flex justify-center w-full h-[80px] lg:h-[250px] mt-24 lg:mt-0">
@@ -35,7 +36,7 @@ const HomeLink = () => {
           </button>
         )}
       </div>
-    </nav>
+    </Container>
   );
 };
 
