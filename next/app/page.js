@@ -51,7 +51,7 @@ export default async function Home() {
     <div className="">
       {description && (
         <div
-          className="font-primary text-[2.2rem] lg:text-[4.8rem] font-bold leading-[1.05] tracking-[-0.01em] rich-text rt-lg"
+          className="font-primary text-[44px] font-bold leading-[100%] tracking-[-3%] rich-text rt-lg"
           dangerouslySetInnerHTML={{ __html: description }}
         ></div>
       )}
