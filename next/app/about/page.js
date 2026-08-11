@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function About() {
   return (
     <div className="pt-32 lg:pt-16 pb-16">
-      <h1 className="font-primary text-[26px] font-bold lg:text-xxl leading-[1.2] mb-10 lg:mb-16">
+      <h1 className="font-primary text-[26px] !font-bold lg:text-xxl leading-[1] mb-10 lg:mb-16">
         We use image, story, and perspective to help ideas take shape in the
         world, creating work that forms culture through creative vision.
       </h1>
