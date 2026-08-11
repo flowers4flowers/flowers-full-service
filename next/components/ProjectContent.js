@@ -72,14 +72,14 @@ const ProjectContent = ({ data }) => {
 
           {shortDescription && (
             <div
-              className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8"
+              className="font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2] mt-8 max-w-[80%]"
               dangerouslySetInnerHTML={{ __html: shortDescription }}
             ></div>
           )}
 
           {description && (
             <button
-              className="uppercase font-primary font-bold text-md lg:text-lg mt-8"
+              className="uppercase font-primary font-bold text-md lg:text-lg mt-8 max-w-[80%]"
               onClick={() => {
                 const nextState = !isFullDescriptionOpen;
                 setIsFullDescriptionOpen(nextState);
