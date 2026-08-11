@@ -46,7 +46,7 @@ Main Nav
 
 /* #secondary-home-link currently matches no element in the live JSX tree */
 #secondary-home-link + main {
-  padding-top: min(29.4vw, 553px);
+  padding-top: min(29.4vw, 425px);
   z-index: 10;
   position: relative;
 }
@@ -165,11 +165,11 @@ Main Nav (LG)
 
 @media (min-width: theme('screens.lg')) {
   #home-link+main {
-    padding-top: min(calc(2.3vw + 10px), 53px);
+    padding-top: min(calc(2.3vw + 10px), 43px);
   }
   /* #secondary-home-link currently matches no element in the live JSX tree */
   #secondary-home-link+main {
-    padding-top: min(25.4vw, 478px);
+    padding-top: min(25.4vw, 367px);
   }
 
   #main-nav .main-nav-links a:hover span {
