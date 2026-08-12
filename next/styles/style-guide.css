@@ -8,13 +8,13 @@ Tailwind/Variables
 
 :root {
   --nav-height: 8rem;
-  --color-bg: #EEEBE6;
+  --color-bg: #F0EFEB;
   --color-text: #000000;
 }
 
 html.dark {
   --color-bg: #000000;
-  --color-text: #EEEBE6;
+  --color-text: #ffffff;
 }
 
 html,

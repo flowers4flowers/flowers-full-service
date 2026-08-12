@@ -23,8 +23,8 @@ module.exports = {
       black: '#000000',
       white: '#ffffff',
       transparent: 'transparent',
-      cream: '#EEEBE6',
-      'light-cream': '#D9D9D9'
+      cream: '#F0EFEB',
+      'light-cream': '#F0EFEB'
     },
     extend: {
       width: {
