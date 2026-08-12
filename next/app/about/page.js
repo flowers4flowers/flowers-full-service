@@ -10,8 +10,8 @@ export default function About() {
         world, creating work that forms culture through creative vision.
       </h1>
 
-      <div className="grid grid-cols-12 gap-20 items-center">
-        <div className="col-span-12 lg:col-span-5 lg:w-[500px] space-y-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+      <div className="grid grid-cols-12 gap-8 lg:gap-20 items-center">
+        <div className="col-span-12 lg:col-span-5 lg:w-[500px] min-w-0 space-y-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
           <p>
             At the root of FLOWERS is storytelling. We create projects that give
             brands the power to communicate exactly who they are. We make art
@@ -25,7 +25,7 @@ export default function About() {
           </p>
         </div>
 
-        <div className="col-span-12 lg:col-span-6">
+        <div className="col-span-12 lg:col-span-6 min-w-0">
           <div className="relative w-full lg:max-w-[600px]">
             <Image
               src="/about/1.png"
@@ -40,8 +40,8 @@ export default function About() {
 
       <hr className="border-t border-black dark:border-cream my-32" />
 
-      <div className="grid grid-cols-12 gap-20 items-center">
-        <div className="col-span-12 lg:col-span-5">
+      <div className="grid grid-cols-12 gap-8 lg:gap-20 items-center">
+        <div className="col-span-12 lg:col-span-5 min-w-0">
           <div className="relative w-full lg:max-w-[500px]">
             <Image
               src="/about/2.png"
@@ -53,7 +53,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="col-span-12 lg:col-span-6 lg:max-w-[600px] font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+        <div className="col-span-12 lg:col-span-6 lg:max-w-[600px] min-w-0 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
           <h2 className="font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px] mb-1">
             Cait Oppermann
           </h2>
@@ -121,13 +121,13 @@ export default function About() {
           ].map((item) => (
             <div
               key={item.title}
-              className="grid grid-cols-12 gap-20 py-10 border-b border-black dark:border-cream"
+              className="grid grid-cols-12 gap-8 lg:gap-20 py-10 border-b border-black dark:border-cream"
             >
-              <h3 className="col-span-12 lg:col-span-5 font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px]">
+              <h3 className="col-span-12 lg:col-span-5 min-w-0 font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px]">
                 {item.title}
               </h3>
 
-              <p className="col-span-12 lg:col-span-6 lg:max-w-[600px] font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+              <p className="col-span-12 lg:col-span-6 lg:max-w-[600px] min-w-0 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
                 {item.description}
               </p>
             </div>
