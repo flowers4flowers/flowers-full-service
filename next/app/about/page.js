@@ -10,8 +10,8 @@ export default function About() {
         world, creating work that forms culture through creative vision.
       </h1>
 
-      <div className="grid grid-cols-12 gap-8 items-center">
-        <div className="col-span-12 lg:col-span-5 lg:w-[467px] space-y-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+      <div className="grid grid-cols-12 gap-20 items-center">
+        <div className="col-span-12 lg:col-span-5 lg:w-[500px] space-y-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
           <p>
             At the root of FLOWERS is storytelling. We create projects that give
             brands the power to communicate exactly who they are. We make art
@@ -19,21 +19,14 @@ export default function About() {
           </p>
 
           <p>
-            We are here to create and innovate, not just execute a brief. By
-            joining the process early, we can help define the idea, establish
-            the art direction, and build a visual world that moves the brand
-            forward
-          </p>
-
-          <p>
-            When we collaborate across strategy, art direction, production, and
-            final delivery, we can create work that gives your brand a more
-            distinct place in the world.
+            We work across strategy, art direction, production, and final
+            delivery, carrying each idea through every stage to build a cohesive
+            visual world.
           </p>
         </div>
 
         <div className="col-span-12 lg:col-span-6">
-          <div className="relative w-full lg:ml-auto">
+          <div className="relative w-full lg:max-w-[600px]">
             <Image
               src="/about/1.png"
               alt="FLOWERS studio"
@@ -47,9 +40,9 @@ export default function About() {
 
       <hr className="border-t border-black dark:border-cream my-32" />
 
-      <div className="grid grid-cols-12 gap-8 items-center">
+      <div className="grid grid-cols-12 gap-20 items-center">
         <div className="col-span-12 lg:col-span-5">
-          <div className="relative w-full">
+          <div className="relative w-full lg:max-w-[500px]">
             <Image
               src="/about/2.png"
               alt="Cait Oppermann"
@@ -60,7 +53,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="col-span-12 lg:col-span-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+        <div className="col-span-12 lg:col-span-6 lg:max-w-[600px] font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
           <h2 className="font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px] mb-1">
             Cait Oppermann
           </h2>
@@ -68,21 +61,19 @@ export default function About() {
 
           <div className="space-y-6">
             <p>
-              After 10+ years working across editorial and commercial
-              photography, Cait founded FLOWERS to bring both ways of making
-              into one studio. Her work for <em>The New York Times Magazine</em>{" "}
-              and other publications sharpened an instinct for observation,
-              human detail, and finding the story already present in a subject.
-              That same perspective now guides ambitious work for brands
-              including IBM, Rapha, and Stella Artois.
+              After 10+ years across editorial and commercial photography, Cait
+              founded FLOWERS to bring both ways of making into one studio. Her
+              work for The New York Times Magazine and other publications shaped
+              an instinct for observation, human detail, and finding the story
+              already present in a subject. That perspective now guides work for
+              brands including IBM, Rapha, and Stella Artois.
             </p>
 
             <p>
-              Cait approaches every project with genuine curiosity and a belief
-              that the strongest images have to be earned. FLOWERS grew from
-              that approach: a studio where strategy, art direction, production,
-              and image-making stay connected, and where long-term collaboration
-              creates work with greater depth.
+              FLOWERS grew from Cait’s belief that the strongest images are
+              earned through curiosity, collaboration, and a connected creative
+              process spanning strategy, art direction, production, and
+              image-making.
             </p>
           </div>
         </div>
@@ -90,7 +81,7 @@ export default function About() {
 
       <div className="mt-40 pb-20"></div>
 
-      <div >
+      <div>
         <h2 className="font-primary font-bold text-[32px] leading-[100%] tracking-[-0.03em] lg:text-[48px] mb-10 lg:mb-16">
           What we do
         </h2>
@@ -130,13 +121,13 @@ export default function About() {
           ].map((item) => (
             <div
               key={item.title}
-              className="grid grid-cols-12 gap-8 py-10 border-b border-black dark:border-cream"
+              className="grid grid-cols-12 gap-20 py-10 border-b border-black dark:border-cream"
             >
               <h3 className="col-span-12 lg:col-span-5 font-primary font-bold text-[22px] leading-[100%] tracking-[-0.01em] lg:text-[30px]">
                 {item.title}
               </h3>
 
-              <p className="col-span-12 lg:col-span-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+              <p className="col-span-12 lg:col-span-6 lg:max-w-[600px] font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
                 {item.description}
               </p>
             </div>
