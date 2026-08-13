@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -7,8 +8,8 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      'primary': ['CounterBlast', 'Helvetica', 'sans-serif'],
-      'secondary': ['LetterGothic', 'monospace'],
+      'primary': ['ABC Monument Grotesk', 'Helvetica', 'sans-serif'],
+      'secondary': ['ABC Monument Grotesk', 'sans-serif'],
     },
     fontSize: {
       'sm': ['1rem'],
@@ -22,8 +23,13 @@ module.exports = {
       black: '#000000',
       white: '#ffffff',
       transparent: 'transparent',
-      cream: '#EEEBE6',
-      'light-cream': '#D9D9D9'
+      cream: '#F0EFEB',
+      'light-cream': '#F0EFEB'
+    },
+    extend: {
+      width: {
+        container: '90%',
+      },
     },
   },
   plugins: [],

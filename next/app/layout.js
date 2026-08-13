@@ -4,12 +4,15 @@ import "../styles/global.css";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { AppWrapper } from "../context";
+import { ThemeProvider } from "../context/ThemeContext";
 import MainNav from "../components/MainNav";
 import MobileNav from "../components/MobileNav";
 import HomeLink from "../components/HomeLink";
 import MobileMenu from "../components/MobileMenu";
 import Screensaver from "../components/Screensaver";
-import { getGlobalData } from "../queries/layoutQuery";
+import Footer from "../components/Footer";
+import Container from "../components/Container";
+import { getGlobalData } from "../styles/queries/layoutQuery";
 import AnalyticsPageTracker from "../components/AnalyticsPageTracker";
 
 export const metadata = {
@@ -55,6 +58,21 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try {
+      var stored = localStorage.getItem('theme');
+      var isDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', isDark);
+    } catch (e) {}`,
+          }}
+        />
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-YSM33VGFQP"
@@ -205,6 +223,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           }}
         />
       </head>
+      <ThemeProvider>
       <AppWrapper>
         <body>
           <GoogleAnalytics gaId="G-YSM33VGFQP" />
@@ -225,7 +244,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
           <HomeLink />
 
-          <main className="px-5 lg:px-14">{children}</main>
+          <main><Container>{children}</Container></main>
+
+          <Footer />
 
           <MobileMenu socialLinks={socialLinks} />
 
@@ -234,6 +255,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           )}
         </body>
       </AppWrapper>
+      </ThemeProvider>
     </html>
   );
 }

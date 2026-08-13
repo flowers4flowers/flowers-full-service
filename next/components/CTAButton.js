@@ -57,7 +57,7 @@ export default function FloatingFormButton() {
           cursor: "pointer",
           fontSize: "14px",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-          fontFamily: "LetterGothicMT, sans-serif",
+          fontFamily: "Archivo, sans-serif",
         }}
       >
         MAKE SOMETHING WITH FLOWERS
@@ -236,16 +236,8 @@ export default function FloatingFormButton() {
         </>
       )}
 
-      {/* Custom CSS for wiggle animation and font loading */}
+      {/* Custom CSS for wiggle animation */}
       <style jsx>{`
-        @font-face {
-          font-family: "LetterGothicMT";
-          src: url("/LetterGothicMTStd.woff2") format("woff2");
-          font-weight: normal;
-          font-style: normal;
-          font-display: swap;
-        }
-
         @keyframes wiggle {
           0%,
           100% {

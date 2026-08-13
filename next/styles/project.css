@@ -2,36 +2,111 @@
 Project
 */
 
-.media-section {
-  opacity: 0;
-  transition: opacity 0.4s;
+.listing-heading {
+  @apply font-primary uppercase;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 120%;
+  letter-spacing: 0%;
 }
 
-.media-section.show {
-  opacity: 1;
+.listing-date {
+  @apply font-primary uppercase;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 120%;
+  letter-spacing: 0%;
 }
 
-.media-section .video-container button {
+.project-description {
+  font-family: 'ABC Monument Grotesk Unlicensed Trial', 'ABC Monument Grotesk', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 23.4px;
+  letter-spacing: 0%;
+}
+
+@media (min-width: 1444px) {
+  .project-description {
+    width: 632px;
+    max-width: 632px;
+  }
+}
+
+.listing-location {
+  @apply font-secondary;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 120%;
+  letter-spacing: 0%;
+}
+
+.media-item {
+  width: 100%;
+  margin-bottom: 2vw;
+}
+
+.video-container button {
   transition: opacity 0.3s;
   pointer-events: auto;
 }
 
-.media-section .video-container.video-started button {
+.video-container.video-started button {
   opacity: 0;
   pointer-events: none;
 }
 
-.media-section .video-container button svg {
+.video-container button svg {
   width: 5rem;
   position: relative;
 }
 
-.media-section .media-section-item {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.text-column-scroll {
+  scrollbar-width: none;
+}
+
+.text-column-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.text-column-scroll.fade-top {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 48px);
+  mask-image: linear-gradient(to bottom, transparent, black 48px);
+}
+
+.text-column-scroll.fade-bottom {
+  -webkit-mask-image: linear-gradient(to top, transparent, black 48px);
+  mask-image: linear-gradient(to top, transparent, black 48px);
+}
+
+.text-column-scroll.fade-top.fade-bottom {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 48px,
+    black calc(100% - 48px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 48px,
+    black calc(100% - 48px),
+    transparent
+  );
+}
+
+.project-title {
+  font-family: 'ABC Monument Grotesk Unlicensed Trial', 'ABC Monument Grotesk', Helvetica, sans-serif;
+}
+
+@media (min-width: theme('screens.lg')) {
+  .project-title {
+    font-weight: 500;
+    font-size: 144px;
+    line-height: 130px;
+    letter-spacing: -4%;
+  }
 }
 
 /*
@@ -39,27 +114,14 @@ Project (LG)
 */
 
 @media (min-width: theme('screens.lg')) {
-  .media-section {
-    height: 100vh;
-  }
-
-  .media-section .media-section-item {
-    margin: 0 2vw;
-    height: auto;
-    display: block;
-  }
-
-  .media-section .video-container button:hover svg path {
+  .video-container button:hover svg path {
     fill: theme('colors.cream');
     stroke: theme('colors.cream');
   }
 
-  .media-section .media-section-item .media-caption {
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .media-section .media-section-item:hover .media-caption {
-    opacity: 1;
+  .listing-heading,
+  .listing-date,
+  .listing-location {
+    font-size: 20px;
   }
 }

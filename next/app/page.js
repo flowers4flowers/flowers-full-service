@@ -1,7 +1,7 @@
 // next/app/page.js
 
-import { getHomeData } from "../queries/homeQuery";
-import HomeContent from "../components/HomeContent";
+import { getAboutData } from "../styles/queries/aboutQuery";
+import ProjectsList from "../components/ProjectsList";
 
 export const metadata = {
   alternates: {
@@ -10,11 +10,57 @@ export const metadata = {
 };
 
 export default async function Home() {
-  const data = await getHomeData();
+  const data = await getAboutData();
 
-  const { description, carouselImages } = data.result;
+  const { description } = data.aboutData.result || {};
+  const { projects } = data.projectsData.result || {};
+  const { clients } = data.clientsData.result || {};
+
+  // group projects by client property
+  const projectsByClient = projects.reduce((acc, project) => {
+    const { client } = project;
+
+    if (!acc.some((item) => item.client === client)) {
+      acc.push({
+        client,
+        projects: [project],
+      });
+    } else {
+      const index = acc.findIndex((item) => item.client === client);
+
+      acc[index].projects.push(project);
+    }
+
+    return acc;
+  }, []);
+
+  // order projectsByClient array to be same as clients array
+  const orderedProjectsByClient = clients.reduce((acc, client) => {
+    const { name } = client;
+
+    const index = projectsByClient.findIndex((item) => item.client === name);
+
+    if (index > -1) {
+      acc.push(projectsByClient[index]);
+    }
+
+    return acc;
+  }, []);
 
   return (
-    <HomeContent description={description} carouselImages={carouselImages} />
+    <div className=" ">
+      {description && (
+        <div
+          className="font-primary text-[26px] lg:text-[44px] font-bold leading-[1] tracking-[-3%] rich-text rt-lg"
+          dangerouslySetInnerHTML={{ __html: description }}
+        ></div>
+      )}
+
+      <div className="h-[50px]"></div>
+
+      {orderedProjectsByClient.length > 0 && (
+        <ProjectsList projectsByClient={orderedProjectsByClient} />
+      )}
+    </div>
   );
 }

@@ -7,6 +7,7 @@ export async function getProjectData(slug) {
     select: {
       title: true,
       slug: true,
+      shortDescription: "page.short_description.kirbyText",
       description: "page.description.kirbyText",
       location: true,
       client: true,

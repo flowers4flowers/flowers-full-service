@@ -3,28 +3,35 @@
 "use client";
 
 import Link from "next/link";
-import { Fragment, useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
 import MainNavLinks from "./MainNavLinks";
 import CopyLink from "./CopyLink";
 import classNames from "classnames";
 import { useAppState } from "../context";
+import { useTheme } from "../context/ThemeContext";
 import { UpArrow } from "./Icons";
 import { useMotionValueEvent, useScroll } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useAnalytics } from "../utility/useAnalytics";
+import { useScrollDirection } from "../utility/useScrollDirection";
+import ThemeToggle from "./ThemeToggle";
+import Container from "./Container";
 
 const MainNav = ({ socialLinks }) => {
   const { state } = useAppState();
+  const { theme } = useTheme();
+  useScrollDirection();
   const { scrollY } = useScroll();
   const [showUp, setShowUp] = useState(false);
   const pathname = usePathname();
   const { trackSocial } = useAnalytics();
 
   const classes = classNames(
-    "fixed bottom-0 left-0 w-full bg-cream px-14 py-10 hidden lg:grid grid-cols-12 gap-6",
+    "fixed top-0 left-0 right-0 bg-cream dark:bg-black py-10 hidden lg:flex",
     {
       hide: state.hideNav,
-    }
+    },
   );
 
   useMotionValueEvent(scrollY, "change", (latestScrollY) => {
@@ -37,32 +44,38 @@ const MainNav = ({ socialLinks }) => {
 
   return (
     <header id="main-nav" className={classes}>
-      <MainNavLinks />
+      <Container className="flex justify-between items-center">
+      <Link href="/">
+        <Image src="/FLOWERS.png" alt="FLOWERS" width={50} height={40} className="dark:invert" />
+      </Link>
 
-      {socialLinks && (
-        <nav className="col-span-3 font-secondary text-base text-left flex justify-between items-center">
-          <div>
-            {socialLinks.map((link, index) => (
-              <Fragment key={index}>
-                {link.link.includes("mailto") ? (
-                  <CopyLink title={link.title} url={link.link} />
-                ) : (
-                  <Link
-                    href={link.link}
-                    target="_blank"
-                    className="lg:hover:opacity-50 transition-opacity duration-300"
-                    onClick={() => trackSocial(link.title)}
-                  >
-                    {link.title}
-                  </Link>
-                )}
-                {index < socialLinks.length - 1 && <span>,&nbsp;</span>}
-              </Fragment>
-            ))}
-          </div>
+      <nav className="main-nav-links">
+        <ul className="font-secondary font-bold text-base text-black dark:text-cream flex justify-end items-center gap-6">
+          <MainNavLinks />
 
-          {(pathname.includes("/projects") ||
-            pathname.includes("/gallery")) && (
+          {socialLinks &&
+            socialLinks
+              .filter((link) => !link.link.toLowerCase().includes("instagram"))
+              .map((link, index) => (
+                <li key={index}>
+                  {link.link.includes("mailto") ? (
+                    <CopyLink title="Contact" url={link.link} />
+                  ) : (
+                    <Link
+                      href={link.link}
+                      target="_blank"
+                      className="lg:hover:opacity-50 transition-opacity duration-300"
+                      onClick={() => trackSocial(link.title)}
+                    >
+                      {link.title}
+                    </Link>
+                  )}
+                </li>
+              ))}
+
+          <ThemeToggle />
+
+          <li>
             <button
               onClick={() => {
                 window.scrollTo({
@@ -71,14 +84,19 @@ const MainNav = ({ socialLinks }) => {
                 });
               }}
               className={`up lg:hover:opacity-50 transition-opacity duration-300 ${
-                showUp ? "opacity-100" : "opacity-0"
+                showUp &&
+                (pathname.includes("/projects") ||
+                  pathname.includes("/gallery"))
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
               }`}
             >
-              <UpArrow />
+              <UpArrow color={theme === "dark" ? "#EEEBE6" : "black"} />
             </button>
-          )}
-        </nav>
-      )}
+          </li>
+        </ul>
+      </nav>
+      </Container>
     </header>
   );
 };

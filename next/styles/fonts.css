@@ -1,17 +1,11 @@
+@font-face {
+  font-family: 'ABC Monument Grotesk';
+  src: url('/ABCMonumentGrotesk-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   -webkit-font-smoothing: antialiased;
-}
-
-@font-face {
-  font-family: 'CounterBlast';
-  src: url('../public/CounterBlastFlowers-Regular.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'LetterGothic';
-  src: url('../public/LetterGothicMTStd.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
 }

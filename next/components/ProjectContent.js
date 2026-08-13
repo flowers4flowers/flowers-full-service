@@ -2,14 +2,15 @@
 
 "use client";
 
-import MediaSection from "../components/MediaSection";
-import { useAppState } from "../context";
-import { useEffect } from "react";
+import Link from "next/link";
+import MediaItem from "../components/MediaItem";
+import { useState, useEffect, useRef } from "react";
+import { useAnalytics } from "../utility/useAnalytics";
 
 const ProjectContent = ({ data }) => {
-  const { state, dispatch } = useAppState();
   const {
     title,
+    shortDescription,
     description,
     location,
     client,
@@ -18,46 +19,97 @@ const ProjectContent = ({ data }) => {
     mediaContent,
   } = data.result;
 
-  console.log(data.result);
-  console.log(mediaContent);
-  console.log(title);
+  const { trackButton } = useAnalytics();
+
+  const [isFullDescriptionOpen, setIsFullDescriptionOpen] = useState(false);
+  const [isScrolledFromTop, setIsScrolledFromTop] = useState(false);
+  const [isScrolledFromBottom, setIsScrolledFromBottom] = useState(false);
+
+  const textColumnRef = useRef(null);
+
+  const mediaItems = (mediaContent || []).flatMap((block, blockIndex) =>
+    block.media.map((item, itemIndex) => ({
+      ...item,
+      key: `${blockIndex}-${itemIndex}`,
+    }))
+  );
 
   useEffect(() => {
-    dispatch({
-      type: "SET_CURRENT_PROJECT_TITLE",
-      payload: title,
-    });
-  }, [dispatch, title]); // Added missing dependencies
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const textColumnEl = textColumnRef.current;
+
+    if (!textColumnEl) return;
+
+    const updateScrollFade = () => {
+      const { scrollTop, scrollHeight, clientHeight } = textColumnEl;
+
+      setIsScrolledFromTop(scrollTop > 1);
+      setIsScrolledFromBottom(scrollTop + clientHeight < scrollHeight - 1);
+    };
+
+    updateScrollFade();
+
+    textColumnEl.addEventListener("scroll", updateScrollFade);
+
+    return () => textColumnEl.removeEventListener("scroll", updateScrollFade);
+  }, []);
 
   return (
-    <div className="pb-60">
-      <section>
-        <div className="grid grid-cols-12 lg:gap-6 text-md lg:text-lg font-primary">
-          <p className="col-span-12 lg:col-span-2 uppercase">{client}</p>
+    <div className="pb-60 pt-32 lg:pt-0 grid grid-cols-12 lg:gap-6">
+      <div className="col-span-12 lg:col-span-8 lg:sticky lg:top-32 lg:self-start lg:flex lg:flex-col lg:h-[calc(100vh-10rem)]">
+        <h1 className="text-3xl font-primary project-title lg:flex-shrink-0">
+          {title}
+        </h1>
 
-          <p className="col-span-12 lg:col-span-2 uppercase">{`${startDate}${
-            endDate && endDate !== startDate ? `- ${endDate}` : ""
-          }`}</p>
+        <div
+          ref={textColumnRef}
+          className={`text-column-scroll overflow-y-auto pb-20 lg:flex-1 lg:min-h-0 ${
+            isScrolledFromTop ? "fade-top" : ""
+          } ${isScrolledFromBottom ? "fade-bottom" : ""}`}
+        >
+          <Link href="/" className="uppercase font-primary text-md lg:text-lg block mt-8">
+            &larr; Back
+          </Link>
 
-          <div className="col-span-12 lg:col-span-6 leading-[1.2] mt-8 lg:mt-0">
-            <h1 className="uppercase">{title}</h1>
-            <p>{location}</p>
-          </div>
-        </div>
-
-        {description && (
-          <div className="grid grid-cols-12 gap-6 mt-8">
+          {shortDescription && (
             <div
-              className="col-span-12 lg:col-span-5 lg:col-start-5 font-secondary text-md lg:text-lg rich-text rt-underline leading-[1.2]"
+              className="project-description rich-text rt-underline mt-8"
+              dangerouslySetInnerHTML={{ __html: shortDescription }}
+            ></div>
+          )}
+
+          {description && (
+            <button
+              className="uppercase font-primary font-bold text-md lg:text-lg mt-8 max-w-[80%]"
+              onClick={() => {
+                const nextState = !isFullDescriptionOpen;
+                setIsFullDescriptionOpen(nextState);
+                trackButton(nextState ? "Read More" : "Read Less", {
+                  project: title,
+                });
+              }}
+            >
+              {isFullDescriptionOpen ? "Read Less" : "Read More"}
+            </button>
+          )}
+
+          {isFullDescriptionOpen && description && (
+            <div
+              className="project-description rich-text rt-underline mt-8"
               dangerouslySetInnerHTML={{ __html: description }}
             ></div>
-          </div>
-        )}
-      </section>
+          )}
+        </div>
+      </div>
 
-      {mediaContent.map((block, index) => {
-        return <MediaSection key={index} block={block} title={title} />;
-      })}
+      <div className="col-span-12 lg:col-span-4 mt-16 lg:mt-0 mr-10">
+        {mediaItems.map((item) => (
+          <MediaItem key={item.key} media={item} />
+        ))}
+      </div>
     </div>
   );
 };

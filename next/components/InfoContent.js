@@ -177,7 +177,7 @@ const InfoContent = () => {
           {/* Column 2 - Services in a more structured way */}
           <div className="col-span-12 lg:col-span-4 space-y-12">
             <div>
-              <h3 className="text-lg uppercase tracking-widest mb-6 border-b border-b-gray-200 pb-2">
+              <h3 className="text-lg uppercase tracking-widest mb-6 border-b border-b-gray-200 dark:border-b-cream pb-2">
                 Our Expertise
               </h3>
               <div className="grid grid-cols-1 gap-2">
@@ -205,7 +205,7 @@ const InfoContent = () => {
 
           {/* Column 3 - Clients in a more dynamic layout */}
           <div className="col-span-12 lg:col-span-4">
-            <h3 className="text-lg uppercase tracking-widest mb-6 border-b border-b-gray-200 pb-2">
+            <h3 className="text-lg uppercase tracking-widest mb-6 border-b border-b-gray-200 dark:border-b-cream pb-2">
               Select Clients
             </h3>
             <div className="space-y-1">
@@ -218,8 +218,7 @@ const InfoContent = () => {
                   return (
                     <div
                       key={index}
-                      className="block py-2 border-b border-b-gray-200 last:border-b-0 px-2 -mx-2"
-                      style={{ borderBottomColor: "#C0C0C0" }}
+                      className="block py-2 border-b border-b-gray-200 dark:border-b-[#4a4a4a] last:border-b-0 px-2 -mx-2"
                     >
                       <div className="flex justify-between items-center">
                         <span className="text-m font-secondary">{client}</span>
@@ -233,8 +232,7 @@ const InfoContent = () => {
                       key={index}
                       href={url}
                       onClick={() => handleClientClick(client, url)} // ADD THIS LINE
-                      className="block py-2 border-b border-b-gray-100 last:border-b-0 hover:bg-gray-100 transition-colors duration-200 px-2 -mx-2"
-                      style={{ borderBottomColor: "#C0C0C0" }}
+                      className="block py-2 border-b border-b-gray-100 dark:border-b-[#4a4a4a] last:border-b-0 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors duration-200 px-2 -mx-2"
                     >
                       <div className="flex justify-between items-center">
                         <span className="text-m font-secondary">{client}</span>

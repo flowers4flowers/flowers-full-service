@@ -1,13 +1,9 @@
-import { getAllProjectSlugs } from "../queries/projectQuery";
+import { getAllProjectSlugs } from "../styles/queries/projectQuery";
 
 export default async function sitemap() {
   const staticRoutes = [
     {
       url: "https://www.flowersfullservice.art",
-      lastModified: new Date(),
-    },
-    {
-      url: "https://www.flowersfullservice.art/work",
       lastModified: new Date(),
     },
   ];

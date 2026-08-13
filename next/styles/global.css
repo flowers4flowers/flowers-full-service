@@ -1,7 +1,8 @@
 @import './fonts.css';
 @import './style-guide.css';
+@import './scrollbar.css';
 @import './nav.css';
-@import './home.css';
 @import './gallery.css';
 @import './about.css';
 @import './project.css';
+@import './footer.css';

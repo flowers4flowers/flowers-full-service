@@ -8,6 +8,19 @@ Tailwind/Variables
 
 :root {
   --nav-height: 8rem;
+  --color-bg: #F0EFEB;
+  --color-text: #000000;
+}
+
+html.dark {
+  --color-bg: #000000;
+  --color-text: #ffffff;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 @layer utilities {
@@ -41,8 +54,8 @@ Global
 html {
   font-family: theme('fontFamily.primary');
   font-size: 10px;
-  color: black;
-  background-color: theme('colors.cream');
+  color: var(--color-text);
+  background-color: var(--color-bg);
   height: 100%;
 }
 
@@ -56,19 +69,6 @@ body {
 main {
   flex: 1;
   padding-bottom: var(--nav-height);
-}
-
-/*
-Def Image
-*/
-
-.def-image {
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.def-image.loaded {
-  opacity: 1;
 }
 
 /*

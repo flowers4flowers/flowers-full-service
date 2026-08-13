@@ -21,7 +21,7 @@ const CopyLink = ({ title, url, className }) => {
   return (
     <button
       onClick={copy}
-      className={`lg:hover:opacity-50 transition-opacity duration-300 ${className}`}
+      className={`lg:hover:opacity-50 transition-opacity duration-300 p-0 m-0 leading-[inherit] text-[length:inherit] font-[inherit] bg-transparent block ${className}`}
     >
       {copied ? "Copied!" : title}
     </button>

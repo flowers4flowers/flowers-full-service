@@ -8,8 +8,8 @@ import { useState, useRef } from "react";
 import classNames from "classnames";
 import { useAnalytics } from "../utility/useAnalytics";
 
-const ProjectLink = ({ project }) => {
-  const [active, setActive] = useState(false);
+const ProjectLink = ({ project, activeSlug, onHover }) => {
+  const active = activeSlug === project.slug;
   const [xValue, setXValue] = useState(0);
   const linkRef = useRef(null);
   const { trackLink } = useAnalytics();
@@ -21,13 +21,7 @@ const ProjectLink = ({ project }) => {
 
   const handleMouseEnter = () => {
     if (isLargeQuery) {
-      setActive(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (isLargeQuery) {
-      setActive(false);
+      onHover(project.slug);
     }
   };
 
@@ -49,7 +43,7 @@ const ProjectLink = ({ project }) => {
   };
 
   const classes = classNames(
-    "project-link grid grid-cols-4 lg:grid-cols-8 gap-4 lg:gap-6 relative",
+    "project-link grid grid-cols-[6rem_1fr] lg:grid-cols-[9rem_1fr] gap-4 lg:gap-6 relative",
     {
       active: active,
     }
@@ -60,12 +54,11 @@ const ProjectLink = ({ project }) => {
       href={`/projects/${project.slug}`}
       ref={linkRef}
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
       onClick={handleProjectClick} // NEW: Add the click tracking
       className={classes}
     >
-      <p className="text-content col-span-1 lg:col-span-2 text-md lg:text-lg font-primary uppercase">{`${
+      <p className="listing-date">{`${
         project.startDate
       }${
         project.endDate && project.endDate !== project.startDate
@@ -73,12 +66,12 @@ const ProjectLink = ({ project }) => {
           : ""
       }`}</p>
 
-      <div className="text-content col-span-3 lg:col-span-6 mb-2 lg:mb-0">
-        <p className="text-md lg:text-lg font-primary uppercase block lg:inline leading-[1.5]">
+      <div className="text-content mb-2 lg:mb-0">
+        <p className="listing-heading block lg:inline">
           {project.title}
         </p>
         {project.location && (
-          <span className="hidden lg:inline text-md font-secondary ml-4">
+          <span className="listing-location hidden lg:inline ml-4">
             ({project.location})
           </span>
         )}

@@ -5,46 +5,8 @@
 import { usePathname } from "next/navigation";
 import { useAppState } from "../context";
 import Link from "next/link";
+import { Fragment } from "react";
 import { useAnalytics } from "../utility/useAnalytics";
-// import classNames from "classnames"
-
-// const CarouselInfo = ({ state, dispatch }) => {
-//   const counterClasses = classNames(
-//     'col-span-3',
-//     {
-//       'left': state.homeCarouselSide === 'left',
-//       'right': state.homeCarouselSide === 'right'
-//     }
-//   )
-
-//   if (state.homeCarouselOpen) {
-//     return (
-//       <li
-//         id="home-carousel-counter"
-//         className={counterClasses}
-//       >
-//         <span className="relative inline-flex items-center">{ state.homeCarouselClose ? '[close images]' : `${state.homeCarouselData?.currentIndex}/${state.homeCarouselData?.total}` }</span>
-//       </li>
-//     )
-//   }
-
-//   return (
-//     <li
-//       id="home-carousel-counter"
-//       className="col-span-3"
-//     >
-//       <button
-//         className="lg:hover:opacity-50 transition-opacity duration-300"
-//         onClick={() => {
-//           dispatch({
-//             type: 'SET_HOME_CAROUSEL_OPEN',
-//             payload: true
-//           })
-//         }}
-//       >[view images]</button>
-//     </li>
-//   )
-// }
 
 const MainNavLinks = () => {
   const { state, dispatch } = useAppState();
@@ -56,48 +18,24 @@ const MainNavLinks = () => {
   };
 
   return (
-    <nav className="main-nav-links col-span-9">
-      <ul className="w-full font-secondary text-base grid grid-cols-9 gap-6">
-        <li className="col-span-2">
-          <Link
-            href="/gallery"
-            className={checkLinkActive("/gallery") ? "active" : ""}
-            onClick={() => trackLink("Main Nav: Gallery", "/gallery")}
-          >
-            <span>Gallery</span>
-          </Link>
-        </li>
+    <Fragment>
+      <Link href="/" onClick={() => trackLink("Main Nav: Home", "/")}>
+        <span>Home</span>
+      </Link>
 
-        <li className="col-span-2">
-          <Link
-            href="/work"
-            className={checkLinkActive("/work") ? "active" : ""}
-            onClick={() => trackLink("Main Nav: Work", "/work")}
-          >
-            <span>Work</span>
-          </Link>
-        </li>
-
-        <li className="col-span-2">
-          <Link
-            href="https://shop.flowersfullservice.art/"
-            target="_blank"
-            onClick={() =>
-              trackLink("Main Nav: Shop", "https://shop.flowersfullservice.art/")
-            }
-          >
-            <span>Shop</span>
-          </Link>
-        </li>
-
-        {/* {pathname === '/' && (
-          <CarouselInfo
-            state={state}
-            dispatch={dispatch}
-          />
-        )} */}
-      </ul>
-    </nav>
+      <Link
+        href="/gallery"
+        onClick={() => trackLink("Main Nav: Gallery", "/gallery")}
+      >
+        <span>Gallery</span>
+      </Link>
+      <Link
+        href="/about"
+        onClick={() => trackLink("Main Nav: About", "/about")}
+      >
+        <span>About</span>
+      </Link>
+    </Fragment>
   );
 };
 
