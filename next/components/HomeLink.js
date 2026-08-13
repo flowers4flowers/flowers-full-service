@@ -14,7 +14,7 @@ const HomeLink = () => {
   const iconColor = theme === "dark" ? "#EEEBE6" : "black";
 
   return (
-    <Container as="nav" id="home-link" className="lg:mt-[120px]">
+    <Container as="nav" id="home-link" className="mt-20 lg:mt-[100px]">
       <div className="flex justify-center">
         {!pathname.includes("/projects") && !pathname.includes("/about") && (
           <Link href="/" className="relative flex justify-center w-full mt-24 lg:mt-0">
