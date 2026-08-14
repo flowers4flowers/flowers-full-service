@@ -17,15 +17,15 @@ import AnalyticsPageTracker from "../components/AnalyticsPageTracker";
 
 export const metadata = {
   metadataBase: new URL("https://www.flowersfullservice.art"),
-  title: "FLOWERS Studio",
+  title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
   icons: {
     icon: "/favicon.ico",
     apple: "/favicon.ico",
   },
   description:
-    "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies. Based in New York, working globally.",
+    "FLOWERS Studio",
   openGraph: {
-    title: "FLOWERS Studio",
+    title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
     description:
       "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies.",
     url: "https://www.flowersfullservice.art",
@@ -43,7 +43,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "FLOWERS Studio",
+    title: "FLOWERS — Cross-disciplinary Creative Studio in NYC.",
     description:
       "Full-service commercial photography studio led by Cait Oppermann. Creative direction, photography, and production for brands and agencies.",
     images: ["https://www.flowersfullservice.art/CaitOppermann_03_06_GQ_HugoMcCloud_DSC3500.jpg"],
