@@ -5,13 +5,28 @@
 import DefImage from "../components/DefImage";
 import classNames from "classnames";
 import GalleryImage from "./GalleryImage";
+import { useEffect } from "react";
+import { useAppState } from "../context";
 
 const GalleryContent = ({ mediaItems }) => {
+  const { state, dispatch } = useAppState();
+
   let isLargeQuery = false;
 
   if (typeof window !== "undefined") {
     isLargeQuery = window.matchMedia("(min-width: 992px)").matches;
   }
+
+  useEffect(() => {
+    if (state.backNavigation?.origin === "gallery") {
+      document.body.scrollTop = state.backNavigation.scrollY;
+
+      dispatch({
+        type: "SET_BACK_NAVIGATION",
+        payload: { origin: null, scrollY: 0 },
+      });
+    }
+  }, []);
 
   if (mediaItems.length > 0) {
     return (

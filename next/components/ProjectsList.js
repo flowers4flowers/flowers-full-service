@@ -2,8 +2,9 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProjectLink from "./ProjectLink";
+import { useAppState } from "../context";
 
 const sortByDate = (a, b) => {
   const aDate = new Date(a.endDate ? a.endDate : a.startDate);
@@ -14,10 +15,22 @@ const sortByDate = (a, b) => {
 
 const ProjectsList = ({ projectsByClient }) => {
   const [activeSlug, setActiveSlug] = useState(null);
+  const { state, dispatch } = useAppState();
 
   const handleHover = (slug) => {
     setActiveSlug(slug);
   };
+
+  useEffect(() => {
+    if (state.backNavigation?.origin === "home") {
+      document.body.scrollTop = state.backNavigation.scrollY;
+
+      dispatch({
+        type: "SET_BACK_NAVIGATION",
+        payload: { origin: null, scrollY: 0 },
+      });
+    }
+  }, []);
 
   return (
     <div

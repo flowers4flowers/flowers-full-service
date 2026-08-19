@@ -6,6 +6,7 @@ import Link from "next/link";
 import MediaItem from "../components/MediaItem";
 import { useState, useEffect, useRef } from "react";
 import { useAnalytics } from "../utility/useAnalytics";
+import { useAppState } from "../context";
 
 const ProjectContent = ({ data }) => {
   const {
@@ -20,6 +21,9 @@ const ProjectContent = ({ data }) => {
   } = data.result;
 
   const { trackButton } = useAnalytics();
+  const { state } = useAppState();
+
+  const backHref = state.backNavigation?.origin === "gallery" ? "/gallery" : "/";
 
   const [isFullDescriptionOpen, setIsFullDescriptionOpen] = useState(false);
   const [isScrolledFromTop, setIsScrolledFromTop] = useState(false);
@@ -70,7 +74,7 @@ const ProjectContent = ({ data }) => {
             isScrolledFromTop ? "fade-top" : ""
           } ${isScrolledFromBottom ? "fade-bottom" : ""}`}
         >
-          <Link href="/" className="uppercase font-primary text-md lg:text-lg block mt-8">
+          <Link href={backHref} className="uppercase font-primary text-md lg:text-lg block mt-8">
             &larr; Back
           </Link>
 

@@ -10,8 +10,6 @@ import { PlayButton } from "./Icons";
 import { useAnalytics } from "../utility/useAnalytics";
 
 const Video = React.forwardRef(({ block }, ref) => {
-  const { trackLink } = useAnalytics();
-
   if (block.videoMp4) {
     return (
       <video
@@ -48,6 +46,7 @@ Video.displayName = "Video";
 const VideoPlayer = ({ block, className }) => {
   const video = useRef(null);
   const [videoStarted, setVideoStarted] = useState(false);
+  const { trackVideo } = useAnalytics();
 
   const playVideo = () => {
     // Determine video type and track

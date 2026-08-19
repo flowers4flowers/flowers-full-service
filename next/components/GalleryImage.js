@@ -42,6 +42,11 @@ const GalleryImage = ({ item, classes, index }) => {
       type: "SET_HIDE_NAV",
       payload: true,
     });
+
+    dispatch({
+      type: "SET_BACK_NAVIGATION",
+      payload: { origin: "gallery", scrollY: document.body.scrollTop },
+    });
   };
 
   const handleVideoEnter = () => {
