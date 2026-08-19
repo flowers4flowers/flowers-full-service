@@ -1,11 +1,15 @@
 // next/app/projects/[slug]/page.js
 
+import { notFound } from "next/navigation";
 import { getProjectData } from "../../../styles/queries/projectQuery";
 import ProjectContent from "../../../components/ProjectContent";
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const data = await getProjectData(slug);
+  const data = await getProjectData(slug).catch(() => null);
+  if (!data?.result) {
+    return {};
+  }
   const { title, client, location, featuredImage } = data.result;
 
   return {
@@ -33,7 +37,11 @@ export async function generateMetadata({ params }) {
 export default async function Project({ params }) {
   const { slug } = params;
 
-  const data = await getProjectData(slug);
+  const data = await getProjectData(slug).catch(() => null);
+
+  if (!data?.result) {
+    notFound();
+  }
 
   return <ProjectContent data={data} />;
 }
