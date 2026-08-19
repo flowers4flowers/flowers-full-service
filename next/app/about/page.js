@@ -11,7 +11,7 @@ export default function About() {
       </h1>
 
       <div className="grid grid-cols-12 gap-8 lg:gap-20 items-center">
-        <div className="col-span-12 lg:col-span-5 lg:w-[500px] min-w-0 space-y-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
+        <div className="col-span-12 lg:col-span-5 lg:max-w-[500px] min-w-0 space-y-6 font-secondary font-normal text-[15px] leading-[19.5px] lg:text-[18px] lg:leading-[23.4px]">
           <p>
             At the root of FLOWERS is storytelling. We create projects that give
             brands the power to communicate exactly who they are. We make art
