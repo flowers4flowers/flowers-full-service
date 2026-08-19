@@ -11,6 +11,7 @@ const initialState = {
   hideNav: false,
   currentProjectCaptions: [],
   mobileMenuOpen: false,
+  backNavigation: { origin: null, scrollY: 0 },
 };
 
 function reducer(state, action) {
@@ -19,6 +20,11 @@ function reducer(state, action) {
       return {
         ...state,
         hideNav: action.payload,
+      };
+    case "SET_BACK_NAVIGATION":
+      return {
+        ...state,
+        backNavigation: action.payload,
       };
     case "SET_CURRENT_PROJECT_CAPTIONS":
       return {

@@ -7,12 +7,14 @@ import DefImage from "./DefImage";
 import { useState, useRef } from "react";
 import classNames from "classnames";
 import { useAnalytics } from "../utility/useAnalytics";
+import { useAppState } from "../context";
 
 const ProjectLink = ({ project, activeSlug, onHover }) => {
   const active = activeSlug === project.slug;
   const [xValue, setXValue] = useState(0);
   const linkRef = useRef(null);
   const { trackLink } = useAnalytics();
+  const { dispatch } = useAppState();
   let isLargeQuery = false;
 
   if (typeof window !== "undefined") {
@@ -39,6 +41,11 @@ const ProjectLink = ({ project, activeSlug, onHover }) => {
     trackLink(`Work List: ${project.title}`, `/projects/${project.slug}`, {
       project_slug: project.slug,
       project_title: project.title,
+    });
+
+    dispatch({
+      type: "SET_BACK_NAVIGATION",
+      payload: { origin: "home", scrollY: document.body.scrollTop },
     });
   };
 
