@@ -1,6 +1,6 @@
 // next/app/gallery/page.js
 
-import { getGalleryData } from "@/queries/galleryQuery";
+import { getGalleryData } from "../../queries/galleryQuery";
 import GalleryContent from "../../components/GalleryContent";
 
 export const metadata = {

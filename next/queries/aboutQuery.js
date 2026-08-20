@@ -1,5 +1,5 @@
 // next/queries/aboutQuery.js
-import { kirbyFetch } from "@/queries/kirbyFetch";
+import { kirbyFetch } from "./kirbyFetch";
 
 export async function getAboutData() {
   const aboutData = await kirbyFetch({

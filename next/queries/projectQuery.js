@@ -1,5 +1,5 @@
 // next/queries/projectQuery.js
-import { kirbyFetch } from "@/queries/kirbyFetch";
+import { kirbyFetch } from "./kirbyFetch";
 
 export async function getProjectData(slug) {
   return kirbyFetch({

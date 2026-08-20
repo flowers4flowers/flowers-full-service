@@ -1,6 +1,6 @@
 // next/app/page.js
 
-import { getAboutData } from "@/queries/aboutQuery";
+import { getAboutData } from "../queries/aboutQuery";
 import ProjectsList from "../components/ProjectsList";
 
 export const metadata = {

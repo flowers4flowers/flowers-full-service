@@ -1,5 +1,5 @@
 // next/queries/shopQuery.js
-import { kirbyFetch } from "@/queries/kirbyFetch";
+import { kirbyFetch } from "./kirbyFetch";
 
 export async function getShopData() {
   return kirbyFetch({
