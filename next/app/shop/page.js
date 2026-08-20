@@ -1,6 +1,6 @@
 // next/app/shop/page.js
 
-import { getShopData } from "@/queries/shopQuery";
+import { getShopData } from "../../queries/shopQuery";
 
 export const metadata = {
   alternates: {
