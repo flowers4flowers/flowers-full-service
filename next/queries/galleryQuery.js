@@ -1,5 +1,5 @@
 // next/queries/galleryQuery.js
-import { kirbyFetch } from "./kirbyFetch";
+import { kirbyFetch } from "@/queries/kirbyFetch";
 
 export async function getGalleryData() {
   return kirbyFetch({

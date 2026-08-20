@@ -1,7 +1,7 @@
 // next/app/projects/[slug]/page.js
 
 import { notFound } from "next/navigation";
-import { getProjectData } from "../../../styles/queries/projectQuery";
+import { getProjectData } from "@/queries/projectQuery";
 import ProjectContent from "../../../components/ProjectContent";
 
 export async function generateMetadata({ params }) {

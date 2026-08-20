@@ -1,5 +1,5 @@
 // next/queries/layoutQuery.js
-import { kirbyFetch } from "./kirbyFetch";
+import { kirbyFetch } from "@/queries/kirbyFetch";
 
 export async function getGlobalData() {
   return kirbyFetch({

@@ -1,4 +1,4 @@
-import { getAllProjectSlugs } from "../styles/queries/projectQuery";
+import { getAllProjectSlugs } from "@/queries/projectQuery";
 
 export default async function sitemap() {
   const staticRoutes = [
