@@ -12,7 +12,7 @@ import MobileMenu from "../components/MobileMenu";
 import Screensaver from "../components/Screensaver";
 import Footer from "../components/Footer";
 import Container from "../components/Container";
-import { getGlobalData } from "../styles/queries/layoutQuery";
+import { getGlobalData } from "../queries/layoutQuery";
 import AnalyticsPageTracker from "../components/AnalyticsPageTracker";
 
 export const metadata = {
