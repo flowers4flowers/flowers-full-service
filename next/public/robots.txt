@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /portal/
 Sitemap: https://www.flowersfullservice.art/sitemap.xml

@@ -1,0 +1,91 @@
+/*
+Deck
+*/
+
+.deck {
+  padding-bottom: 6rem;
+}
+
+.deck-header {
+  margin-bottom: 3rem;
+}
+
+.deck .rich-text {
+  font-family: 'ABC Monument Grotesk Unlicensed Trial', 'ABC Monument Grotesk', sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.deck-heading {
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.deck-text {
+  margin-top: 1.5rem;
+}
+
+.deck-section {
+  margin-top: 2rem;
+}
+
+/*
+Deck (Editorial)
+*/
+
+.deck-editorial {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.deck-editorial .deck-header,
+.deck-editorial .deck-intro,
+.deck-editorial .deck-heading,
+.deck-editorial .deck-text {
+  max-width: 680px;
+}
+
+/*
+Deck (Grid)
+*/
+
+.deck-grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.deck-grid .deck-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2vw;
+}
+
+@media (min-width: theme('screens.lg')) {
+  .deck-grid .deck-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/*
+Deck (Full bleed)
+*/
+
+.deck-full-bleed .deck-section .media-item {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.deck-full-bleed .deck-header,
+.deck-full-bleed .deck-intro,
+.deck-full-bleed .deck-heading,
+.deck-full-bleed .deck-text {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
