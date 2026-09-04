@@ -26,7 +26,7 @@ export async function getDeckForRender(token) {
       title: true,
       client: "page.client.value",
       parentSlug: "page.parent.slug",
-      layout: "page.layout.value",
+      intro: "page.intro.kirbytext",
       expiry: "page.expiry.toDate('Y-m-d')",
     },
   });
@@ -40,7 +40,7 @@ export async function getDeckForRender(token) {
   return {
     title: result.title || "",
     client: result.client || "",
-    layout: result.layout || "editorial",
+    intro: result.intro || "",
     expiry: result.expiry || null,
   };
 }
@@ -73,49 +73,45 @@ export async function getDeckSecret(token) {
   };
 }
 
-export async function getDeckContent(token) {
+export async function getDeckPages(token) {
   const id = sanitizeToken(token);
 
   if (!id) {
-    return { intro: "", blocks: [] };
+    return [];
   }
 
   const data = await kirbyFetch({
     query: `site.page("page://${id}")`,
     select: {
-      intro: "page.intro.kirbytext",
-      body: {
-        query: "page.body.toBlocks",
+      pages: {
+        query: "page.children.listed",
         select: {
-          type: true,
-          html: "block.text.kirbytext",
-          text: "block.text",
-          level: "block.level",
-          slug: true,
-          media: {
-            query: "block.media.toBlocks",
+          layout: "page.layout.value",
+          visual: {
+            query: "page.visual.toFile",
             select: {
-              vimeoUrl: "block.vimeo_url",
-              caption: "block.caption",
-              videoMp4: {
-                query: "block.video_mp4.toFile",
-                select: {
-                  url: true,
-                  mime: true,
-                  type: true,
-                },
-              },
-              media: {
-                query: "block.media.toFile",
-                select: {
-                  url: true,
-                  width: true,
-                  height: true,
-                  alt: true,
-                  mime: true,
-                  type: true,
-                },
-              },
+              url: true,
+              width: true,
+              height: true,
+              alt: true,
+            },
+          },
+          videoMp4: {
+            query: "page.video_mp4.toFile",
+            select: {
+              url: true,
+              mime: true,
+              type: true,
+            },
+          },
+          vimeoUrl: "page.vimeo_url",
+          body: {
+            query: "page.body.toBlocks",
+            select: {
+              type: true,
+              html: "block.text.kirbytext",
+              text: "block.text",
+              level: "block.level",
             },
           },
         },
@@ -123,10 +119,20 @@ export async function getDeckContent(token) {
     },
   });
 
-  const result = data?.result || {};
+  const rawPages = data?.result?.pages;
 
-  return {
-    intro: result.intro || "",
-    blocks: Array.isArray(result.body) ? result.body : [],
-  };
+  if (!Array.isArray(rawPages)) {
+    return [];
+  }
+
+  return rawPages.map((entry) => ({
+    layout: entry.layout || "full-text",
+    media: {
+      media: entry.visual || null,
+      videoMp4: entry.videoMp4 || null,
+      vimeoUrl: entry.vimeoUrl || "",
+      caption: "",
+    },
+    blocks: Array.isArray(entry.body) ? entry.body : [],
+  }));
 }

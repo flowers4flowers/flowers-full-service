@@ -1,91 +1,171 @@
 /*
-Deck
+Deck (variables)
 */
 
-.deck {
-  padding-bottom: 6rem;
+:root {
+  --deck-header-h: 80px;
 }
 
-.deck-header {
-  margin-bottom: 3rem;
+/*
+Deck (nav)
+*/
+
+.deck-nav {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--deck-header-h));
 }
 
-.deck .rich-text {
-  font-family: 'ABC Monument Grotesk Unlicensed Trial', 'ABC Monument Grotesk', sans-serif;
+.deck-nav__slide {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.deck-nav__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.deck-nav__btn {
+  @apply font-primary;
+  font-size: 24px;
+  line-height: 1;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deck-nav__btn[aria-disabled="true"] {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.deck-nav__counter {
+  @apply font-secondary;
+  font-size: 12px;
+}
+
+/*
+Deck (cover)
+*/
+
+.deck-cover {
+  margin: auto;
+  max-width: 680px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.deck-cover__intro {
   font-size: 18px;
   line-height: 1.4;
 }
 
-.deck-heading {
-  margin-top: 3rem;
-  margin-bottom: 1rem;
+/*
+Deck (page)
+*/
+
+.deck-page {
+  flex: 1;
+  display: flex;
+  width: 100%;
 }
 
-.deck-text {
+.deck-page__text-col {
+  align-self: center;
+  width: 100%;
+}
+
+.deck-page__text {
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.deck-page__heading + .deck-page__heading,
+.deck-page__heading + .deck-page__text,
+.deck-page__text + .deck-page__heading,
+.deck-page__text + .deck-page__text {
   margin-top: 1.5rem;
 }
 
-.deck-section {
-  margin-top: 2rem;
-}
-
 /*
-Deck (Editorial)
+Deck (page: full image)
 */
 
-.deck-editorial {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+.deck-page--full-image {
+  align-items: center;
+  justify-content: center;
 }
 
-.deck-editorial .deck-header,
-.deck-editorial .deck-intro,
-.deck-editorial .deck-heading,
-.deck-editorial .deck-text {
-  max-width: 680px;
-}
-
-/*
-Deck (Grid)
-*/
-
-.deck-grid {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-.deck-grid .deck-section {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2vw;
-}
-
-@media (min-width: theme('screens.lg')) {
-  .deck-grid .deck-section {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/*
-Deck (Full bleed)
-*/
-
-.deck-full-bleed .deck-section .media-item {
+.deck-page--full-image .deck-page__media-col,
+.deck-page--full-image .media-item {
   width: 100%;
   margin-bottom: 0;
 }
 
-.deck-full-bleed .deck-header,
-.deck-full-bleed .deck-intro,
-.deck-full-bleed .deck-heading,
-.deck-full-bleed .deck-text {
+.deck-page--full-image .media-item img,
+.deck-page--full-image .media-item video {
+  max-height: calc(100vh - var(--deck-header-h) - 6rem);
+  width: 100%;
+  object-fit: contain;
+}
+
+/*
+Deck (page: full text)
+*/
+
+.deck-page--full-text {
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.deck-page--full-text .deck-page__text-col {
   max-width: 680px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+}
+
+/*
+Deck (page: split)
+*/
+
+.deck-page--left-image,
+.deck-page--right-image {
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.deck-page--left-image .media-item,
+.deck-page--right-image .media-item {
+  margin-bottom: 0;
+}
+
+@media (min-width: theme('screens.lg')) {
+  .deck-page--left-image,
+  .deck-page--right-image {
+    flex-direction: row;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  .deck-page--left-image .deck-page__media-col,
+  .deck-page--right-image .deck-page__media-col,
+  .deck-page--left-image .deck-page__text-col,
+  .deck-page--right-image .deck-page__text-col {
+    width: 50%;
+  }
+
+  .deck-page--right-image .deck-page__media-col {
+    order: 2;
+  }
+
+  .deck-page--right-image .deck-page__text-col {
+    order: 1;
+  }
 }

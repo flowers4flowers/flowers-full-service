@@ -1,17 +1,11 @@
 // next/app/(portal)/portal/[token]/page.js
 
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import {
-  getDeckForRender,
-  getDeckContent,
-} from "../../../../queries/deckQuery";
-import {
-  DECK_SESSION_COOKIE,
-  verifyDeckToken,
-} from "../../../../utility/deckSession";
+import { getDeckPages } from "../../../../queries/deckQuery";
+import { resolveDeckAccess } from "../../../../utility/deckAccess";
 import PasswordGate from "./PasswordGate";
-import DeckContent from "../../../../components/DeckContent";
+import DeckNav from "../../../../components/DeckNav";
+import DeckCover from "../../../../components/DeckCover";
 
 export const dynamic = "force-dynamic";
 
@@ -26,15 +20,13 @@ export function generateMetadata() {
 }
 
 export default async function Page({ params }) {
-  const meta = await getDeckForRender(params.token);
+  const { status, meta } = await resolveDeckAccess(params.token);
 
-  if (!meta) {
+  if (status === "notfound") {
     notFound();
   }
 
-  const expired = meta.expiry && new Date(meta.expiry) < new Date();
-
-  if (expired) {
+  if (status === "expired") {
     return (
       <div className="px-6 max-w-[420px] mx-auto pt-24">
         <p className="font-secondary text-md">This link has expired.</p>
@@ -42,23 +34,16 @@ export default async function Page({ params }) {
     );
   }
 
-  const cookieValue = cookies().get(DECK_SESSION_COOKIE)?.value;
-  const payload = cookieValue ? await verifyDeckToken(cookieValue) : null;
-  const unlocked = payload?.deckId === params.token;
-
-  if (!unlocked) {
+  if (status === "locked") {
     return <PasswordGate token={params.token} deckTitle={meta.title} />;
   }
 
-  const { intro, blocks } = await getDeckContent(params.token);
+  const pages = await getDeckPages(params.token);
+  const nextHref = pages.length > 0 ? `/portal/${params.token}/1` : null;
 
   return (
-    <DeckContent
-      layout={meta.layout || "editorial"}
-      blocks={blocks}
-      intro={intro}
-      title={meta.title}
-      client={meta.client}
-    />
+    <DeckNav prevHref={null} nextHref={nextHref} counter={null}>
+      <DeckCover title={meta.title} client={meta.client} intro={meta.intro} />
+    </DeckNav>
   );
 }
