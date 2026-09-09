@@ -27,12 +27,12 @@ const renderBlocks = (blocks) =>
     return null;
   });
 
-const MediaColumn = ({ media }) => {
+const MediaColumn = ({ media, sizes }) => {
   const hasMedia = media && (media.media || media.videoMp4 || media.vimeoUrl);
 
   return (
     <div className="deck-page__media-col">
-      {hasMedia && <MediaItem media={media} />}
+      {hasMedia && <MediaItem media={media} priority sizes={sizes} />}
     </div>
   );
 };
@@ -41,7 +41,7 @@ const DeckPage = ({ layout, media, blocks }) => {
   if (layout === "full-image") {
     return (
       <div className="deck-page deck-page--full-image">
-        <MediaColumn media={media} />
+        <MediaColumn media={media} sizes="100vw" />
       </div>
     );
   }
@@ -49,7 +49,7 @@ const DeckPage = ({ layout, media, blocks }) => {
   if (layout === "left-image" || layout === "right-image") {
     return (
       <div className={`deck-page deck-page--${layout}`}>
-        <MediaColumn media={media} />
+        <MediaColumn media={media} sizes="(min-width: 1024px) 50vw, 100vw" />
 
         <div className="deck-page__text-col">{renderBlocks(blocks)}</div>
       </div>

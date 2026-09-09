@@ -90,10 +90,15 @@ export async function getDeckPages(token) {
           visual: {
             query: "page.visual.toFile",
             select: {
-              url: true,
-              width: true,
-              height: true,
               alt: true,
+              resized: {
+                query: "file.resize(2400)",
+                select: {
+                  url: true,
+                  width: true,
+                  height: true,
+                },
+              },
             },
           },
           videoMp4: {
@@ -128,7 +133,9 @@ export async function getDeckPages(token) {
   return rawPages.map((entry) => ({
     layout: entry.layout || "full-text",
     media: {
-      media: entry.visual || null,
+      media: entry.visual?.resized
+        ? { ...entry.visual.resized, alt: entry.visual.alt || "" }
+        : null,
       videoMp4: entry.videoMp4 || null,
       vimeoUrl: entry.vimeoUrl || "",
       caption: "",
