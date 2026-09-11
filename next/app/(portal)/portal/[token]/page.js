@@ -1,11 +1,9 @@
 // next/app/(portal)/portal/[token]/page.js
 
 import { notFound } from "next/navigation";
-import { getDeckPages } from "../../../../queries/deckQuery";
 import { resolveDeckAccess } from "../../../../utility/deckAccess";
 import PasswordGate from "./PasswordGate";
-import DeckNav from "../../../../components/DeckNav";
-import DeckCover from "../../../../components/DeckCover";
+import DeckEmbed from "../../../../components/DeckEmbed";
 
 export const dynamic = "force-dynamic";
 
@@ -38,12 +36,13 @@ export default async function Page({ params }) {
     return <PasswordGate token={params.token} deckTitle={meta.title} />;
   }
 
-  const pages = await getDeckPages(params.token);
-  const nextHref = pages.length > 0 ? `/portal/${params.token}/1` : null;
+  if (!meta.figmaUrl) {
+    return (
+      <div className="px-6 max-w-[420px] mx-auto pt-24">
+        <p className="font-secondary text-md">This deck is not ready yet.</p>
+      </div>
+    );
+  }
 
-  return (
-    <DeckNav prevHref={null} nextHref={nextHref} counter={null}>
-      <DeckCover title={meta.title} client={meta.client} intro={meta.intro} />
-    </DeckNav>
-  );
+  return <DeckEmbed figmaUrl={meta.figmaUrl} />;
 }
