@@ -5,14 +5,6 @@ import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { AppWrapper } from "../context";
 import { ThemeProvider } from "../context/ThemeContext";
-import MainNav from "../components/MainNav";
-import MobileNav from "../components/MobileNav";
-import HomeLink from "../components/HomeLink";
-import MobileMenu from "../components/MobileMenu";
-import Screensaver from "../components/Screensaver";
-import Footer from "../components/Footer";
-import Container from "../components/Container";
-import { getGlobalData } from "../queries/layoutQuery";
 import AnalyticsPageTracker from "../components/AnalyticsPageTracker";
 
 export const metadata = {
@@ -50,11 +42,7 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({ children }) {
-  const data = await getGlobalData();
-
-  const { socialLinks, screensaverImages } = data.result;
-
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
@@ -238,21 +226,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             />
           </noscript>
 
-          <MainNav socialLinks={socialLinks} />
-
-          <MobileNav />
-
-          <HomeLink />
-
-          <main><Container>{children}</Container></main>
-
-          <Footer />
-
-          <MobileMenu socialLinks={socialLinks} />
-
-          {screensaverImages.length > 0 && (
-            <Screensaver images={screensaverImages} />
-          )}
+          {children}
         </body>
       </AppWrapper>
       </ThemeProvider>

@@ -4,7 +4,7 @@
 
 import Image from "next/image";
 
-const DefImage = ({ src, alt, style, width, height, className }) => {
+const DefImage = ({ src, alt, style, width, height, className, priority, sizes }) => {
   return (
     <Image
       src={src}
@@ -13,6 +13,8 @@ const DefImage = ({ src, alt, style, width, height, className }) => {
       className={`def-image ${className}`}
       width={width}
       height={height}
+      priority={priority}
+      sizes={sizes}
     />
   );
 };

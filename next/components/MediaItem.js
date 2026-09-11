@@ -3,7 +3,7 @@
 import DefImage from "./DefImage";
 import VideoPlayer from "./VideoPlayer";
 
-const MediaItem = ({ media }) => {
+const MediaItem = ({ media, priority, sizes }) => {
   if (media.videoMp4 || media.vimeoUrl) {
     return <VideoPlayer block={media} className="media-item" />;
   }
@@ -16,6 +16,8 @@ const MediaItem = ({ media }) => {
         width={media.media.width}
         height={media.media.height}
         className="w-full h-auto"
+        priority={priority}
+        sizes={sizes}
       />
 
       {media.caption && (

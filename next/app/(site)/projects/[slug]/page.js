@@ -1,8 +1,8 @@
 // next/app/projects/[slug]/page.js
 
 import { notFound } from "next/navigation";
-import { getProjectData } from "../../../queries/projectQuery";
-import ProjectContent from "../../../components/ProjectContent";
+import { getProjectData } from "../../../../queries/projectQuery";
+import ProjectContent from "../../../../components/ProjectContent";
 
 export async function generateMetadata({ params }) {
   const { slug } = params;

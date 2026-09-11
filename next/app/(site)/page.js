@@ -1,7 +1,7 @@
 // next/app/page.js
 
-import { getAboutData } from "../queries/aboutQuery";
-import ProjectsList from "../components/ProjectsList";
+import { getAboutData } from "../../queries/aboutQuery";
+import ProjectsList from "../../components/ProjectsList";
 
 export const metadata = {
   alternates: {

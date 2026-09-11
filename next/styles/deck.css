@@ -1,0 +1,54 @@
+/*
+Deck (variables)
+*/
+
+:root {
+  --deck-header-h: 80px;
+}
+
+/*
+Deck (embed)
+*/
+
+.deck-embed {
+  position: relative;
+  height: calc(100vh - var(--deck-header-h));
+}
+
+.deck-embed__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.deck-embed__loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s;
+}
+
+.deck-embed__loader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/*
+Deck (download)
+*/
+
+.deck-download {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: var(--deck-header-h);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  z-index: 10;
+}
