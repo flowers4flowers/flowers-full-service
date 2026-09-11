@@ -46,7 +46,8 @@ export async function POST(request, { params }) {
     );
 
     return res;
-  } catch {
+  } catch (error) {
+    console.error("Deck unlock failed:", error);
     return NextResponse.json({ error: "server" }, { status: 500 });
   }
 }
