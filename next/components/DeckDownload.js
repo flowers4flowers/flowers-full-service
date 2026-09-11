@@ -9,7 +9,7 @@ const DeckDownload = ({ token, pdfUrl, title }) => {
       download={sanitiseFilename(title)}
       className="deck-download"
     >
-      <span className="uppercase font-primary font-bold text-md">
+      <span className="uppercase font-primary font-bold text-md hidden">
         Download PDF
       </span>
     </a>
