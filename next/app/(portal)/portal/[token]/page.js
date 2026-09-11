@@ -38,7 +38,7 @@ export default async function Page({ params }) {
   }
 
   const download = meta.pdfUrl ? (
-    <DeckDownload pdfUrl={meta.pdfUrl} title={meta.title} />
+    <DeckDownload token={params.token} pdfUrl={meta.pdfUrl} title={meta.title} />
   ) : null;
 
   if (!meta.figmaUrl) {

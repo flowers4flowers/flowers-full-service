@@ -1,14 +1,14 @@
 // next/components/DeckDownload.js
 
-function sanitiseFilename(title) {
-  const cleaned = (title || "").trim().replace(/[\\/:*?"<>|]/g, "-");
+import { sanitiseFilename } from "../utility/filename";
 
-  return `${cleaned || "Deck"}.pdf`;
-}
-
-const DeckDownload = ({ pdfUrl, title }) => {
+const DeckDownload = ({ token, pdfUrl, title }) => {
   return (
-    <a href={pdfUrl} download={sanitiseFilename(title)} className="deck-download">
+    <a
+      href={`/portal/${token}/pdf`}
+      download={sanitiseFilename(title)}
+      className="deck-download"
+    >
       <span className="uppercase font-primary font-bold text-md">
         Download PDF
       </span>
