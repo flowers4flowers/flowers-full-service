@@ -37,3 +37,18 @@ Deck (embed)
   opacity: 0;
   pointer-events: none;
 }
+
+/*
+Deck (download)
+*/
+
+.deck-download {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: var(--deck-header-h);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  z-index: 10;
+}
