@@ -4,6 +4,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const ERROR_MESSAGES = {
   incorrect: "Incorrect password.",
@@ -57,6 +58,14 @@ export default function PasswordGate({ token, deckTitle }) {
 
   return (
     <div className="px-6 max-w-[420px] mx-auto pt-24">
+      <Image
+        src="/FLOWERS.png"
+        alt="FLOWERS"
+        width={50}
+        height={40}
+        className="dark:invert mb-8"
+      />
+
       {deckTitle && (
         <h1 className="font-primary text-xl mb-8">{deckTitle}</h1>
       )}

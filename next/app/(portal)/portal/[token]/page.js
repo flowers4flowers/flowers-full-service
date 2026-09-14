@@ -1,10 +1,15 @@
 // next/app/(portal)/portal/[token]/page.js
 
 import { notFound } from "next/navigation";
+import nextDynamic from "next/dynamic";
 import { resolveDeckAccess } from "../../../../utility/deckAccess";
 import PasswordGate from "./PasswordGate";
 import DeckEmbed from "../../../../components/DeckEmbed";
-import DeckDownload from "../../../../components/DeckDownload";
+
+const DeckPdfViewer = nextDynamic(
+  () => import("../../../../components/DeckPdfViewer"),
+  { ssr: false }
+);
 
 export const dynamic = "force-dynamic";
 
@@ -37,25 +42,17 @@ export default async function Page({ params }) {
     return <PasswordGate token={params.token} deckTitle={meta.title} />;
   }
 
-  const download = meta.pdfUrl ? (
-    <DeckDownload token={params.token} pdfUrl={meta.pdfUrl} title={meta.title} />
-  ) : null;
+  if (meta.contentType === "figma" && meta.figmaUrl) {
+    return <DeckEmbed figmaUrl={meta.figmaUrl} />;
+  }
 
-  if (!meta.figmaUrl) {
-    return (
-      <>
-        {download}
-        <div className="px-6 max-w-[420px] mx-auto pt-24">
-          <p className="font-secondary text-md">This deck is not ready yet.</p>
-        </div>
-      </>
-    );
+  if (meta.contentType === "pdf" && meta.pdfUrl) {
+    return <DeckPdfViewer pdfUrl={`/portal/${params.token}/pdf-file`} />;
   }
 
   return (
-    <>
-      {download}
-      <DeckEmbed figmaUrl={meta.figmaUrl} />
-    </>
+    <div className="px-6 max-w-[420px] mx-auto pt-24">
+      <p className="font-secondary text-md">This deck is not ready yet.</p>
+    </div>
   );
 }

@@ -29,7 +29,13 @@ export async function getDeckForRender(token) {
       intro: "page.intro.kirbytext",
       expiry: "page.expiry.toDate('Y-m-d')",
       figmaUrl: "page.figma_url.value",
-      pdfUrl: "page.pdf_url.value",
+      contentType: "page.content_type.value",
+      pdf: {
+        query: "page.pdf_file.toFile",
+        select: {
+          url: true,
+        },
+      },
     },
   });
 
@@ -45,7 +51,8 @@ export async function getDeckForRender(token) {
     intro: result.intro || "",
     expiry: result.expiry || null,
     figmaUrl: result.figmaUrl || "",
-    pdfUrl: result.pdfUrl || "",
+    contentType: result.contentType || "",
+    pdfUrl: result.pdf?.url || "",
   };
 }
 
