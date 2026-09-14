@@ -112,6 +112,7 @@ const DeckPdfViewer = ({ pdfUrl }) => {
           currentPage={currentPage}
           onNavigate={setCurrentPage}
           onClose={() => setMenuOpen(false)}
+          pdf={pdfProxy}
         />
       )}
     </div>

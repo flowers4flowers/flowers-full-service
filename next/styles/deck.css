@@ -116,21 +116,34 @@ Deck (pdf menu)
   position: fixed;
   inset: 0;
   z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.deck-pdf-menu-backdrop--open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .deck-pdf-menu {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
   z-index: 20;
-  width: min(20rem, 80vw);
-  max-height: 70vh;
+  width: min(20rem, 85vw);
   padding: 2rem 1.5rem;
   background-color: #000000;
   color: #ffffff;
   overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.deck-pdf-menu--open {
+  transform: translateX(0);
 }
 
 .deck-pdf-menu__close {
@@ -157,18 +170,18 @@ Deck (pdf menu)
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.5rem;
+  gap: 1rem;
   margin-top: 2rem;
   list-style: none;
 }
 
 .deck-pdf-menu__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
   width: 100%;
   padding: 0.5rem 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: center;
   color: #ffffff;
   font-family: theme('fontFamily.secondary');
   font-size: theme('fontSize.md');
@@ -181,4 +194,23 @@ Deck (pdf menu)
 
 .deck-pdf-menu__item--active {
   font-weight: bold;
+}
+
+.deck-pdf-menu__item--active .deck-pdf-menu__thumb-placeholder,
+.deck-pdf-menu__item--active .react-pdf__Thumbnail {
+  outline: 2px solid #ffffff;
+}
+
+.deck-pdf-menu__thumb-placeholder {
+  width: 96px;
+  aspect-ratio: 16 / 9;
+  background-color: #333333;
+}
+
+.deck-pdf-menu__item .react-pdf__Thumbnail {
+  cursor: pointer;
+}
+
+.deck-pdf-menu__item .react-pdf__Thumbnail canvas {
+  display: block;
 }
