@@ -2,6 +2,8 @@
 
 "use client";
 
+import { LeftArrow, RightArrow } from "./Icons";
+
 const DeckPdfNav = ({ currentPage, numPages, onNavigate }) => {
   return (
     <div className="deck-pdf-nav">
@@ -11,7 +13,7 @@ const DeckPdfNav = ({ currentPage, numPages, onNavigate }) => {
         disabled={currentPage <= 1}
         onClick={() => onNavigate(currentPage - 1)}
       >
-        ‹
+        <LeftArrow color="currentColor" />
       </button>
 
       <span className="deck-pdf-nav__counter font-secondary text-md">
@@ -24,7 +26,7 @@ const DeckPdfNav = ({ currentPage, numPages, onNavigate }) => {
         disabled={currentPage >= numPages}
         onClick={() => onNavigate(currentPage + 1)}
       >
-        ›
+        <RightArrow color="currentColor" />
       </button>
     </div>
   );

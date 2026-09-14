@@ -17,6 +17,7 @@ const DeckPdfViewer = ({ pdfUrl }) => {
       <Document
         file={pdfUrl}
         onLoadSuccess={({ numPages }) => setNumPages(numPages)}
+        onLoadError={(error) => console.error("PDF load failed:", error)}
         loading={<p className="font-secondary text-md">Loading deck…</p>}
       >
         {numPages && <Page pageNumber={currentPage} width={800} />}

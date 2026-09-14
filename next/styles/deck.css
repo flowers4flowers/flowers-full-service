@@ -53,8 +53,10 @@ Deck (pdf nav)
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.5rem;
   padding: 1rem;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 .deck-pdf-nav__prev,
@@ -62,6 +64,20 @@ Deck (pdf nav)
   background: none;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s;
+}
+
+.deck-pdf-nav__prev svg,
+.deck-pdf-nav__next svg {
+  width: 1.4rem;
+  height: auto;
+}
+
+.deck-pdf-nav__prev:hover:not(:disabled),
+.deck-pdf-nav__next:hover:not(:disabled) {
+  opacity: 0.5;
 }
 
 .deck-pdf-nav__prev:disabled,
