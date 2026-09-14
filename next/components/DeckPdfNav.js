@@ -2,11 +2,12 @@
 
 "use client";
 
+import { forwardRef } from "react";
 import { LeftArrow, RightArrow } from "./Icons";
 
-const DeckPdfNav = ({ currentPage, numPages, onNavigate }) => {
+const DeckPdfNav = forwardRef(({ currentPage, numPages, onNavigate }, ref) => {
   return (
-    <div className="deck-pdf-nav">
+    <div className="deck-pdf-nav" ref={ref}>
       <button
         type="button"
         className="deck-pdf-nav__prev"
@@ -30,6 +31,6 @@ const DeckPdfNav = ({ currentPage, numPages, onNavigate }) => {
       </button>
     </div>
   );
-};
+});
 
 export default DeckPdfNav;
