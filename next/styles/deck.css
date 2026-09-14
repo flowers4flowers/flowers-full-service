@@ -1,18 +1,10 @@
 /*
-Deck (variables)
-*/
-
-:root {
-  --deck-header-h: 80px;
-}
-
-/*
 Deck (embed)
 */
 
 .deck-embed {
   position: relative;
-  height: calc(100vh - var(--deck-header-h));
+  height: 100vh;
 }
 
 .deck-embed__frame {
@@ -39,16 +31,41 @@ Deck (embed)
 }
 
 /*
-Deck (download)
+Deck (pdf viewer)
 */
 
-.deck-download {
+.deck-pdf-viewer {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  padding-bottom: 5rem;
+}
+
+/*
+Deck (pdf nav)
+*/
+
+.deck-pdf-nav {
   position: fixed;
-  top: 0;
+  left: 0;
   right: 0;
-  height: var(--deck-header-h);
+  bottom: 0;
   display: flex;
   align-items: center;
-  padding: 0 1.5rem;
-  z-index: 10;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.deck-pdf-nav__prev,
+.deck-pdf-nav__next {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.deck-pdf-nav__prev:disabled,
+.deck-pdf-nav__next:disabled {
+  opacity: 0.3;
+  cursor: default;
 }
