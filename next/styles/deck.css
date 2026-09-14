@@ -89,3 +89,96 @@ Deck (pdf nav)
   opacity: 0.3;
   cursor: default;
 }
+
+.deck-pdf-nav__menu-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s;
+}
+
+.deck-pdf-nav__menu-toggle svg {
+  width: 1.4rem;
+  height: auto;
+}
+
+.deck-pdf-nav__menu-toggle:hover {
+  opacity: 0.5;
+}
+
+/*
+Deck (pdf menu)
+*/
+
+.deck-pdf-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.deck-pdf-menu {
+  position: relative;
+  z-index: 20;
+  width: min(20rem, 80vw);
+  max-height: 70vh;
+  padding: 2rem 1.5rem;
+  background-color: #000000;
+  color: #ffffff;
+  overflow-y: auto;
+}
+
+.deck-pdf-menu__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ffffff;
+  transition: opacity 0.3s;
+}
+
+.deck-pdf-menu__close svg {
+  width: 1.4rem;
+  height: auto;
+}
+
+.deck-pdf-menu__close:hover {
+  opacity: 0.5;
+}
+
+.deck-pdf-menu__list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  list-style: none;
+}
+
+.deck-pdf-menu__item {
+  width: 100%;
+  padding: 0.5rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  color: #ffffff;
+  font-family: theme('fontFamily.secondary');
+  font-size: theme('fontSize.md');
+  transition: opacity 0.3s;
+}
+
+.deck-pdf-menu__item:hover {
+  opacity: 0.5;
+}
+
+.deck-pdf-menu__item--active {
+  font-weight: bold;
+}

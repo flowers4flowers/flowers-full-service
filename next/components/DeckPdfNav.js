@@ -3,11 +3,22 @@
 "use client";
 
 import { forwardRef } from "react";
-import { LeftArrow, RightArrow } from "./Icons";
+import { HamburgerIcon, LeftArrow, RightArrow } from "./Icons";
 
-const DeckPdfNav = forwardRef(({ currentPage, numPages, onNavigate }, ref) => {
+const DeckPdfNav = forwardRef(function DeckPdfNav(
+  { currentPage, numPages, onNavigate, onToggleMenu },
+  ref,
+) {
   return (
     <div className="deck-pdf-nav" ref={ref}>
+      <button
+        type="button"
+        className="deck-pdf-nav__menu-toggle"
+        onClick={onToggleMenu}
+      >
+        <HamburgerIcon color="currentColor" />
+      </button>
+
       <button
         type="button"
         className="deck-pdf-nav__prev"

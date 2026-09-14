@@ -7,6 +7,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import DeckPdfNav from "./DeckPdfNav";
+import DeckPdfMenu from "./DeckPdfMenu";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
@@ -28,6 +29,7 @@ const DeckPdfViewer = ({ pdfUrl }) => {
   const [viewportSize, setViewportSize] = useState(getViewportSize);
   const [navHeight, setNavHeight] = useState(0);
   const [pageAspectRatio, setPageAspectRatio] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -99,6 +101,17 @@ const DeckPdfViewer = ({ pdfUrl }) => {
           currentPage={currentPage}
           numPages={numPages}
           onNavigate={setCurrentPage}
+          onToggleMenu={() => setMenuOpen((open) => !open)}
+        />
+      )}
+
+      {numPages && (
+        <DeckPdfMenu
+          isOpen={menuOpen}
+          numPages={numPages}
+          currentPage={currentPage}
+          onNavigate={setCurrentPage}
+          onClose={() => setMenuOpen(false)}
         />
       )}
     </div>
