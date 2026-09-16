@@ -14,7 +14,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pd
 
 const DOCUMENT_OPTIONS = {
   disableAutoFetch: true,
-  disableStream: true,
+  disableStream: false,
   disableRange: true,
 };
 
@@ -32,6 +32,7 @@ const DeckPdfViewer = ({ pdfUrl }) => {
   const [pageAspectRatio, setPageAspectRatio] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [loadProgress, setLoadProgress] = useState(null);
+  const [visitedPages, setVisitedPages] = useState(() => new Set([1]));
   const navRef = useRef(null);
 
   useEffect(() => {
@@ -53,6 +54,15 @@ const DeckPdfViewer = ({ pdfUrl }) => {
   }, [numPages]);
 
   useDeckKeyboardNav({ currentPage, numPages, onNavigate: setCurrentPage });
+
+  useEffect(() => {
+    setVisitedPages((prev) => {
+      if (prev.has(currentPage)) {
+        return prev;
+      }
+      return new Set(prev).add(currentPage);
+    });
+  }, [currentPage]);
 
   const availableHeight = Math.max(viewportSize.height - navHeight, 0);
   const fitWidth = pageAspectRatio
@@ -90,18 +100,28 @@ const DeckPdfViewer = ({ pdfUrl }) => {
           );
         })()}
       >
-        {numPages && (
-          <Page
-            pageNumber={currentPage}
-            width={fitWidth}
-            onLoadSuccess={(page) => {
-              if (pageAspectRatio === null) {
-                setPageAspectRatio(page.originalWidth / page.originalHeight);
+        {numPages &&
+          Array.from(visitedPages).map((pageNumber) => (
+            <div
+              key={pageNumber}
+              className={
+                pageNumber === currentPage
+                  ? "deck-pdf-viewer__page deck-pdf-viewer__page--active"
+                  : "deck-pdf-viewer__page"
               }
-            }}
-            loading={<p className="font-secondary text-md">Loading page…</p>}
-          />
-        )}
+            >
+              <Page
+                pageNumber={pageNumber}
+                width={fitWidth}
+                onLoadSuccess={(page) => {
+                  if (pageAspectRatio === null) {
+                    setPageAspectRatio(page.originalWidth / page.originalHeight);
+                  }
+                }}
+                loading={<p className="font-secondary text-md">Loading page…</p>}
+              />
+            </div>
+          ))}
       </Document>
 
       {numPages && (

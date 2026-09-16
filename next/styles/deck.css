@@ -72,6 +72,14 @@ Deck (pdf viewer)
   color: #ffffff;
 }
 
+.deck-pdf-viewer__page {
+  display: none;
+}
+
+.deck-pdf-viewer__page--active {
+  display: block;
+}
+
 /*
 Deck (pdf nav)
 */
