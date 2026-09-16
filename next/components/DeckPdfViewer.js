@@ -13,9 +13,9 @@ import useDeckKeyboardNav from "./useDeckKeyboardNav";
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
 const DOCUMENT_OPTIONS = {
-  rangeChunkSize: 1024 * 1024,
   disableAutoFetch: true,
-  disableStream: false,
+  disableStream: true,
+  disableRange: true,
 };
 
 const getViewportSize = () =>
@@ -31,21 +31,8 @@ const DeckPdfViewer = ({ pdfUrl }) => {
   const [navHeight, setNavHeight] = useState(0);
   const [pageAspectRatio, setPageAspectRatio] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(null);
   const navRef = useRef(null);
-
-  useEffect(() => {
-    if (!pdfProxy) {
-      return;
-    }
-
-    if (currentPage + 1 <= numPages) {
-      pdfProxy.getPage(currentPage + 1);
-    }
-
-    if (currentPage - 1 >= 1) {
-      pdfProxy.getPage(currentPage - 1);
-    }
-  }, [pdfProxy, currentPage, numPages]);
 
   useEffect(() => {
     const measureNavHeight = () => {
@@ -82,7 +69,26 @@ const DeckPdfViewer = ({ pdfUrl }) => {
           setNumPages(pdf.numPages);
         }}
         onLoadError={(error) => console.error("PDF load failed:", error)}
-        loading={<p className="font-secondary text-md">Loading deck…</p>}
+        onLoadProgress={({ loaded, total }) => setLoadProgress({ loaded, total })}
+        loading={(() => {
+          const loaded = loadProgress?.loaded ?? 0;
+          const total = loadProgress?.total ?? 0;
+          const percentage = total ? Math.round((loaded / total) * 100) : 0;
+
+          return (
+            <div className="deck-pdf-viewer__progress">
+              <div className="deck-pdf-viewer__progress-track">
+                <div
+                  className="deck-pdf-viewer__progress-bar"
+                  style={{ width: `${percentage}%` }}
+                />
+              </div>
+              <p className="deck-pdf-viewer__progress-label font-secondary text-md">
+                Loading deck… {percentage}%
+              </p>
+            </div>
+          );
+        })()}
       >
         {numPages && (
           <Page
