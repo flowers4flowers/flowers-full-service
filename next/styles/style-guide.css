@@ -66,6 +66,11 @@ body {
   flex-direction: column;
 }
 
+.portal-shell--dark {
+  background-color: #000000;
+  color: #ffffff;
+}
+
 main {
   flex: 1;
   padding-bottom: var(--nav-height);

@@ -10,6 +10,12 @@ export const dynamic = "force-dynamic";
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const pdfUrlCache = new Map();
 
+const BYTES_CACHE_TTL_MS = 30 * 60 * 1000;
+const BYTES_CACHE_MAX_ENTRIES = 10;
+const pdfBytesCache = new Map();
+
+const BROWSER_CACHE_MAX_AGE_SECONDS = 1800;
+
 async function getCachedPdfUrl(token) {
   const cached = pdfUrlCache.get(token);
 
@@ -43,15 +49,16 @@ export async function GET(request, { params }) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }
 
-  const range = request.headers.get("range");
+  const cachedBytes = pdfBytesCache.get(params.token);
 
-  console.log("Upstream PDF URL:", pdfUrl);
-  console.log("Range header:", range);
-  console.log("Request signal:", request.signal);
-  console.log("Request method:", request.method);
+  if (cachedBytes && Date.now() - cachedBytes.cachedAt < BYTES_CACHE_TTL_MS) {
+    return new NextResponse(cachedBytes.body, {
+      status: 200,
+      headers: cachedBytes.headers,
+    });
+  }
 
   const upstream = await fetch(pdfUrl, {
-    headers: range ? { Range: range } : {},
     signal: request.signal,
   });
 
@@ -61,7 +68,7 @@ export async function GET(request, { params }) {
 
   const headers = {
     "Content-Type": "application/pdf",
-    "Accept-Ranges": "bytes",
+    "Cache-Control": `private, max-age=${BROWSER_CACHE_MAX_AGE_SECONDS}`,
   };
 
   const contentLength = upstream.headers.get("content-length");
@@ -69,12 +76,31 @@ export async function GET(request, { params }) {
     headers["Content-Length"] = contentLength;
   }
 
-  const contentRange = upstream.headers.get("content-range");
-  if (contentRange) {
-    headers["Content-Range"] = contentRange;
-  }
+  const [clientStream, cacheStream] = upstream.body.tee();
 
-  return new NextResponse(upstream.body, {
+  (async () => {
+    const reader = cacheStream.getReader();
+    const chunks = [];
+
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+      chunks.push(value);
+    }
+
+    const body = await new Blob(chunks).arrayBuffer();
+
+    if (pdfBytesCache.size >= BYTES_CACHE_MAX_ENTRIES && !pdfBytesCache.has(params.token)) {
+      const oldestKey = pdfBytesCache.keys().next().value;
+      pdfBytesCache.delete(oldestKey);
+    }
+
+    pdfBytesCache.set(params.token, { body, headers, cachedAt: Date.now() });
+  })();
+
+  return new NextResponse(clientStream, {
     status: upstream.status,
     headers,
   });

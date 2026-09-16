@@ -8,13 +8,14 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import DeckPdfNav from "./DeckPdfNav";
 import DeckPdfMenu from "./DeckPdfMenu";
+import useDeckKeyboardNav from "./useDeckKeyboardNav";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
 const DOCUMENT_OPTIONS = {
-  rangeChunkSize: 1024 * 1024,
   disableAutoFetch: true,
   disableStream: false,
+  disableRange: true,
 };
 
 const getViewportSize = () =>
@@ -30,21 +31,9 @@ const DeckPdfViewer = ({ pdfUrl }) => {
   const [navHeight, setNavHeight] = useState(0);
   const [pageAspectRatio, setPageAspectRatio] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(null);
+  const [visitedPages, setVisitedPages] = useState(() => new Set([1]));
   const navRef = useRef(null);
-
-  useEffect(() => {
-    if (!pdfProxy) {
-      return;
-    }
-
-    if (currentPage + 1 <= numPages) {
-      pdfProxy.getPage(currentPage + 1);
-    }
-
-    if (currentPage - 1 >= 1) {
-      pdfProxy.getPage(currentPage - 1);
-    }
-  }, [pdfProxy, currentPage, numPages]);
 
   useEffect(() => {
     const measureNavHeight = () => {
@@ -64,6 +53,17 @@ const DeckPdfViewer = ({ pdfUrl }) => {
     setNavHeight(navRef.current?.offsetHeight ?? 0);
   }, [numPages]);
 
+  useDeckKeyboardNav({ currentPage, numPages, onNavigate: setCurrentPage });
+
+  useEffect(() => {
+    setVisitedPages((prev) => {
+      if (prev.has(currentPage)) {
+        return prev;
+      }
+      return new Set(prev).add(currentPage);
+    });
+  }, [currentPage]);
+
   const availableHeight = Math.max(viewportSize.height - navHeight, 0);
   const fitWidth = pageAspectRatio
     ? Math.min(viewportSize.width, availableHeight * pageAspectRatio)
@@ -79,20 +79,49 @@ const DeckPdfViewer = ({ pdfUrl }) => {
           setNumPages(pdf.numPages);
         }}
         onLoadError={(error) => console.error("PDF load failed:", error)}
-        loading={<p className="font-secondary text-md">Loading deck…</p>}
+        onLoadProgress={({ loaded, total }) => setLoadProgress({ loaded, total })}
+        loading={(() => {
+          const loaded = loadProgress?.loaded ?? 0;
+          const total = loadProgress?.total ?? 0;
+          const percentage = total ? Math.round((loaded / total) * 100) : 0;
+
+          return (
+            <div className="deck-pdf-viewer__progress">
+              <div className="deck-pdf-viewer__progress-track">
+                <div
+                  className="deck-pdf-viewer__progress-bar"
+                  style={{ width: `${percentage}%` }}
+                />
+              </div>
+              <p className="deck-pdf-viewer__progress-label font-secondary text-md">
+                Loading deck… {percentage}%
+              </p>
+            </div>
+          );
+        })()}
       >
-        {numPages && (
-          <Page
-            pageNumber={currentPage}
-            width={fitWidth}
-            onLoadSuccess={(page) => {
-              if (pageAspectRatio === null) {
-                setPageAspectRatio(page.originalWidth / page.originalHeight);
+        {numPages &&
+          Array.from(visitedPages).map((pageNumber) => (
+            <div
+              key={pageNumber}
+              className={
+                pageNumber === currentPage
+                  ? "deck-pdf-viewer__page deck-pdf-viewer__page--active"
+                  : "deck-pdf-viewer__page"
               }
-            }}
-            loading={<p className="font-secondary text-md">Loading page…</p>}
-          />
-        )}
+            >
+              <Page
+                pageNumber={pageNumber}
+                width={fitWidth}
+                onLoadSuccess={(page) => {
+                  if (pageAspectRatio === null) {
+                    setPageAspectRatio(page.originalWidth / page.originalHeight);
+                  }
+                }}
+                loading={<p className="font-secondary text-md">Loading page…</p>}
+              />
+            </div>
+          ))}
       </Document>
 
       {numPages && (

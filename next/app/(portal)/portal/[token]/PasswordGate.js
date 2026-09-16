@@ -63,7 +63,7 @@ export default function PasswordGate({ token, deckTitle }) {
         alt="FLOWERS"
         width={50}
         height={40}
-        className="dark:invert mb-8"
+        className="invert mb-8"
       />
 
       {deckTitle && (
@@ -80,7 +80,7 @@ export default function PasswordGate({ token, deckTitle }) {
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          className="border border-black dark:border-cream bg-transparent px-3 py-2 font-secondary text-md"
+          className="border border-cream bg-transparent px-3 py-2 font-secondary text-md"
           autoComplete="current-password"
           autoFocus
         />
@@ -88,7 +88,7 @@ export default function PasswordGate({ token, deckTitle }) {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="uppercase font-primary font-bold text-md border border-black dark:border-cream px-4 py-2 disabled:opacity-50"
+          className="uppercase font-primary font-bold text-md border border-cream px-4 py-2 disabled:opacity-50"
         >
           {status === "submitting" ? "Checking" : "View deck"}
         </button>
