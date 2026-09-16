@@ -8,6 +8,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import DeckPdfNav from "./DeckPdfNav";
 import DeckPdfMenu from "./DeckPdfMenu";
+import useDeckKeyboardNav from "./useDeckKeyboardNav";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
@@ -63,6 +64,8 @@ const DeckPdfViewer = ({ pdfUrl }) => {
   useEffect(() => {
     setNavHeight(navRef.current?.offsetHeight ?? 0);
   }, [numPages]);
+
+  useDeckKeyboardNav({ currentPage, numPages, onNavigate: setCurrentPage });
 
   const availableHeight = Math.max(viewportSize.height - navHeight, 0);
   const fitWidth = pageAspectRatio
