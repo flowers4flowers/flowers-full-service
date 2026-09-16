@@ -9,7 +9,10 @@ export const metadata = {
 
 export default function PortalLayout({ children }) {
   return (
-    <div className="portal-shell portal-shell--dark min-h-screen">
+    <div
+      className="portal-shell portal-shell--dark min-h-screen"
+      style={{ backgroundColor: "#000000", color: "#ffffff" }}
+    >
       <div className="portal-content">{children}</div>
     </div>
   );
