@@ -80,6 +80,10 @@ Deck (pdf viewer)
   display: block;
 }
 
+.deck-pdf-viewer__page .react-pdf__Page {
+  background-color: #000000 !important;
+}
+
 /*
 Deck (pdf nav)
 */
