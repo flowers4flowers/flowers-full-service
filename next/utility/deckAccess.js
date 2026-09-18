@@ -2,7 +2,11 @@
 
 import { cookies } from "next/headers";
 import { getDeckForRender } from "../queries/deckQuery";
-import { DECK_SESSION_COOKIE, verifyDeckToken } from "./deckSession";
+import {
+  DECK_SESSION_COOKIE,
+  hashPassword,
+  verifyDeckToken,
+} from "./deckSession";
 
 export async function resolveDeckAccess(token) {
   const meta = await getDeckForRender(token);
@@ -17,7 +21,11 @@ export async function resolveDeckAccess(token) {
 
   const cookieValue = cookies().get(DECK_SESSION_COOKIE)?.value;
   const payload = cookieValue ? await verifyDeckToken(cookieValue) : null;
-  const unlocked = payload?.deckId === token;
+  const currentHash = meta.password ? hashPassword(meta.password) : null;
+  const unlocked =
+    payload?.deckId === token &&
+    currentHash !== null &&
+    payload?.passwordHash === currentHash;
 
   return { status: unlocked ? "unlocked" : "locked", meta };
 }

@@ -26,6 +26,7 @@ export async function getDeckForRender(token) {
       title: true,
       client: "page.client.value",
       parentSlug: "page.parent.slug",
+      password: "page.password.value",
       intro: "page.intro.kirbytext",
       expiry: "page.expiry.toDate('Y-m-d')",
       figmaUrl: "page.figma_url.value",
@@ -48,6 +49,7 @@ export async function getDeckForRender(token) {
   return {
     title: result.title || "",
     client: result.client || "",
+    password: result.password || "",
     intro: result.intro || "",
     expiry: result.expiry || null,
     figmaUrl: result.figmaUrl || "",

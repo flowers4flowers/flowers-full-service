@@ -1,6 +1,6 @@
 // next/utility/deckSession.js
 
-import { timingSafeEqual } from "crypto";
+import { createHash, timingSafeEqual } from "crypto";
 import { SignJWT, jwtVerify } from "jose";
 
 export const DECK_SESSION_COOKIE = "deck_session";
@@ -27,14 +27,22 @@ export function effectiveExpiry(deckExpiry) {
   return ninetyDaysOut;
 }
 
-export async function signDeckToken(deckId, expiresAt) {
+export async function signDeckToken(deckId, passwordHash, expiresAt) {
   const exp = Math.floor(expiresAt.getTime() / 1000);
 
-  return new SignJWT({ deckId })
+  return new SignJWT({ deckId, passwordHash })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(exp)
     .sign(getSecretKey());
+}
+
+export function hashPassword(password) {
+  if (typeof password !== "string") {
+    return "";
+  }
+
+  return createHash("sha256").update(password.trim(), "utf8").digest("hex");
 }
 
 export async function verifyDeckToken(value) {
