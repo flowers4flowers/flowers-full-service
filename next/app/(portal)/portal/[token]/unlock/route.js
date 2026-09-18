@@ -5,6 +5,7 @@ import { getDeckSecret } from "../../../../../queries/deckQuery";
 import {
   DECK_SESSION_COOKIE,
   comparePassword,
+  hashPassword,
   signDeckToken,
   effectiveExpiry,
   buildSessionCookieOptions,
@@ -35,8 +36,9 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: "incorrect" }, { status: 401 });
     }
 
+    const passwordHash = hashPassword(deck.password);
     const expiresAt = effectiveExpiry(deckExpiry);
-    const token = await signDeckToken(params.token, expiresAt);
+    const token = await signDeckToken(params.token, passwordHash, expiresAt);
 
     const res = NextResponse.json({ ok: true });
     res.cookies.set(
