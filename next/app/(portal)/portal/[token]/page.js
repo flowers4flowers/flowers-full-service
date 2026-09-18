@@ -5,6 +5,7 @@ import nextDynamic from "next/dynamic";
 import { resolveDeckAccess } from "../../../../utility/deckAccess";
 import PasswordGate from "./PasswordGate";
 import DeckEmbed from "../../../../components/DeckEmbed";
+import DeckSessionWatcher from "../../../../components/DeckSessionWatcher";
 
 const DeckPdfViewer = nextDynamic(
   () => import("../../../../components/DeckPdfViewer"),
@@ -43,16 +44,26 @@ export default async function Page({ params }) {
   }
 
   if (meta.contentType === "figma" && meta.figmaUrl) {
-    return <DeckEmbed figmaUrl={meta.figmaUrl} />;
+    return (
+      <DeckSessionWatcher token={params.token}>
+        <DeckEmbed figmaUrl={meta.figmaUrl} />
+      </DeckSessionWatcher>
+    );
   }
 
   if (meta.contentType === "pdf" && meta.pdfUrl) {
-    return <DeckPdfViewer pdfUrl={`/portal/${params.token}/pdf-file`} />;
+    return (
+      <DeckSessionWatcher token={params.token}>
+        <DeckPdfViewer pdfUrl={`/portal/${params.token}/pdf-file`} />
+      </DeckSessionWatcher>
+    );
   }
 
   return (
-    <div className="px-6 max-w-[420px] mx-auto pt-24">
-      <p className="font-secondary text-md">This deck is not ready yet.</p>
-    </div>
+    <DeckSessionWatcher token={params.token}>
+      <div className="px-6 max-w-[420px] mx-auto pt-24">
+        <p className="font-secondary text-md">This deck is not ready yet.</p>
+      </div>
+    </DeckSessionWatcher>
   );
 }
