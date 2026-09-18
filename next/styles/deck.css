@@ -78,6 +78,16 @@ Deck (pdf viewer)
 
 .deck-pdf-viewer__page--active {
   display: block;
+  animation: deck-page-fade-in 0.5s ease;
+}
+
+@keyframes deck-page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .deck-pdf-viewer__page .react-pdf__Page {
