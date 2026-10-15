@@ -62,7 +62,14 @@ export async function GET(request, { params }) {
     signal: request.signal,
   });
 
-  if (!upstream.ok || !upstream.body) {
+  // A bot-protection challenge comes back as 202 + HTML; don't stream or
+  // cache that as if it were the PDF.
+  const upstreamType = upstream.headers.get("content-type") || "";
+  if (
+    upstream.status !== 200 ||
+    !upstream.body ||
+    upstreamType.includes("text/html")
+  ) {
     return NextResponse.json({ error: "upstream" }, { status: 502 });
   }
 
