@@ -8,9 +8,10 @@ import Image from "next/image";
 import { useDeckAnalytics } from "../../../../utility/useDeckAnalytics";
 
 const ERROR_MESSAGES = {
-  incorrect_username: "Incorrect username.",
+  missing_company: "Please enter your company name. Any name is fine.",
   incorrect_password: "Incorrect password.",
-  incorrect_both: "Incorrect username and password.",
+  missing_company_and_password:
+    "Please enter your company name (any name is fine) and check your password.",
   expired: "This link has expired.",
   network: "Something went wrong. Please try again.",
 };
@@ -23,10 +24,11 @@ export default function PasswordGate({ token, deckTitle, client, type }) {
     client,
     type,
     role: "unknown",
+    company: "unknown",
   });
   const gateViewSentRef = useRef(false);
 
-  const [username, setUsername] = useState("client");
+  const [company, setCompany] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("idle");
   const [errorKind, setErrorKind] = useState(null);
@@ -49,12 +51,16 @@ export default function PasswordGate({ token, deckTitle, client, type }) {
       const res = await fetch(`/portal/${token}/unlock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ company, password }),
       });
 
       if (res.ok) {
         const data = await res.json().catch(() => null);
-        trackUnlock("success", data?.role || "unknown");
+        trackUnlock(
+          "success",
+          data?.role || "unknown",
+          data?.company || "unknown"
+        );
         router.refresh();
         return;
       }
@@ -63,9 +69,9 @@ export default function PasswordGate({ token, deckTitle, client, type }) {
         const data = await res.json().catch(() => null);
         const kind = data?.error;
         const isKnownKind =
-          kind === "incorrect_username" ||
+          kind === "missing_company" ||
           kind === "incorrect_password" ||
-          kind === "incorrect_both";
+          kind === "missing_company_and_password";
 
         trackUnlock(isKnownKind ? kind : "error", data?.role || "unknown");
         setStatus("error");
@@ -105,18 +111,19 @@ export default function PasswordGate({ token, deckTitle, client, type }) {
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <label className="font-secondary text-md" htmlFor="deck-username">
-          Username
+        <label className="font-secondary text-md" htmlFor="deck-company">
+          What company are you from?
         </label>
 
         <input
-          id="deck-username"
+          id="deck-company"
           type="text"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
+          value={company}
+          onChange={(event) => setCompany(event.target.value)}
+          placeholder="e.g. Acme Studio"
           className="border border-cream bg-transparent px-3 py-2 font-secondary text-md"
-          autoComplete="username"
-          autoCapitalize="none"
+          autoComplete="organization"
+          autoCapitalize="words"
           spellCheck={false}
         />
 

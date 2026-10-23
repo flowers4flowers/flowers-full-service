@@ -27,24 +27,38 @@ export function effectiveExpiry(deckExpiry) {
   return ninetyDaysOut;
 }
 
-export function resolveViewerRole(username) {
-  if (typeof username !== "string") {
+export function resolveViewerRole(company) {
+  if (typeof company !== "string") {
     return null;
   }
 
-  const normalized = username.trim().toLowerCase();
+  const trimmed = company.trim();
 
-  if (normalized === "client" || normalized === "admin") {
-    return normalized;
+  if (trimmed.length === 0) {
+    return null;
   }
 
-  return null;
+  return trimmed.toLowerCase() === "admin" ? "admin" : "client";
 }
 
-export async function signDeckToken(deckId, passwordHash, role, expiresAt) {
+export function normalizeCompany(company, role) {
+  if (role === "admin") {
+    return "admin";
+  }
+
+  const trimmed = typeof company === "string" ? company.trim() : "";
+
+  if (trimmed.includes("@")) {
+    return "redacted";
+  }
+
+  return trimmed.slice(0, 100);
+}
+
+export async function signDeckToken(deckId, passwordHash, role, company, expiresAt) {
   const exp = Math.floor(expiresAt.getTime() / 1000);
 
-  return new SignJWT({ deckId, passwordHash, role })
+  return new SignJWT({ deckId, passwordHash, role, company })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(exp)

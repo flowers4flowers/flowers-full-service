@@ -9,13 +9,27 @@ import { useDeckAnalytics, DeckDescriptor } from "../utility/useDeckAnalytics";
 
 const CLIENT_ID_TIMEOUT_MS = 2000;
 
-export default function DeckAnalytics({ token, title, client, type, role }: DeckDescriptor) {
-  const { trackDeckView } = useDeckAnalytics({ token, title, client, type, role });
+export default function DeckAnalytics({
+  token,
+  title,
+  client,
+  type,
+  role,
+  company,
+}: DeckDescriptor) {
+  const { trackDeckView } = useDeckAnalytics({
+    token,
+    title,
+    client,
+    type,
+    role,
+    company,
+  });
   const viewSentRef = useRef(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setGAParams({ viewer_role: role });
+    setGAParams({ viewer_role: role, viewer_company: company });
 
     const tags: [string, string][] = [
       ["deck_token", token],
@@ -23,6 +37,7 @@ export default function DeckAnalytics({ token, title, client, type, role }: Deck
       ["deck_client", client],
       ["deck_type", type],
       ["viewer_role", role],
+      ["viewer_company", company],
     ];
 
     tags.forEach(([key, value]) => {
@@ -56,7 +71,7 @@ export default function DeckAnalytics({ token, title, client, type, role }: Deck
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [token, title, client, type, role, trackDeckView]);
+  }, [token, title, client, type, role, company, trackDeckView]);
 
   return null;
 }

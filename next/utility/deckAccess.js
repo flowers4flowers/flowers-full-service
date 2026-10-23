@@ -12,11 +12,11 @@ export async function resolveDeckAccess(token) {
   const meta = await getDeckForRender(token);
 
   if (!meta) {
-    return { status: "notfound", meta: null, role: null };
+    return { status: "notfound", meta: null, role: null, company: null };
   }
 
   if (meta.expiry && new Date(meta.expiry) < new Date()) {
-    return { status: "expired", meta, role: null };
+    return { status: "expired", meta, role: null, company: null };
   }
 
   const cookieValue = cookies().get(DECK_SESSION_COOKIE)?.value;
@@ -30,9 +30,15 @@ export async function resolveDeckAccess(token) {
     payload?.passwordHash === currentHash &&
     hasValidRole;
 
+  const company =
+    typeof payload?.company === "string" && payload.company.length > 0
+      ? payload.company
+      : "not provided";
+
   return {
     status: unlocked ? "unlocked" : "locked",
     meta,
     role: unlocked ? payload.role : null,
+    company: unlocked ? company : null,
   };
 }
