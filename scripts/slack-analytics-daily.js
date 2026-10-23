@@ -384,6 +384,9 @@ async function getGA4DeckData() {
           {
             name: "customEvent:viewer_role",
           },
+          {
+            name: "customEvent:viewer_company",
+          },
         ],
         metrics: [
           {
@@ -419,6 +422,7 @@ async function getGA4DeckData() {
       const client = row.dimensionValues[3].value;
       const unlockResult = row.dimensionValues[4].value;
       const viewerRole = row.dimensionValues[5].value;
+      const viewerCompany = row.dimensionValues[6].value;
       const eventCount = parseInt(row.metricValues[0].value);
       const users = parseInt(row.metricValues[1].value);
 
@@ -436,6 +440,7 @@ async function getGA4DeckData() {
             views: 0,
             viewers: 0,
             completions: 0,
+            companies: new Set(),
           };
         }
 
@@ -467,12 +472,20 @@ async function getGA4DeckData() {
           deck.views += eventCount;
           deck.viewers += users;
           totalViews += eventCount;
+
+          if (viewerCompany && viewerCompany !== "(not set)") {
+            deck.companies.add(viewerCompany);
+          }
         }
       } else if (eventName === "deck_complete") {
         if (isClient) {
           getDeck().completions += eventCount;
         }
       }
+    });
+
+    Object.values(decks).forEach((deck) => {
+      deck.companies = Array.from(deck.companies).sort();
     });
 
     console.log(
@@ -814,10 +827,18 @@ function formatSlackBlocks(
     const deckFields = sortedDecks.map(([token, deck]) => {
       const displayName = deck.title || token;
       const clientText = deck.client ? ` (${deck.client})` : "";
+      const shownCompanies = deck.companies.slice(0, 10);
+      const extraCompanies = deck.companies.length - shownCompanies.length;
+      const viewedByText =
+        deck.companies.length > 0
+          ? `\nViewed by: ${shownCompanies.join(", ")}${
+              extraCompanies > 0 ? ` and ${extraCompanies} more` : ""
+            }`
+          : "";
 
       return {
         type: "mrkdwn",
-        text: `*${displayName}${clientText}:*\n${deck.views} views | ${deck.viewers} viewers | ${deck.unlocks} unlocks | ${deck.failedUnlocks} failed | ${deck.gateViews} gate views | ${deck.completions} completed`,
+        text: `*${displayName}${clientText}:*\n${deck.views} views | ${deck.viewers} viewers | ${deck.unlocks} unlocks | ${deck.failedUnlocks} failed | ${deck.gateViews} gate views | ${deck.completions} completed${viewedByText}`,
       };
     });
 

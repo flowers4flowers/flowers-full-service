@@ -6,6 +6,7 @@ import {
   DECK_SESSION_COOKIE,
   comparePassword,
   hashPassword,
+  normalizeCompany,
   resolveViewerRole,
   signDeckToken,
   effectiveExpiry,
@@ -16,7 +17,7 @@ export async function POST(request, { params }) {
   try {
     const body = await request.json().catch(() => null);
     const password = body?.password;
-    const username = body?.username;
+    const company = body?.company;
 
     if (typeof password !== "string" || password.length === 0) {
       return NextResponse.json({ error: "missing" }, { status: 400 });
@@ -34,19 +35,19 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: "expired" }, { status: 410 });
     }
 
-    const role = resolveViewerRole(username);
+    const role = resolveViewerRole(company);
     const passwordOk = comparePassword(password, deck.password);
 
     if (!role && !passwordOk) {
       return NextResponse.json(
-        { error: "incorrect_both", role },
+        { error: "missing_company_and_password", role },
         { status: 401 }
       );
     }
 
     if (!role) {
       return NextResponse.json(
-        { error: "incorrect_username", role },
+        { error: "missing_company", role },
         { status: 401 }
       );
     }
@@ -58,16 +59,18 @@ export async function POST(request, { params }) {
       );
     }
 
+    const viewerCompany = normalizeCompany(company, role);
     const passwordHash = hashPassword(deck.password);
     const expiresAt = effectiveExpiry(deckExpiry);
     const token = await signDeckToken(
       params.token,
       passwordHash,
       role,
+      viewerCompany,
       expiresAt
     );
 
-    const res = NextResponse.json({ ok: true, role });
+    const res = NextResponse.json({ ok: true, role, company: viewerCompany });
     res.cookies.set(
       DECK_SESSION_COOKIE,
       token,

@@ -24,7 +24,7 @@ const getViewportSize = () =>
     ? { width: 0, height: 0 }
     : { width: window.innerWidth, height: window.innerHeight };
 
-const DeckPdfViewer = ({ pdfUrl, token, title, client, type, role }) => {
+const DeckPdfViewer = ({ pdfUrl, token, title, client, type, role, company }) => {
   const [pdfProxy, setPdfProxy] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,6 +41,7 @@ const DeckPdfViewer = ({ pdfUrl, token, title, client, type, role }) => {
     client,
     type,
     role,
+    company,
   });
   const navSourceRef = useRef("initial");
   const lastTrackedPageRef = useRef(null);
