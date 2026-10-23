@@ -1,6 +1,7 @@
 // next/app/layout.js
 
 import "../styles/global.css";
+import { Suspense } from "react";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { AppWrapper } from "../context";
@@ -59,20 +60,6 @@ export default function RootLayout({ children }) {
       var isDark = stored ? stored === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
       document.documentElement.classList.toggle('dark', isDark);
     } catch (e) {}`,
-          }}
-        />
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-YSM33VGFQP"
-        ></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-YSM33VGFQP');
-    `,
           }}
         />
         <script
@@ -215,7 +202,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <AppWrapper>
         <body>
           <GoogleAnalytics gaId="G-YSM33VGFQP" />
-          <AnalyticsPageTracker />
+          <Suspense fallback={null}>
+            <AnalyticsPageTracker />
+          </Suspense>
           {/* Google Tag Manager - Body (noscript) */}
           <noscript>
             <iframe

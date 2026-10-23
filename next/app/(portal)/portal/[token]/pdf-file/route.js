@@ -37,7 +37,9 @@ async function getCachedPdfUrl(token) {
 export async function GET(request, { params }) {
   const cookieValue = cookies().get(DECK_SESSION_COOKIE)?.value;
   const payload = cookieValue ? await verifyDeckToken(cookieValue) : null;
-  const unlocked = payload?.deckId === params.token;
+  const unlocked =
+    payload?.deckId === params.token &&
+    (payload?.role === "client" || payload?.role === "admin");
 
   if (!unlocked) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });

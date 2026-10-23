@@ -2,13 +2,14 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import DeckPdfNav from "./DeckPdfNav";
 import DeckPdfMenu from "./DeckPdfMenu";
 import useDeckKeyboardNav from "./useDeckKeyboardNav";
+import { useDeckAnalytics } from "../utility/useDeckAnalytics";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
 
@@ -23,7 +24,7 @@ const getViewportSize = () =>
     ? { width: 0, height: 0 }
     : { width: window.innerWidth, height: window.innerHeight };
 
-const DeckPdfViewer = ({ pdfUrl }) => {
+const DeckPdfViewer = ({ pdfUrl, token, title, client, type, role }) => {
   const [pdfProxy, setPdfProxy] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -34,6 +35,43 @@ const DeckPdfViewer = ({ pdfUrl }) => {
   const [loadProgress, setLoadProgress] = useState(null);
   const [visitedPages, setVisitedPages] = useState(() => new Set([1]));
   const navRef = useRef(null);
+  const { trackPageView, trackComplete, trackMenuOpen } = useDeckAnalytics({
+    token,
+    title,
+    client,
+    type,
+    role,
+  });
+  const navSourceRef = useRef("initial");
+  const lastTrackedPageRef = useRef(null);
+  const completeSentRef = useRef(false);
+
+  const navigateTo = useCallback((page, source) => {
+    navSourceRef.current = source;
+    setCurrentPage(page);
+  }, []);
+
+  const navigateByArrows = useCallback(
+    (page) => navigateTo(page, "arrows"),
+    [navigateTo],
+  );
+
+  const navigateByKeyboard = useCallback(
+    (page) => navigateTo(page, "keyboard"),
+    [navigateTo],
+  );
+
+  const navigateByMenu = useCallback(
+    (page) => navigateTo(page, "menu"),
+    [navigateTo],
+  );
+
+  const handleToggleMenu = () => {
+    if (!menuOpen) {
+      trackMenuOpen();
+    }
+    setMenuOpen((open) => !open);
+  };
 
   useEffect(() => {
     const measureNavHeight = () => {
@@ -53,7 +91,21 @@ const DeckPdfViewer = ({ pdfUrl }) => {
     setNavHeight(navRef.current?.offsetHeight ?? 0);
   }, [numPages]);
 
-  useDeckKeyboardNav({ currentPage, numPages, onNavigate: setCurrentPage });
+  useDeckKeyboardNav({ currentPage, numPages, onNavigate: navigateByKeyboard });
+
+  useEffect(() => {
+    if (!numPages || currentPage === lastTrackedPageRef.current) {
+      return;
+    }
+
+    lastTrackedPageRef.current = currentPage;
+    trackPageView(currentPage, numPages, navSourceRef.current);
+
+    if (currentPage === numPages && !completeSentRef.current) {
+      completeSentRef.current = true;
+      trackComplete(numPages);
+    }
+  }, [currentPage, numPages, trackPageView, trackComplete]);
 
   useEffect(() => {
     setVisitedPages((prev) => {
@@ -129,8 +181,8 @@ const DeckPdfViewer = ({ pdfUrl }) => {
           ref={navRef}
           currentPage={currentPage}
           numPages={numPages}
-          onNavigate={setCurrentPage}
-          onToggleMenu={() => setMenuOpen((open) => !open)}
+          onNavigate={navigateByArrows}
+          onToggleMenu={handleToggleMenu}
         />
       )}
 
@@ -139,7 +191,7 @@ const DeckPdfViewer = ({ pdfUrl }) => {
           isOpen={menuOpen}
           numPages={numPages}
           currentPage={currentPage}
-          onNavigate={setCurrentPage}
+          onNavigate={navigateByMenu}
           onClose={() => setMenuOpen(false)}
           pdf={pdfProxy}
         />
