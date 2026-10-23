@@ -1,6 +1,7 @@
 // next/app/layout.js
 
 import "../styles/global.css";
+import { Suspense } from "react";
 import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { AppWrapper } from "../context";
@@ -215,7 +216,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <AppWrapper>
         <body>
           <GoogleAnalytics gaId="G-YSM33VGFQP" />
-          <AnalyticsPageTracker />
+          <Suspense fallback={null}>
+            <AnalyticsPageTracker />
+          </Suspense>
           {/* Google Tag Manager - Body (noscript) */}
           <noscript>
             <iframe
