@@ -112,7 +112,7 @@ export default function PasswordGate({ token, deckTitle, client, type }) {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <label className="font-secondary text-md" htmlFor="deck-company">
-          What company are you from?
+          Company
         </label>
 
         <input
