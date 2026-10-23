@@ -6,6 +6,7 @@ import { resolveDeckAccess } from "../../../../utility/deckAccess";
 import PasswordGate from "./PasswordGate";
 import DeckEmbed from "../../../../components/DeckEmbed";
 import DeckSessionWatcher from "../../../../components/DeckSessionWatcher";
+import DeckAnalytics from "../../../../components/DeckAnalytics";
 
 const DeckPdfViewer = nextDynamic(
   () => import("../../../../components/DeckPdfViewer"),
@@ -40,12 +41,25 @@ export default async function Page({ params }) {
   }
 
   if (status === "locked") {
-    return <PasswordGate token={params.token} deckTitle={meta.title} />;
+    return (
+      <PasswordGate
+        token={params.token}
+        deckTitle={meta.title}
+        client={meta.client}
+        type={meta.contentType}
+      />
+    );
   }
 
   if (meta.contentType === "figma" && meta.figmaUrl) {
     return (
       <DeckSessionWatcher token={params.token}>
+        <DeckAnalytics
+          token={params.token}
+          title={meta.title}
+          client={meta.client}
+          type={meta.contentType}
+        />
         <DeckEmbed figmaUrl={meta.figmaUrl} />
       </DeckSessionWatcher>
     );
@@ -54,7 +68,19 @@ export default async function Page({ params }) {
   if (meta.contentType === "pdf" && meta.pdfUrl) {
     return (
       <DeckSessionWatcher token={params.token}>
-        <DeckPdfViewer pdfUrl={`/portal/${params.token}/pdf-file`} />
+        <DeckAnalytics
+          token={params.token}
+          title={meta.title}
+          client={meta.client}
+          type={meta.contentType}
+        />
+        <DeckPdfViewer
+          pdfUrl={`/portal/${params.token}/pdf-file`}
+          token={params.token}
+          title={meta.title}
+          client={meta.client}
+          type={meta.contentType}
+        />
       </DeckSessionWatcher>
     );
   }

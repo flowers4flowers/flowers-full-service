@@ -28,6 +28,16 @@ export const trackEvent = ({
   }
 };
 
+export const getGAClientId = (callback: (clientId: string) => void) => {
+  if (typeof window === "undefined") return;
+
+  try {
+    sendGAEvent("get", "G-YSM33VGFQP", "client_id", callback);
+  } catch (error) {
+    console.error("Analytics client ID error:", error);
+  }
+};
+
 // Convenience functions for common events
 export const trackButtonClick = (
   label: string,

@@ -2,9 +2,10 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useDeckAnalytics } from "../../../../utility/useDeckAnalytics";
 
 const ERROR_MESSAGES = {
   incorrect: "Incorrect password.",
@@ -12,12 +13,28 @@ const ERROR_MESSAGES = {
   network: "Something went wrong. Please try again.",
 };
 
-export default function PasswordGate({ token, deckTitle }) {
+export default function PasswordGate({ token, deckTitle, client, type }) {
   const router = useRouter();
+  const { trackGateView, trackUnlock } = useDeckAnalytics({
+    token,
+    title: deckTitle,
+    client,
+    type,
+  });
+  const gateViewSentRef = useRef(false);
 
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("idle");
   const [errorKind, setErrorKind] = useState(null);
+
+  useEffect(() => {
+    if (gateViewSentRef.current) {
+      return;
+    }
+
+    gateViewSentRef.current = true;
+    trackGateView();
+  }, [trackGateView]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,25 +49,30 @@ export default function PasswordGate({ token, deckTitle }) {
       });
 
       if (res.ok) {
+        trackUnlock("success");
         router.refresh();
         return;
       }
 
       if (res.status === 401) {
+        trackUnlock("incorrect");
         setStatus("error");
         setErrorKind("incorrect");
         return;
       }
 
       if (res.status === 410) {
+        trackUnlock("expired");
         setStatus("error");
         setErrorKind("expired");
         return;
       }
 
+      trackUnlock("error");
       setStatus("error");
       setErrorKind("network");
     } catch {
+      trackUnlock("error");
       setStatus("error");
       setErrorKind("network");
     }

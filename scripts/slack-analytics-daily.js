@@ -332,6 +332,141 @@ async function getGA4TrafficData() {
   }
 }
 
+async function getGA4DeckData() {
+  try {
+    console.log("Fetching GA4 deck data...");
+
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      "http://localhost"
+    );
+
+    oauth2Client.setCredentials({
+      refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+    });
+
+    const analyticsDataClient = new BetaAnalyticsDataClient({
+      authClient: oauth2Client,
+      clientConfig: {
+        apiEndpoint: "analyticsdata.googleapis.com",
+      },
+      gaxOptions: {
+        timeout: 120000,
+      },
+    });
+
+    const [response] = await retryWithBackoff(async () => {
+      return await analyticsDataClient.runReport({
+        property: `properties/${process.env.GA4_PROPERTY_ID}`,
+        dateRanges: [
+          {
+            startDate: "yesterday",
+            endDate: "yesterday",
+          },
+        ],
+        dimensions: [
+          {
+            name: "eventName",
+          },
+          {
+            name: "customEvent:deck_token",
+          },
+          {
+            name: "customEvent:deck_title",
+          },
+          {
+            name: "customEvent:deck_client",
+          },
+          {
+            name: "customEvent:unlock_result",
+          },
+        ],
+        metrics: [
+          {
+            name: "eventCount",
+          },
+          {
+            name: "totalUsers",
+          },
+        ],
+        dimensionFilter: {
+          filter: {
+            fieldName: "eventName",
+            inListFilter: {
+              values: [
+                "deck_gate_view",
+                "deck_unlock",
+                "deck_view",
+                "deck_complete",
+              ],
+            },
+          },
+        },
+      });
+    });
+
+    const decks = {};
+    let totalViews = 0;
+
+    response.rows?.forEach((row) => {
+      const eventName = row.dimensionValues[0].value;
+      const token = row.dimensionValues[1].value;
+      const title = row.dimensionValues[2].value;
+      const client = row.dimensionValues[3].value;
+      const unlockResult = row.dimensionValues[4].value;
+      const eventCount = parseInt(row.metricValues[0].value);
+      const users = parseInt(row.metricValues[1].value);
+
+      if (!decks[token]) {
+        decks[token] = {
+          title: "",
+          client: "",
+          gateViews: 0,
+          unlocks: 0,
+          failedUnlocks: 0,
+          views: 0,
+          viewers: 0,
+          completions: 0,
+        };
+      }
+
+      const deck = decks[token];
+
+      if (!deck.title && title && title !== "(not set)") {
+        deck.title = title;
+      }
+      if (!deck.client && client && client !== "(not set)") {
+        deck.client = client;
+      }
+
+      if (eventName === "deck_gate_view") {
+        deck.gateViews += eventCount;
+      } else if (eventName === "deck_unlock") {
+        if (unlockResult === "success") {
+          deck.unlocks += eventCount;
+        } else {
+          deck.failedUnlocks += eventCount;
+        }
+      } else if (eventName === "deck_view") {
+        deck.views += eventCount;
+        deck.viewers += users;
+        totalViews += eventCount;
+      } else if (eventName === "deck_complete") {
+        deck.completions += eventCount;
+      }
+    });
+
+    console.log(
+      `Found ${totalViews} deck views across ${Object.keys(decks).length} decks`
+    );
+    return { decks, totalViews };
+  } catch (error) {
+    console.error("GA4 deck data fetch failed:", error.message);
+    return null;
+  }
+}
+
 async function getSearchConsoleData() {
   try {
     console.log("Fetching Google Search Console data...");
@@ -527,7 +662,8 @@ function formatSlackBlocks(
   projectClicks,
   trafficData,
   searchData,
-  dateString
+  dateString,
+  deckData
 ) {
   const blocks = [
     {
@@ -556,6 +692,10 @@ function formatSlackBlocks(
   const projectPages = [];
 
   Object.entries(combinedData.pages).forEach(([pagePath, data]) => {
+    if (pagePath.startsWith("/portal/")) {
+      return;
+    }
+
     const isProject =
       pagePath.startsWith("/projects/") || pagePath === "/gallery";
     if (isProject) {
@@ -631,6 +771,42 @@ function formatSlackBlocks(
       blocks.push({
         type: "section",
         fields: projectFields.slice(i, i + 10),
+      });
+    }
+
+    blocks.push({
+      type: "divider",
+    });
+  }
+
+  // Deck Activity section
+  if (deckData && Object.keys(deckData.decks).length > 0) {
+    blocks.push({
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "*Deck Activity:*",
+      },
+    });
+
+    const sortedDecks = Object.entries(deckData.decks).sort(
+      ([, a], [, b]) => b.views - a.views
+    );
+
+    const deckFields = sortedDecks.map(([token, deck]) => {
+      const displayName = deck.title || token;
+      const clientText = deck.client ? ` (${deck.client})` : "";
+
+      return {
+        type: "mrkdwn",
+        text: `*${displayName}${clientText}:*\n${deck.views} views | ${deck.viewers} viewers | ${deck.unlocks} unlocks | ${deck.failedUnlocks} failed | ${deck.gateViews} gate views | ${deck.completions} completed`,
+      };
+    });
+
+    for (let i = 0; i < deckFields.length; i += 10) {
+      blocks.push({
+        type: "section",
+        fields: deckFields.slice(i, i + 10),
       });
     }
 
@@ -774,7 +950,7 @@ async function main() {
 
     // Fetch all GA4 data in parallel
     console.log("Fetching GA4 data from all sources...");
-    const [pageData, eventData, trafficData, searchData] = await Promise.all([
+    const [pageData, eventData, trafficData, searchData, deckData] = await Promise.all([
       getGA4PageData().catch((err) => {
         console.error("Page data fetch failed:", err.message);
         return null;
@@ -789,6 +965,10 @@ async function main() {
       }),
       getSearchConsoleData().catch((err) => {
         console.error("Search Console data fetch failed:", err.message);
+        return null;
+      }),
+      getGA4DeckData().catch((err) => {
+        console.error("Deck data fetch failed:", err.message);
         return null;
       }),
     ]);
@@ -814,7 +994,8 @@ async function main() {
       projectClicks,
       trafficData,
       searchData,
-      dateString
+      dateString,
+      deckData
     );
 
     // Send to Slack
@@ -831,6 +1012,7 @@ async function main() {
       workListClicks: projectClicks.totalWorkListClicks,
       galleryClicks: projectClicks.totalGalleryClicks,
       trafficSessions: trafficData?.totalSessions || 0,
+      deckViews: deckData?.totalViews || 0,
     });
   } catch (error) {
     console.error("Process failed:", error.message);
