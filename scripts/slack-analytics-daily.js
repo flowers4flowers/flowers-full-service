@@ -381,6 +381,9 @@ async function getGA4DeckData() {
           {
             name: "customEvent:unlock_result",
           },
+          {
+            name: "customEvent:viewer_role",
+          },
         ],
         metrics: [
           {
@@ -415,45 +418,60 @@ async function getGA4DeckData() {
       const title = row.dimensionValues[2].value;
       const client = row.dimensionValues[3].value;
       const unlockResult = row.dimensionValues[4].value;
+      const viewerRole = row.dimensionValues[5].value;
       const eventCount = parseInt(row.metricValues[0].value);
       const users = parseInt(row.metricValues[1].value);
 
-      if (!decks[token]) {
-        decks[token] = {
-          title: "",
-          client: "",
-          gateViews: 0,
-          unlocks: 0,
-          failedUnlocks: 0,
-          views: 0,
-          viewers: 0,
-          completions: 0,
-        };
-      }
+      const isClient = viewerRole === "client";
+      const isAdmin = viewerRole === "admin";
 
-      const deck = decks[token];
+      const getDeck = () => {
+        if (!decks[token]) {
+          decks[token] = {
+            title: "",
+            client: "",
+            gateViews: 0,
+            unlocks: 0,
+            failedUnlocks: 0,
+            views: 0,
+            viewers: 0,
+            completions: 0,
+          };
+        }
 
-      if (!deck.title && title && title !== "(not set)") {
-        deck.title = title;
-      }
-      if (!deck.client && client && client !== "(not set)") {
-        deck.client = client;
-      }
+        const deck = decks[token];
+
+        if (!deck.title && title && title !== "(not set)") {
+          deck.title = title;
+        }
+        if (!deck.client && client && client !== "(not set)") {
+          deck.client = client;
+        }
+
+        return deck;
+      };
 
       if (eventName === "deck_gate_view") {
-        deck.gateViews += eventCount;
+        getDeck().gateViews += eventCount;
       } else if (eventName === "deck_unlock") {
         if (unlockResult === "success") {
-          deck.unlocks += eventCount;
-        } else {
-          deck.failedUnlocks += eventCount;
+          if (isClient) {
+            getDeck().unlocks += eventCount;
+          }
+        } else if (!isAdmin) {
+          getDeck().failedUnlocks += eventCount;
         }
       } else if (eventName === "deck_view") {
-        deck.views += eventCount;
-        deck.viewers += users;
-        totalViews += eventCount;
+        if (isClient) {
+          const deck = getDeck();
+          deck.views += eventCount;
+          deck.viewers += users;
+          totalViews += eventCount;
+        }
       } else if (eventName === "deck_complete") {
-        deck.completions += eventCount;
+        if (isClient) {
+          getDeck().completions += eventCount;
+        }
       }
     });
 

@@ -27,10 +27,24 @@ export function effectiveExpiry(deckExpiry) {
   return ninetyDaysOut;
 }
 
-export async function signDeckToken(deckId, passwordHash, expiresAt) {
+export function resolveViewerRole(username) {
+  if (typeof username !== "string") {
+    return null;
+  }
+
+  const normalized = username.trim().toLowerCase();
+
+  if (normalized === "client" || normalized === "admin") {
+    return normalized;
+  }
+
+  return null;
+}
+
+export async function signDeckToken(deckId, passwordHash, role, expiresAt) {
   const exp = Math.floor(expiresAt.getTime() / 1000);
 
-  return new SignJWT({ deckId, passwordHash })
+  return new SignJWT({ deckId, passwordHash, role })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(exp)
@@ -73,12 +87,17 @@ export function comparePassword(submitted, stored) {
   return timingSafeEqual(a, b);
 }
 
-export function buildSessionCookieOptions(expiresAt) {
-  return {
+export function buildSessionCookieOptions(expiresAt, role) {
+  const options = {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/portal",
-    expires: expiresAt,
   };
+
+  if (role !== "admin") {
+    options.expires = expiresAt;
+  }
+
+  return options;
 }

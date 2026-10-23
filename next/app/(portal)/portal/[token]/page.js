@@ -26,7 +26,7 @@ export function generateMetadata() {
 }
 
 export default async function Page({ params }) {
-  const { status, meta } = await resolveDeckAccess(params.token);
+  const { status, meta, role } = await resolveDeckAccess(params.token);
 
   if (status === "notfound") {
     notFound();
@@ -59,6 +59,7 @@ export default async function Page({ params }) {
           title={meta.title}
           client={meta.client}
           type={meta.contentType}
+          role={role}
         />
         <DeckEmbed figmaUrl={meta.figmaUrl} />
       </DeckSessionWatcher>
@@ -73,6 +74,7 @@ export default async function Page({ params }) {
           title={meta.title}
           client={meta.client}
           type={meta.contentType}
+          role={role}
         />
         <DeckPdfViewer
           pdfUrl={`/portal/${params.token}/pdf-file`}
@@ -80,6 +82,7 @@ export default async function Page({ params }) {
           title={meta.title}
           client={meta.client}
           type={meta.contentType}
+          role={role}
         />
       </DeckSessionWatcher>
     );

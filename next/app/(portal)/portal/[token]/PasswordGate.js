@@ -8,7 +8,9 @@ import Image from "next/image";
 import { useDeckAnalytics } from "../../../../utility/useDeckAnalytics";
 
 const ERROR_MESSAGES = {
-  incorrect: "Incorrect password.",
+  incorrect_username: "Incorrect username.",
+  incorrect_password: "Incorrect password.",
+  incorrect_both: "Incorrect username and password.",
   expired: "This link has expired.",
   network: "Something went wrong. Please try again.",
 };
@@ -20,9 +22,11 @@ export default function PasswordGate({ token, deckTitle, client, type }) {
     title: deckTitle,
     client,
     type,
+    role: "unknown",
   });
   const gateViewSentRef = useRef(false);
 
+  const [username, setUsername] = useState("client");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("idle");
   const [errorKind, setErrorKind] = useState(null);
@@ -45,19 +49,27 @@ export default function PasswordGate({ token, deckTitle, client, type }) {
       const res = await fetch(`/portal/${token}/unlock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (res.ok) {
-        trackUnlock("success");
+        const data = await res.json().catch(() => null);
+        trackUnlock("success", data?.role || "unknown");
         router.refresh();
         return;
       }
 
       if (res.status === 401) {
-        trackUnlock("incorrect");
+        const data = await res.json().catch(() => null);
+        const kind = data?.error;
+        const isKnownKind =
+          kind === "incorrect_username" ||
+          kind === "incorrect_password" ||
+          kind === "incorrect_both";
+
+        trackUnlock(isKnownKind ? kind : "error", data?.role || "unknown");
         setStatus("error");
-        setErrorKind("incorrect");
+        setErrorKind(isKnownKind ? kind : "network");
         return;
       }
 
@@ -93,6 +105,21 @@ export default function PasswordGate({ token, deckTitle, client, type }) {
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <label className="font-secondary text-md" htmlFor="deck-username">
+          Username
+        </label>
+
+        <input
+          id="deck-username"
+          type="text"
+          value={username}
+          onChange={(event) => setUsername(event.target.value)}
+          className="border border-cream bg-transparent px-3 py-2 font-secondary text-md"
+          autoComplete="username"
+          autoCapitalize="none"
+          spellCheck={false}
+        />
+
         <label className="font-secondary text-md" htmlFor="deck-password">
           Enter password
         </label>

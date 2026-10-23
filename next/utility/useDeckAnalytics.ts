@@ -12,17 +12,19 @@ export interface DeckDescriptor {
   title: string;
   client: string;
   type: string;
+  role: string;
 }
 
-export const useDeckAnalytics = ({ token, title, client, type }: DeckDescriptor) => {
+export const useDeckAnalytics = ({ token, title, client, type, role }: DeckDescriptor) => {
   const baseParams = useMemo(
     () => ({
       deck_token: token,
       deck_title: title,
       deck_client: client,
       deck_type: type,
+      viewer_role: role,
     }),
-    [token, title, client, type]
+    [token, title, client, type, role]
   );
 
   const send = useCallback(
@@ -44,8 +46,11 @@ export const useDeckAnalytics = ({ token, title, client, type }: DeckDescriptor)
   }, [send]);
 
   const trackUnlock = useCallback(
-    (result: string) => {
-      send(AnalyticsEvent.DECK_UNLOCK, { unlock_result: result });
+    (result: string, attemptRole?: string) => {
+      send(AnalyticsEvent.DECK_UNLOCK, {
+        unlock_result: result,
+        ...(attemptRole ? { viewer_role: attemptRole } : {}),
+      });
     },
     [send]
   );

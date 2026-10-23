@@ -38,6 +38,16 @@ export const getGAClientId = (callback: (clientId: string) => void) => {
   }
 };
 
+export const setGAParams = (params: Record<string, any>) => {
+  if (typeof window === "undefined") return;
+
+  try {
+    sendGAEvent("set", params);
+  } catch (error) {
+    console.error("Analytics set params error:", error);
+  }
+};
+
 // Convenience functions for common events
 export const trackButtonClick = (
   label: string,
